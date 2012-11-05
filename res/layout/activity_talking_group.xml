@@ -1,0 +1,131 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+      <RelativeLayout
+          android:id="@+id/gt_member_list_view"
+          android:layout_width="fill_parent"
+          android:layout_height="fill_parent"
+          android:visibility="visible" >
+
+          <RelativeLayout
+              android:id="@+id/gt_right_bar"
+              android:layout_width="80dp"
+              android:layout_height="fill_parent"
+              android:layout_alignParentRight="true"
+              android:background="@drawable/bottom_bar"
+              android:orientation="vertical" >
+
+              <Button
+                  android:id="@+id/gt_weixin_bt"
+                  android:layout_width="80dip"
+                  android:layout_height="wrap_content"
+                  android:background="@drawable/bottombar_bt_bg"
+                  android:drawablePadding="5dip"
+                  android:drawableTop="@drawable/sms"
+                  android:onClick="onWeixinAction"
+                  android:paddingTop="12dip"
+                  android:text="@string/weixin_invite"
+                  android:textColor="@android:color/white" />
+
+              <ImageView
+                  android:id="@+id/gt_bottom_sep1"
+                  android:layout_below="@id/gt_weixin_bt"
+                  android:layout_width="fill_parent"
+                  android:layout_height="1dp"
+                  android:scaleType="centerCrop"
+                  android:src="@drawable/bottom_sep_line" />
+
+              <Button
+                  android:id="@+id/gt_sms_invite_bt"
+                  android:layout_below="@id/gt_bottom_sep1"
+                  android:layout_width="80dip"
+                  android:layout_height="wrap_content"
+                  android:background="@drawable/bottombar_bt_bg"
+                  android:drawablePadding="5dip"
+                  android:drawableTop="@drawable/sms"
+                  android:onClick="onSmsInviteAction"
+                  android:paddingTop="12dip"
+                  android:text="@string/sms_invite"
+                  android:textColor="@android:color/white" />
+
+              <ImageView
+                  android:id="@+id/gt_bottom_sep2"
+                  android:layout_below="@id/gt_sms_invite_bt"
+                  android:layout_width="fill_parent"
+                  android:layout_height="1dp"
+                  android:scaleType="centerCrop"
+                  android:src="@drawable/bottom_sep_line" />
+
+              <Button
+                  android:id="@+id/gt_dial_bt"
+                  android:layout_below="@id/gt_bottom_sep2"
+                  android:layout_width="80dip"
+                  android:layout_height="wrap_content"
+                  android:background="@drawable/bottombar_bt_bg"
+                  android:drawablePadding="5dip"
+                  android:drawableTop="@drawable/dial"
+                  android:onClick="onDialAction"
+                  android:paddingTop="12dip"
+                  android:text="@string/dial"
+                  android:textColor="@android:color/white" />
+
+              <ImageView
+                  android:id="@+id/gt_bottom_sep3"
+                  android:layout_below="@id/gt_dial_bt"
+                  android:layout_width="fill_parent"
+                  android:layout_height="1dp"
+                  android:scaleType="centerCrop"
+                  android:src="@drawable/bottom_sep_line" />
+
+              <Button
+                  android:id="@+id/gt_email_bt"
+                  android:layout_below="@id/gt_bottom_sep3"
+                  android:layout_width="80dip"
+                  android:layout_height="wrap_content"
+                  android:background="@drawable/bottombar_bt_bg"
+                  android:drawablePadding="5dip"
+                  android:drawableTop="@drawable/leave"
+                  android:onClick="onEmailInviteAction"
+                  android:paddingTop="12dip"
+                  android:text="@string/email_invite"
+                  android:textColor="@android:color/white" />
+              <ImageView
+                  android:layout_below="@id/gt_email_bt"
+                  android:layout_width="fill_parent"
+                  android:layout_height="1dp"              
+                  android:scaleType="centerCrop"
+                  android:src="@drawable/bottom_sep_line" />
+              
+              <Button 
+                  android:id="@+id/gt_leave_bt"
+                  android:layout_alignParentBottom="true"
+                  android:layout_width="80dip" 
+                  android:layout_height="wrap_content"
+                  android:background="@drawable/bottombar_bt_bg"
+                  android:drawablePadding="5dip"
+                  android:drawableTop="@drawable/leave"
+                  android:onClick="onLeaveAction"
+                  android:paddingTop="12dip"
+                  android:text="@string/leave"
+                  android:textColor="@android:color/white"/>
+              <ImageView
+                  android:layout_above="@id/gt_leave_bt"
+                  android:layout_width="fill_parent"
+                  android:layout_height="1dp"              
+                  android:scaleType="centerCrop"
+                  android:src="@drawable/bottom_sep_line" />
+              
+          </RelativeLayout>
+          
+          <com.handmark.pulltorefresh.library.PullToRefreshListView
+              android:id="@+id/gt_memberlist"
+              android:layout_toLeftOf="@id/gt_right_bar"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"           
+              android:dividerHeight="1dip" />
+          
+      </RelativeLayout>
+
+</RelativeLayout>

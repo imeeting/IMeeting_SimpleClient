@@ -118,5 +118,28 @@
     
     <!--create meeting-->
     <string name="setting_nav_btn_title">设置</string>
-    <string name="create_meeting_title">创建会议</string>
+    <string name="create_meeting_title">智会</string>
+    <string name="payment_required">账户余额不足，请充值后再使用!</string>
+    <string name="error_in_create_group">创建群聊失败</string>
+    
+    <!--talking group-->
+    <string name="talking_group_title">会议号:</string>
+    <string name="weixin_invite">微信邀请</string>
+    <string name="sms_invite">短信邀请</string>
+    <string name="email_invite">邮件邀请</string>
+	<string name="dial">加入会议</string>
+	<string name="leave">退出会议</string>
+	<string name="calling">正在呼叫</string>
+    <string name="talking">正在通话</string>
+    <string name="call_failed">呼叫失败</string>
+    <string name="video_is_on">视频已开启</string>
+    <string name="invite_sms_body">请拨打05512379997加入多方会议，会议号：%s</string>
+    <string name="email_body">邀请您拨打05512379997加入多方会议</string>
+    <string name="email_subject">邀请您加入多人会议</string>
+    <string name="call_number">05512379997</string>
+    <string name="select_operation">选择操作</string>
+    <string name="close_talkgroup">挂断全体并离开</string>
+	<string name="only_leave_talkgroup">挂断自己并离开</string>
+	<string name="destroying_talkgroup">正在结束群聊…</string>
+	<string name="network_error">无法连接服务器，可能网络状态不佳或没有网络信号！</string>
 </resources>
