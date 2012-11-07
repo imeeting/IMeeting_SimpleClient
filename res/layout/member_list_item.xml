@@ -37,7 +37,9 @@
                 android:layout_marginTop="5dip"
                 android:contentDescription="online status"
                 android:scaleType="centerInside"
-                android:src="@drawable/online_flag" />
+                android:src="@drawable/online_flag" 
+                android:visibility="gone"
+                />
 
             <TextView
                 android:id="@+id/member_name"

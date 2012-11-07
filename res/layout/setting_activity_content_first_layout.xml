@@ -14,7 +14,7 @@
               
               <LinearLayout 
                   android:id="@+id/accountSetting_item"
-                  android:background="@drawable/setting_top_item_bg"
+                  android:background="@drawable/setting_alone_item_bg"
                   android:clickable="true"
                   android:layout_width="fill_parent"
                   android:layout_height="50.0dp"
@@ -46,7 +46,7 @@
                   android:background="@drawable/setting_line_img" 
                   />
               
-              <LinearLayout 
+              <!-- <LinearLayout 
                   android:id="@+id/accountCharge_item"
                   android:onClick="onAccountChargeButtonClick"
                   android:background="@drawable/setting_bottom_item_bg"
@@ -73,6 +73,6 @@
                       android:layout_marginRight="10.0dp"
                       android:src="@drawable/img_setting_into_icon"
                       />                   
-              </LinearLayout>
+              </LinearLayout> -->
              
 </LinearLayout>

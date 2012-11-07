@@ -1,7 +1,7 @@
 <resources>
 
 	<!-- iMeeting project -->
-	<string name="app_name">IMeeting_SimpleClient</string>
+	<string name="app_name">智会免费版</string>
     <string name="alert_title">智会提醒</string>
     <string name="sending_request">正在发送请求…</string>
     <string name="loading">正在加载…</string>
@@ -121,6 +121,7 @@
     <string name="create_meeting_title">智会</string>
     <string name="payment_required">账户余额不足，请充值后再使用!</string>
     <string name="error_in_create_group">创建群聊失败</string>
+    <string name="create_meeting_btn_title">我要开会</string>
     
     <!--talking group-->
     <string name="talking_group_title">会议号:</string>
@@ -132,9 +133,11 @@
 	<string name="calling">正在呼叫</string>
     <string name="talking">正在通话</string>
     <string name="call_failed">呼叫失败</string>
-    <string name="video_is_on">视频已开启</string>
+    <string name="weixin_not_install">请安装微信，谢谢</string>
+    <string name="sms_not_surpport">您的设备不支持短信功能</string>
+    <string name="phone_not_surpport">您的设备不支持电话功能</string>
     <string name="invite_sms_body">请拨打05512379997加入多方会议，会议号：%s</string>
-    <string name="email_body">邀请您拨打05512379997加入多方会议</string>
+    <string name="email_body">邀请您拨打05512379997加入多方会议,会议号 ：%s</string>
     <string name="email_subject">邀请您加入多人会议</string>
     <string name="call_number">05512379997</string>
     <string name="select_operation">选择操作</string>
