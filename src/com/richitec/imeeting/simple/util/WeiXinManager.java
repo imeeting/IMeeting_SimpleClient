@@ -13,7 +13,7 @@ import com.tencent.mm.sdk.openapi.WXTextObject;
 
 public class WeiXinManager {
 	private static IWXAPI api;
-	public final static String APP_ID= "wx1d17bdecb3bc2b13";//"wx6d0e1dd1ed644f48";"wxa0a0756f13fea27e"
+	public final static String APP_ID= "wx3e0b8398d893e9d1";
 	private static Context context;
 	
 	public static void createWeiXinAPI(Context c){
@@ -53,7 +53,7 @@ public class WeiXinManager {
 			
 			// 构造一个Req
 			SendMessageToWX.Req req = new SendMessageToWX.Req();
-			req.transaction = buildTransaction("text"); // transaction�ֶ�����Ψһ��ʶһ������
+			req.transaction = buildTransaction("text"); // transaction字段用于唯一标识一个请求
 			req.message = msg;
 			req.scene = SendMessageToWX.Req.WXSceneSession;
 			

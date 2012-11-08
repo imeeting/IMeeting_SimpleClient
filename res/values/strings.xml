@@ -90,9 +90,9 @@
     <string name="product_version">版本号:</string>
     <!-- design -->
     <string name="programming_design">程序设计</string>
-    <string name="programming_authors">王星\t\t翟绍虎</string>
+    <string name="programming_authors">王星\t\t翟绍虎\t\t路辉</string>
     <string name="ui_design">UI设计</string>
-    <string name="ui_designers">李欣</string>
+    <string name="ui_designers">李欣\t\t王星</string>
     <!-- copyright -->
     <string name="copyright">Copyright © 2012</string>
     <string name="copyright_ownership">合肥优云信息技术有限公司 保留所有权利</string>
@@ -145,4 +145,8 @@
 	<string name="only_leave_talkgroup">挂断自己并离开</string>
 	<string name="destroying_talkgroup">正在结束群聊…</string>
 	<string name="network_error">无法连接服务器，可能网络状态不佳或没有网络信号！</string>
+	
+	 <!-- version upgrade -->
+    <string name="detect_new_version" formatted="false">发现新版本%s，\n是否升级？\n本次更新内容：\n%s</string>
+    <string name="upgrade">升级</string>
 </resources>

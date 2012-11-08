@@ -1,9 +1,5 @@
 package com.richitec.imeeting.simple.util;
 
-import org.apache.http.HttpRequest;
-import org.apache.http.HttpResponse;
-import org.apache.http.protocol.HTTP;
-import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 
 import android.app.AlertDialog;
@@ -30,8 +26,8 @@ public class AppUpdateManager {
 	public void checkVersion() {
 		if (VersionUtils.checkVersion) {
 			VersionUtils.localVersion = VersionUtils.currentVersionName(context);
-			VersionUtils.updateURL = context.getString(R.string.server_url) + context.getString(R.string.app_download_url);
-			HttpUtils.getRequest(context.getString(R.string.server_url)
+			VersionUtils.updateURL = context.getString(R.string.appvcenter_url) + context.getString(R.string.app_download_url);
+			HttpUtils.getRequest(context.getString(R.string.appvcenter_url)
 					+ context.getString(R.string.app_version_url), null, null,
 					HttpRequestType.ASYNCHRONOUS, onFinishedGetVersion);
 		}
@@ -41,7 +37,7 @@ public class AppUpdateManager {
 
 		@Override
 		public void onFinished(HttpResponseResult responseResult) {
-			/*try {
+			try {
 				Log.d(SystemConstants.TAG, "response text: " + responseResult.getResponseText());
 				JSONObject data = new JSONObject(responseResult.getResponseText());
 				String comment = data.getString("comment");
@@ -84,7 +80,7 @@ public class AppUpdateManager {
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
-			}*/
+			}
 		}
 
 		@Override

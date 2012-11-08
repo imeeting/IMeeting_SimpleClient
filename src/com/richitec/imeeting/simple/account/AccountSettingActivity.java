@@ -26,11 +26,11 @@ import com.richitec.commontoolkit.utils.HttpUtils.HttpResponseResult;
 import com.richitec.commontoolkit.utils.HttpUtils.OnHttpRequestListener;
 import com.richitec.commontoolkit.utils.HttpUtils.PostRequestFormat;
 import com.richitec.commontoolkit.utils.MyToast;
-//import com.richitec.imeeting.talkinggroup.TalkingGroupHistoryListActivity;
 import com.richitec.imeeting.simple.R;
 import com.richitec.imeeting.simple.constants.SystemConstants;
 import com.richitec.imeeting.simple.createmeeting.MeetingCreateActivity;
 import com.richitec.imeeting.simple.customcomponent.IMeetingNavigationActivity;
+import com.richitec.imeeting.simple.util.AppUpdateManager;
 
 public class AccountSettingActivity extends IMeetingNavigationActivity {
 	private ProgressDialog progressDialog;
@@ -72,8 +72,8 @@ public class AccountSettingActivity extends IMeetingNavigationActivity {
 
 		useSavedPwd = remeberPwdToggle.isChecked();
 
-		/*AppUpdateManager aum = new AppUpdateManager(this);
-		aum.checkVersion();*/
+		AppUpdateManager aum = new AppUpdateManager(this);
+		aum.checkVersion();
 	}
 
 	private TextWatcher onTextChanged = new TextWatcher() {
@@ -190,11 +190,12 @@ public class AccountSettingActivity extends IMeetingNavigationActivity {
 			String userKey = data.getString("userkey");
 			UserManager.getInstance().setUserKey(userKey);
 			saveUserAccount();
-//			pushActivity(TalkingGroupHistoryListActivity.class);
-			Intent intent = new Intent(AccountSettingActivity.this, MeetingCreateActivity.class);
-			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			Intent intent = new Intent(AccountSettingActivity.this,
+					MeetingCreateActivity.class);
+			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+					| Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intent);
-			
+
 			finish();
 
 		} catch (JSONException e) {

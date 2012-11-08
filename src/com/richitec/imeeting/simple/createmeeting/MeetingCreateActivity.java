@@ -1,6 +1,7 @@
 package com.richitec.imeeting.simple.createmeeting;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -10,20 +11,21 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.Toast;
+
 import com.richitec.commontoolkit.customcomponent.BarButtonItem.BarButtonItemStyle;
 import com.richitec.commontoolkit.utils.HttpUtils;
-import com.richitec.commontoolkit.utils.MyToast;
+import com.richitec.commontoolkit.utils.HttpUtils.HttpRequestType;
 import com.richitec.commontoolkit.utils.HttpUtils.HttpResponseResult;
 import com.richitec.commontoolkit.utils.HttpUtils.OnHttpRequestListener;
-import com.richitec.commontoolkit.utils.VersionUtils;
-import com.richitec.commontoolkit.utils.HttpUtils.HttpRequestType;
 import com.richitec.commontoolkit.utils.HttpUtils.PostRequestFormat;
+import com.richitec.commontoolkit.utils.MyToast;
 import com.richitec.imeeting.simple.R;
 import com.richitec.imeeting.simple.assistant.SettingActivity;
 import com.richitec.imeeting.simple.constants.TalkGroup;
 import com.richitec.imeeting.simple.customcomponent.IMeetingBarButtonItem;
 import com.richitec.imeeting.simple.customcomponent.IMeetingNavigationActivity;
 import com.richitec.imeeting.simple.talkinggroup.TalkingGroupActivity;
+import com.richitec.imeeting.simple.util.AppUpdateManager;
 
 public class MeetingCreateActivity extends IMeetingNavigationActivity {
 	private ProgressDialog progressDialog;
@@ -45,13 +47,14 @@ public class MeetingCreateActivity extends IMeetingNavigationActivity {
 		Button createButton = (Button) findViewById(R.id.create_meeting_button);
 		createButton.setOnClickListener(new CreateBtnOnClickListener());
 		
+		AppUpdateManager aum = new AppUpdateManager(this);
+		aum.checkVersion();
 	}
 	
 	class CreateBtnOnClickListener implements OnClickListener{
 
 		@Override
 		public void onClick(View arg0) {
-			// TODO Auto-generated method stub
 			progressDialog = ProgressDialog.show(MeetingCreateActivity.this, null, getString(R.string.sending_request));
 			HttpUtils.postSignatureRequest(getString(R.string.server_url)
 					+ getString(R.string.create_conf_url),

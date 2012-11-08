@@ -2,7 +2,7 @@
 <resources>
 
     <!-- iMeeting server url -->
-    <string name="server_url">http://www.wetalking.net/imeeting</string>
+    <string name="server_url">https://www.wetalking.net/imeeting</string>
     <!-- <string name="server_url">http://192.168.1.133:8080/imeeting</string> -->
     <string name="login_url">/user/login</string>
     <string name="retrieve_auth_code_url">/user/getPhoneCode</string>
@@ -27,8 +27,9 @@
     <!-- support url -->
     <string name="support_url">/help</string>
     <!-- version and app download -->
-    <string name="app_download_url">/downloadAppClient/android</string>
-    <string name="app_version_url">/appVersion/android</string>
+    <string name="appvcenter_url">http://www.wetalking.net/appvcenter</string>
+    <string name="app_download_url">/downloadapp/2/android</string>
+    <string name="app_version_url">/version/2/android</string>
     <!-- other -->
     <string name="notify_url">http://msg.wetalking.net</string>
 	<string name="rtmp_server_url">rtmp://rtmp.wetalking.net/quick_server</string>

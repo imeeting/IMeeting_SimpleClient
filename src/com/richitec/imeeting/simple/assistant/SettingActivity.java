@@ -52,7 +52,6 @@ public class SettingActivity extends IMeetingNavigationActivity {
 		.setOnClickListener(new AboutBtnOnClickListener());
 		((LinearLayout)findViewById(R.id.help_item))
 		.setOnClickListener(new HelpBtnOnClickListener());
-		
 
 	}
 
