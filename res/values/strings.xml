@@ -66,8 +66,8 @@
     
     <!-- setting activity -->
     <string name="setting_nav_title_text">设置</string>
-    <string name="accountSetting_btn_title">账户设置</string>
-    <string name="accountCharge_btn_title">账户充值</string>
+    <string name="accountChange_btn_title">切换账号</string>
+    <string name="changePSW_btn_title">修改密码</string>
     <string name="addressbook_upload_btn_title">备份通讯录</string>
     <string name="need_upload_addressbook">确定备份通讯录到服务器吗？</string>
     <string name="backup">备份</string>
