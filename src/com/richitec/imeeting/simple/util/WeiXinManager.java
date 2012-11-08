@@ -41,24 +41,23 @@ public class WeiXinManager {
 		if(api!=null&&isInstallWeiXin()){
 			String text = String.format(context.getString(R.string.email_body),groupId);
 			
-			// 初始化一个WXTextObject对象
+			// 鍒濆鍖栦竴涓猈XTextObject瀵硅薄
 			WXTextObject textObj = new WXTextObject();
 			textObj.text = text;
 	
-			// 用WXTextObject对象初始化一个WXMediaMessage对象
+			// 鐢╓XTextObject瀵硅薄鍒濆鍖栦竴涓猈XMediaMessage瀵硅薄
 			WXMediaMessage msg = new WXMediaMessage();
 			msg.mediaObject = textObj;
-			// 发送文本类型的消息时，title字段不起作用
-			// msg.title = "Will be ignored";
+
 			msg.description = text;
 			
-			// 构造一个Req
+			// 鏋勯�犱竴涓猂eq
 			SendMessageToWX.Req req = new SendMessageToWX.Req();
-			req.transaction = buildTransaction("text"); // transaction字段用于唯一标识一个请求
+			req.transaction = buildTransaction("text"); // transaction锟街讹拷锟斤拷锟斤拷唯一锟斤拷识一锟斤拷锟斤拷锟斤拷
 			req.message = msg;
 			req.scene = SendMessageToWX.Req.WXSceneSession;
 			
-			// 调用api接口发送数据到微信
+			// 璋冪敤api鎺ュ彛鍙戦�佹暟鎹埌寰俊
 			api.sendReq(req);
 			return true;
 		}
