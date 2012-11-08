@@ -50,9 +50,9 @@ public class SettingActivity extends IMeetingNavigationActivity {
 				.setOnClickListener(new AccountSettingBtnOnClickListener());
 		((LinearLayout)findViewById(R.id.about_item))
 		.setOnClickListener(new AboutBtnOnClickListener());
-		((LinearLayout)findViewById(R.id.help_item))
-		.setOnClickListener(new HelpBtnOnClickListener());
-
+		/*((LinearLayout)findViewById(R.id.help_item))
+		.setOnClickListener(new HelpBtnOnClickListener());*/
+		
 	}
 
 	// inner class
