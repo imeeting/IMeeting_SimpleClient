@@ -62,7 +62,7 @@ public class TalkingGroupActivity extends Activity{
 		setContentView(R.layout.activity_talking_group);
 		handler = new Handler(Looper.myLooper());
 		
-		//´´½¨Î¢ÐÅAPI
+		//ï¿½ï¿½ï¿½ï¿½Î¢ï¿½ï¿½API
 		WeiXinManager.createWeiXinAPI(this);
 		
 		Bundle data = getIntent().getExtras();
@@ -306,7 +306,7 @@ public class TalkingGroupActivity extends Activity{
 			startActivity(intent);
 		}
 		else
-			Toast.makeText(this, getString(R.string.sms_not_surpport), Toast.LENGTH_LONG).show();
+			Toast.makeText(this, getString(R.string.sms_not_surpport), Toast.LENGTH_SHORT).show();
 	}
 	
 	public void onLeaveAction(View v){
@@ -349,9 +349,9 @@ public class TalkingGroupActivity extends Activity{
 	}
 	
 	public void onWeixinAction(View v){
-		//·¢ËÍÎ¢ÐÅÏûÏ¢
+		//ï¿½ï¿½ï¿½ï¿½Î¢ï¿½ï¿½ï¿½ï¿½Ï¢
 		if(!WeiXinManager.sendInviteMessage(groupId)){
-			Toast.makeText(this, getString(R.string.weixin_not_install), Toast.LENGTH_LONG).show();
+			Toast.makeText(this, getString(R.string.weixin_not_install), Toast.LENGTH_SHORT).show();
 		}
 	}
 	
@@ -368,6 +368,6 @@ public class TalkingGroupActivity extends Activity{
 			startActivity(intent);
 		}
 		else
-			Toast.makeText(this, getString(R.string.phone_not_surpport), Toast.LENGTH_LONG).show();
+			Toast.makeText(this, getString(R.string.phone_not_surpport), Toast.LENGTH_SHORT).show();
 	}
 }

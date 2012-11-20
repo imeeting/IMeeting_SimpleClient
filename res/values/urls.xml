@@ -8,6 +8,8 @@
     <string name="retrieve_auth_code_url">/user/getPhoneCode</string>
     <string name="check_auth_code_url">/user/checkPhoneCode</string>
     <string name="user_register_url">/user/regUser</string>
+    <string name="user_get_pwd_url">/user/getUserPwd</string>
+    <string name="modify_psw_url">/profile/changePwd</string>
     <string name="conf_list_url">/conference/conflist</string>
     <string name="join_conf_url">/conference/join</string>
     <string name="create_conf_url">/conference/create</string>
@@ -32,5 +34,6 @@
     <string name="app_version_url">/version/2/android</string>
     <!-- other -->
     <string name="notify_url">http://msg.wetalking.net</string>
-	<string name="rtmp_server_url">rtmp://rtmp.wetalking.net/quick_server</string>
+    <string name="rtmp_server_url">rtmp://rtmp.wetalking.net/quick_server</string>
+
 </resources>
