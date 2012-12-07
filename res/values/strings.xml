@@ -7,6 +7,7 @@
     <string name="loading">正在加载…</string>
     <string name="no_more_item">没有更多</string>
     <string name="exit_app">确定要退出智会应用吗？</string>
+    <string name="your_account_expired">您的登录已失效，请重新登录！</string>
     <string name="exit">退出</string>
     <string name="cancel">取消</string>
     <string name="ok">确定</string>
@@ -153,10 +154,10 @@
     <string name="weixin_not_install">请安装微信，谢谢</string>
     <string name="sms_not_surpport">您的设备不支持短信功能</string>
     <string name="phone_not_surpport">您的设备不支持电话功能</string>
-    <string name="invite_sms_body">请拨打05512379997加入多方会议，会议号：%s</string>
-    <string name="email_body">邀请您拨打05512379997加入多方会议,会议号 ：%s</string>
+    <string name="invite_sms_body">请拨打055162379997加入多方会议，会议号：%s</string>
+    <string name="email_body">邀请您拨打055162379997加入多方会议,会议号 ：%s</string>
     <string name="email_subject">邀请您加入多人会议</string>
-    <string name="call_number">05512379997</string>
+    <string name="call_number">055162379997</string>
     <string name="select_operation">选择操作</string>
     <string name="close_talkgroup">挂断全体并离开</string>
     <string name="only_leave_talkgroup">挂断自己并离开</string>
