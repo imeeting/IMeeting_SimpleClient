@@ -1,13 +1,13 @@
-package com.richitec.imeeting.simple.assistant;
+package com.richitec.simpleimeeting.assistant;
 
 import android.os.Bundle;
 import android.widget.TextView;
 
 import com.richitec.commontoolkit.utils.VersionUtils;
-import com.richitec.imeeting.simple.R;
-import com.richitec.imeeting.simple.customcomponent.IMeetingNavigationActivity;
+import com.richitec.simpleimeeting.R;
+import com.richitec.simpleimeeting.customcomponent.SimpleIMeetingNavigationActivity;
 
-public class AboutActivity extends IMeetingNavigationActivity {
+public class AboutActivity extends SimpleIMeetingNavigationActivity {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {

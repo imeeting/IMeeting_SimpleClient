@@ -1,13 +1,14 @@
-package com.richitec.imeeting.simple.customcomponent;
+package com.richitec.simpleimeeting.customcomponent;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+
 import com.richitec.commontoolkit.customcomponent.BarButtonItem;
-import com.richitec.imeeting.simple.R;
+import com.richitec.simpleimeeting.R;
 
-public class IMeetingBarButtonItem extends BarButtonItem {
+public class SimpleIMeetingBarButtonItem extends BarButtonItem {
 
-	public IMeetingBarButtonItem(Context context,
+	public SimpleIMeetingBarButtonItem(Context context,
 			BarButtonItemStyle barBtnItemStyle, CharSequence title,
 			OnClickListener btnClickListener) {
 		super(
@@ -34,14 +35,14 @@ public class IMeetingBarButtonItem extends BarButtonItem {
 								: null), btnClickListener);
 	}
 
-	public IMeetingBarButtonItem(Context context,
+	public SimpleIMeetingBarButtonItem(Context context,
 			BarButtonItemStyle barBtnItemStyle, int titleId,
 			OnClickListener btnClickListener) {
 		this(context, barBtnItemStyle, context.getResources()
 				.getString(titleId), btnClickListener);
 	}
 
-	public IMeetingBarButtonItem(Context context, CharSequence title,
+	public SimpleIMeetingBarButtonItem(Context context, CharSequence title,
 			BarButtonItemStyle barBtnItemStyle,
 			Drawable normalBackgroundDrawable,
 			Drawable pressedBackgroundDrawable, OnClickListener btnClickListener) {
@@ -49,28 +50,28 @@ public class IMeetingBarButtonItem extends BarButtonItem {
 				pressedBackgroundDrawable, btnClickListener);
 	}
 
-	public IMeetingBarButtonItem(Context context, CharSequence title,
+	public SimpleIMeetingBarButtonItem(Context context, CharSequence title,
 			OnClickListener btnClickListener) {
 		super(context, title, btnClickListener);
 	}
 
-	public IMeetingBarButtonItem(Context context, int titleId,
+	public SimpleIMeetingBarButtonItem(Context context, int titleId,
 			int normalBackgroundResId, int pressedBackgroundResId,
 			OnClickListener btnClickListener) {
 		super(context, titleId, normalBackgroundResId, pressedBackgroundResId,
 				btnClickListener);
 	}
 
-	public IMeetingBarButtonItem(Context context, int titleId,
+	public SimpleIMeetingBarButtonItem(Context context, int titleId,
 			OnClickListener btnClickListener) {
 		super(context, titleId, btnClickListener);
 	}
 
-	public IMeetingBarButtonItem(Context context, int resId) {
+	public SimpleIMeetingBarButtonItem(Context context, int resId) {
 		super(context, resId);
 	}
 
-	public IMeetingBarButtonItem(Context context) {
+	public SimpleIMeetingBarButtonItem(Context context) {
 		super(context);
 	}
 

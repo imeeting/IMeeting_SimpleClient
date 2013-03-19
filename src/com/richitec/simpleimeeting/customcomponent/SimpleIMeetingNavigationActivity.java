@@ -1,11 +1,11 @@
-package com.richitec.imeeting.simple.customcomponent;
+package com.richitec.simpleimeeting.customcomponent;
 
 import android.graphics.drawable.Drawable;
 
 import com.richitec.commontoolkit.activityextension.NavigationActivity;
-import com.richitec.imeeting.simple.R;
+import com.richitec.simpleimeeting.R;
 
-public class IMeetingNavigationActivity extends NavigationActivity {
+public class SimpleIMeetingNavigationActivity extends NavigationActivity {
 
 	@Override
 	public void setContentView(int layoutResID) {

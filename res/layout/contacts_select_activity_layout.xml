@@ -1,0 +1,75 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:baselineAligned="false"
+    android:orientation="horizontal"
+    tools:context=".talkinggroup.SimpleIMeetingMainActivity" >
+
+    <RelativeLayout
+        android:id="@+id/cs_contactsSelect_relativeLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1" >
+
+        <TextView
+            android:id="@+id/cs_cl_headTip_textView"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/contactsSelect_contactsList_headTip_textViewText" />
+
+        <RelativeLayout
+            android:id="@+id/cs_cl_contactSearch_relativeLayout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/cs_cl_headTip_textView" >
+
+            <ImageButton
+                android:id="@+id/cs_cl_contactSearchImgBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:contentDescription="@string/contactsSelect_contactsList_contactSearchImgBtn_contentDescription"
+                android:src="@android:drawable/ic_input_add" />
+
+            <EditText
+                android:id="@+id/cs_cl_contactSearchEditText"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@id/cs_cl_contactSearchImgBtn"
+                android:hint="@string/contactsSelect_contactsList_contactSearchEditText_hint" >
+
+                <requestFocus />
+            </EditText>
+        </RelativeLayout>
+
+        <ListView
+            android:id="@+id/cs_contactsListView"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_below="@id/cs_cl_contactSearch_relativeLayout" >
+        </ListView>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/cs_selectedContacts_relativeLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="2"
+        android:visibility="gone" >
+
+        <TextView
+            android:id="@+id/cs_sc_headTip_textView"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/contactsSelect_selectedContacts_headTip_textViewText" />
+
+        <ListView
+            android:id="@+id/cs_selectedContactsListView"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_below="@id/cs_sc_headTip_textView" >
+        </ListView>
+    </RelativeLayout>
+
+</LinearLayout>
