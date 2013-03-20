@@ -1,6 +1,7 @@
 package com.richitec.simpleimeeting.customcomponent;
 
 import android.graphics.drawable.Drawable;
+import android.view.View;
 
 import com.richitec.commontoolkit.activityextension.NavigationActivity;
 import com.richitec.simpleimeeting.R;
@@ -10,6 +11,14 @@ public class SimpleIMeetingNavigationActivity extends NavigationActivity {
 	@Override
 	public void setContentView(int layoutResID) {
 		super.setContentView(layoutResID);
+
+		// set navigation bar background drawable
+		setNavBarBackgroundResource(R.drawable.img_imeeting_navbar_bg);
+	}
+
+	@Override
+	public void setContentView(View view) {
+		super.setContentView(view);
 
 		// set navigation bar background drawable
 		setNavBarBackgroundResource(R.drawable.img_imeeting_navbar_bg);

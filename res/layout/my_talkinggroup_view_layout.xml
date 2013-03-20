@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:baselineAligned="false"
+    android:orientation="horizontal"
+    tools:context=".talkinggroup.SimpleIMeetingMainActivity" >
+
+    <RelativeLayout
+        android:id="@+id/mtg_talkingGroupList_relativeLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1" >
+
+        <TextView
+            android:id="@+id/mtg_tgl_headTip_textView"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/myTalkingGroup_talkingGroupList_headTip_textViewText" />
+
+        <ListView
+            android:id="@+id/mtg_talkingGroupListView"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_below="@id/mtg_tgl_headTip_textView" >
+        </ListView>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/mtg_talkingGroupAttendeeList_relativeLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="2"
+        android:visibility="gone" >
+
+        <TextView
+            android:id="@+id/mtg_tga_headTip_textView"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/myTalkingGroup_talkingGroupAttendeeList_headTip_textViewText" />
+
+        <ListView
+            android:id="@+id/mtg_talkingGroupAttendeeListView"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_below="@id/mtg_tga_headTip_textView" >
+        </ListView>
+    </RelativeLayout>
+
+</LinearLayout>

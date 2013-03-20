@@ -33,7 +33,8 @@ public class SimpleIMeetingAppLaunchActivity extends AppLaunchActivity {
 		// return intent;
 
 		// define target intent activity
-		Intent _targetIntent = new Intent(this, SimpleIMeetingMainActivity.class);
+		Intent _targetIntent = new Intent(this,
+				SimpleIMeetingMainActivity.class);
 
 		return _targetIntent;
 	}
@@ -42,6 +43,9 @@ public class SimpleIMeetingAppLaunchActivity extends AppLaunchActivity {
 	public void didFinishLaunching() {
 		// traversal address book
 		AddressBookManager.getInstance().traversalAddressBook();
+
+		// init all name phonetic sorted contacts info array
+		SimpleIMeetingMainActivity.initNamePhoneticSortedContactsInfoArray();
 	}
 
 	// private void loadAccount() {

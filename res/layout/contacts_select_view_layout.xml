@@ -7,10 +7,11 @@
     tools:context=".talkinggroup.SimpleIMeetingMainActivity" >
 
     <RelativeLayout
-        android:id="@+id/cs_contactsSelect_relativeLayout"
+        android:id="@+id/cs_contactsList_relativeLayout"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_weight="1" >
+        android:layout_weight="1"
+        android:background="@drawable/img_contactsselect_relativelayout_bg" >
 
         <TextView
             android:id="@+id/cs_cl_headTip_textView"
@@ -43,12 +44,22 @@
             </EditText>
         </RelativeLayout>
 
-        <ListView
-            android:id="@+id/cs_contactsListView"
+        <FrameLayout
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_below="@id/cs_cl_contactSearch_relativeLayout" >
-        </ListView>
+
+            <ListView
+                android:id="@+id/cs_contactsListView"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:cacheColorHint="@android:color/transparent"
+                android:divider="@drawable/img_addressbook_contact_listview_divider_bg"
+                android:fadingEdge="none"
+                android:headerDividersEnabled="false"
+                android:listSelector="@android:color/transparent" >
+            </ListView>
+        </FrameLayout>
     </RelativeLayout>
 
     <RelativeLayout

@@ -26,10 +26,16 @@
 
     <!-- simple imeeting main activity -->
     <string name="title_activity_simple_imeeting_main">SimpleIMeetingMainActivity</string>
+    <!-- contacts select view -->
     <string name="contactsSelect_leftBarButtonItem_navTitle">我的会议</string>
     <string name="contactsSelect_contactsList_headTip_textViewText">通讯录</string>
     <string name="contactsSelect_contactsList_contactSearchImgBtn_contentDescription">it is a image button of contact search</string>
     <string name="contactsSelect_contactsList_contactSearchEditText_hint">搜索联系人</string>
-    <string name="contactsSelect_selectedContacts_headTip_textViewText">与会者</string>
+    <string name="contactsSelect_addressbookContact_unsel6sel_imageView_content_description">contact select address book contact unselected or selected image view</string>
+    <string name="contactsSelect_selectedContacts_headTip_textViewText">邀请参与者</string>
+    <!-- my talking group view -->
+    <string name="myTalkingGroup_leftBarButtonItem_navTitle">通讯录</string>
+    <string name="myTalkingGroup_talkingGroupList_headTip_textViewText">会议列表</string>
+    <string name="myTalkingGroup_talkingGroupAttendeeList_headTip_textViewText">与会者</string>
 
 </resources>
