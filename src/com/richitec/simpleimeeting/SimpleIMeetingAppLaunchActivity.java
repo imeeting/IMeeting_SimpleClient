@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable;
 
 import com.richitec.commontoolkit.activityextension.AppLaunchActivity;
 import com.richitec.commontoolkit.addressbook.AddressBookManager;
+import com.richitec.simpleimeeting.talkinggroup.ContactsSelectView;
 import com.richitec.simpleimeeting.talkinggroup.SimpleIMeetingMainActivity;
 
 public class SimpleIMeetingAppLaunchActivity extends AppLaunchActivity {
@@ -45,7 +46,7 @@ public class SimpleIMeetingAppLaunchActivity extends AppLaunchActivity {
 		AddressBookManager.getInstance().traversalAddressBook();
 
 		// init all name phonetic sorted contacts info array
-		SimpleIMeetingMainActivity.initNamePhoneticSortedContactsInfoArray();
+		ContactsSelectView.initNamePhoneticSortedContactsInfoArray();
 	}
 
 	// private void loadAccount() {

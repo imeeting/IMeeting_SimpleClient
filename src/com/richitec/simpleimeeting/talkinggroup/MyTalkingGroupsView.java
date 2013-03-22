@@ -1,20 +1,20 @@
 package com.richitec.simpleimeeting.talkinggroup;
 
-import android.view.View;
-
+import com.richitec.simpleimeeting.R;
 import com.richitec.simpleimeeting.view.SIMBaseView;
 
 public class MyTalkingGroupsView extends SIMBaseView {
 
-	public MyTalkingGroupsView() {
-		super();
-		// TODO Auto-generated constructor stub
+	@Override
+	public int presentViewLayout() {
+		// return my talking group list view layout
+		return R.layout.my_talkinggroup_view_layout;
 	}
 
 	@Override
-	public View presentView() {
+	public void initSubComponents() {
 		// TODO Auto-generated method stub
-		return null;
+
 	}
 
 }
