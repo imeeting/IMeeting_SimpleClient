@@ -11,7 +11,7 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_weight="1"
-        android:background="@drawable/img_contactsselect_relativelayout_bg" >
+        android:background="@drawable/img_contactslist_relativelayout_bg" >
 
         <TextView
             android:id="@+id/cs_cl_headTip_textView"

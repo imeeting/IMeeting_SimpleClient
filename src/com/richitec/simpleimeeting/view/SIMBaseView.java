@@ -12,6 +12,9 @@ public abstract class SIMBaseView {
 	// content context
 	private Context _mContext;
 
+	// present view
+	private View _mView;
+
 	public Context getContext() {
 		return _mContext;
 	}
@@ -28,12 +31,23 @@ public abstract class SIMBaseView {
 
 	// get simple imeeting base view present view
 	public View getPresentView() {
-		// get layout inflater
-		LayoutInflater _layoutInflater = (LayoutInflater) getContext()
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		View _presentView;
 
-		// inflater present view and return
-		return _layoutInflater.inflate(presentViewLayout(), null);
+		// check present view
+		if (null == _mView) {
+			// get layout inflater
+			LayoutInflater _layoutInflater = (LayoutInflater) getContext()
+					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+			// inflater present view, save it and return
+			_presentView = _mView = _layoutInflater.inflate(
+					presentViewLayout(), null);
+		} else {
+			// return immediately
+			_presentView = _mView;
+		}
+
+		return _presentView;
 	}
 
 	// find view by id

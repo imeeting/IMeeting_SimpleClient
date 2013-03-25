@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.text.Editable;
@@ -26,6 +27,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.richitec.commontoolkit.addressbook.AddressBookManager;
 import com.richitec.commontoolkit.addressbook.ContactBean;
@@ -45,6 +47,14 @@ public class ContactsSelectView extends SIMBaseView {
 	// extension structured and in addressbook contact adapter data key
 	private final String CONTACT_IS_SELECTED = "in address book contact is selected";
 
+	// selected contact whose selected phone which saved in contact bean
+	// extension structured
+	private final String SELECTED_CONTACT_SELECTEDPHONE = "selected contact the selected phone";
+
+	// in and prein talking group contacts adapter data keys
+	private final String SELECTED_CONTACT_DISPLAYNAME = "selected_contact_displayName";
+	private final String SELECTED_CONTACT_IS_IN_TALKINGGROUP = "selected_contact_is_in_talkingGroup";
+
 	// contact search type
 	private ContactSearchType _mContactSearchType = ContactSearchType.NONE;
 
@@ -56,6 +66,18 @@ public class ContactsSelectView extends SIMBaseView {
 
 	// in addressbook contacts present list view
 	private ListView _mInABContactsPresentListView;
+
+	// in and prein talking group contacts list view
+	private ListView _mIn7PreinTalkingGroupContactsListView;
+
+	// talking group attendees phone list
+	private List<String> _mTalkingGroupContactsPhoneArray = new ArrayList<String>();
+
+	// prein talking group contacts detail info list
+	private final List<ContactBean> _mPreinTalkingGroupContactsInfoArray = new ArrayList<ContactBean>();
+
+	// in and prein talking group contacts adapter data list
+	private final List<Map<String, ?>> _mIn7PreinTalkingGroupContactsAdapterDataList = new ArrayList<Map<String, ?>>();
 
 	// init all name phonetic sorted contacts info array
 	public static void initNamePhoneticSortedContactsInfoArray() {
@@ -75,8 +97,6 @@ public class ContactsSelectView extends SIMBaseView {
 		// get contacts in addressbook present list view
 		_mInABContactsPresentListView = (ListView) findViewById(R.id.cs_contactsListView);
 
-		Log.d(LOG_TAG, "_mInABContactsPresentListView = " + _mInABContactsPresentListView);
-		
 		// set contacts in addressbook present listView adapter
 		_mInABContactsPresentListView
 				.setAdapter(generateInABContactAdapter(_mPresentContactsInABInfoArray));
@@ -94,6 +114,36 @@ public class ContactsSelectView extends SIMBaseView {
 		// bind contact search editText text watcher
 		((EditText) findViewById(R.id.cs_cl_contactSearchEditText))
 				.addTextChangedListener(new ContactSearchEditTextTextWatcher());
+
+		// init attendees phone in talking group and contacts in prein talking
+		// group list view
+		_mIn7PreinTalkingGroupContactsListView = (ListView) findViewById(R.id.cs_selectedContactsListView);
+
+		// generate in and prein talking group contact adapter
+		// process in talking group attendees phone list, then set prein talking
+		// group contacts list view present data list
+		for (int i = 0; i < _mTalkingGroupContactsPhoneArray.size(); i++) {
+			// add data to list
+			_mIn7PreinTalkingGroupContactsAdapterDataList
+					.add(generateIn6PreinTalkingGroupAdapterData(
+							_mTalkingGroupContactsPhoneArray.get(i), true));
+		}
+
+		// set contacts in and prein talking group listView adapter
+		_mIn7PreinTalkingGroupContactsListView
+				.setAdapter(new InAB6In7PreinTalkingGroupContactAdapter(
+						getContext(),
+						_mIn7PreinTalkingGroupContactsAdapterDataList,
+						R.layout.in7prein_talkinggroup_contact_layout,
+						new String[] { SELECTED_CONTACT_DISPLAYNAME,
+								SELECTED_CONTACT_IS_IN_TALKINGGROUP },
+						new int[] {
+								R.id.in7preinTalkingGroup_contact_displayName_textView,
+								R.id.in7preinTalkingGroup_contactInTalkingGroup_imageView }));
+
+		// bind contacts in and prein talking group listView item click listener
+		_mIn7PreinTalkingGroupContactsListView
+				.setOnItemClickListener(new ContactsIn7PreinTalkingGroupListViewOnItemClickListener());
 	}
 
 	// generate in addressbook contact adapter
@@ -221,6 +271,22 @@ public class ContactsSelectView extends SIMBaseView {
 						.setData(_addressBookContactsPresentDataList);
 	}
 
+	// generate in or prein talking group adapter data
+	private Map<String, Object> generateIn6PreinTalkingGroupAdapterData(
+			String displayName6Phone, boolean isInTalkingGroup) {
+		Map<String, Object> _dataMap = new HashMap<String, Object>();
+
+		// set data
+		_dataMap.put(
+				SELECTED_CONTACT_DISPLAYNAME,
+				isInTalkingGroup ? AddressBookManager.getInstance()
+						.getContactsDisplayNamesByPhone(displayName6Phone)
+						.get(0) : displayName6Phone);
+		_dataMap.put(SELECTED_CONTACT_IS_IN_TALKINGGROUP, isInTalkingGroup);
+
+		return _dataMap;
+	}
+
 	// get real position in contact display name with original position
 	private Integer getRealPositionInContactDisplayName(String displayName,
 			Integer origPosition) {
@@ -263,6 +329,124 @@ public class ContactsSelectView extends SIMBaseView {
 		}
 
 		return _realPos;
+	}
+
+	// mark contact selected
+	private void markContactSelected(String selectedPhone, int contactPosition,
+			boolean isPresentInABContactsListView) {
+		// get selected contact object
+		ContactBean _selectedContact;
+
+		// check if it is present in address book contacts listView
+		if (isPresentInABContactsListView) {
+			_selectedContact = _mPresentContactsInABInfoArray
+					.get(contactPosition);
+		} else {
+			_selectedContact = _mAllNamePhoneticSortedContactsInfoArray
+					.get(contactPosition);
+		}
+
+		// check the selected contact is in talking group attendees
+		if (_mTalkingGroupContactsPhoneArray.contains(selectedPhone)) {
+			Toast.makeText(
+					getContext(),
+					AddressBookManager.getInstance()
+							.getContactsDisplayNamesByPhone(selectedPhone)
+							.get(0)
+							+ getContext()
+									.getResources()
+									.getString(
+											R.string.toast_selectedContact_existedInTalkingGroup_attendees),
+					Toast.LENGTH_SHORT).show();
+
+			return;
+		}
+
+		// set selected contact the selected phone
+		_selectedContact.getExtension().put(SELECTED_CONTACT_SELECTEDPHONE,
+				selectedPhone);
+
+		// update contact is selected flag
+		_selectedContact.getExtension().put(CONTACT_IS_SELECTED, true);
+
+		// update address book contacts listView, if the selected contact is
+		// present in address book contacts listView
+		if (isPresentInABContactsListView) {
+			// get in address book present contacts adapter
+			InAB6In7PreinTalkingGroupContactAdapter _inABContactAdapter = (InAB6In7PreinTalkingGroupContactAdapter) _mInABContactsPresentListView
+					.getAdapter();
+
+			// get in address book present contacts adapter data map
+			@SuppressWarnings("unchecked")
+			Map<String, Object> _inABContactAdapterDataMap = (Map<String, Object>) _inABContactAdapter
+					.getItem(contactPosition);
+
+			// update address book present contacts adapter data map and notify
+			// adapter changed
+			_inABContactAdapterDataMap.put(CONTACT_IS_SELECTED,
+					_selectedContact.getExtension().get(CONTACT_IS_SELECTED));
+			_inABContactAdapter.notifyDataSetChanged();
+		}
+
+		// add to in and prein talking group contacts adapter data list and
+		// notify adapter changed
+		_mPreinTalkingGroupContactsInfoArray.add(_selectedContact);
+		_mIn7PreinTalkingGroupContactsAdapterDataList
+				.add(generateIn6PreinTalkingGroupAdapterData(
+						_selectedContact.getDisplayName(), false));
+		((InAB6In7PreinTalkingGroupContactAdapter) _mIn7PreinTalkingGroupContactsListView
+				.getAdapter()).notifyDataSetChanged();
+	}
+
+	// mark the contact unselected
+	private void markContactUnselected(int contactPosition,
+			boolean isClickedOnInABContactsPresentListView) {
+		// get the selected contact
+		ContactBean _selectedContact;
+		if (isClickedOnInABContactsPresentListView) {
+			_selectedContact = _mPresentContactsInABInfoArray
+					.get(contactPosition);
+		} else {
+			_selectedContact = _mPreinTalkingGroupContactsInfoArray
+					.get(contactPosition
+							- _mTalkingGroupContactsPhoneArray.size());
+		}
+
+		// update contact is selected flag
+		_selectedContact.getExtension().put(CONTACT_IS_SELECTED, false);
+
+		// update in addressbook contacts present listView, if the selected
+		// contact is present in addressbook contacts present listView
+		if (_mPresentContactsInABInfoArray.contains(_selectedContact)) {
+			// get in addressbook present contacts adapter
+			InAB6In7PreinTalkingGroupContactAdapter _inABContactAdapter = (InAB6In7PreinTalkingGroupContactAdapter) _mInABContactsPresentListView
+					.getAdapter();
+
+			// get in addressbook present contacts adapter data map
+			@SuppressWarnings("unchecked")
+			Map<String, Object> _inABContactAdapterDataMap = (Map<String, Object>) _inABContactAdapter
+					.getItem(_mPresentContactsInABInfoArray
+							.indexOf(_selectedContact));
+
+			// update addressbook present contacts adapter data map and notify
+			// adapter changed
+			_inABContactAdapterDataMap.put(CONTACT_IS_SELECTED,
+					_selectedContact.getExtension().get(CONTACT_IS_SELECTED));
+			_inABContactAdapter.notifyDataSetChanged();
+		}
+
+		// get select contact in prein talking contacts detail info list
+		// position
+		int _index = _mPreinTalkingGroupContactsInfoArray
+				.indexOf(_selectedContact);
+
+		// remove from in and prein talking group contacts adapter data list and
+		// notify adapter changed
+		_mPreinTalkingGroupContactsInfoArray.remove(_index);
+		_mIn7PreinTalkingGroupContactsAdapterDataList
+				.remove(_mTalkingGroupContactsPhoneArray.size() + _index);
+		((InAB6In7PreinTalkingGroupContactAdapter) _mIn7PreinTalkingGroupContactsListView
+				.getAdapter()).notifyDataSetChanged();
 	}
 
 	// inner class
@@ -409,54 +593,54 @@ public class ContactsSelectView extends SIMBaseView {
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position,
 				long id) {
-			// // get the click item view data: contact object
-			// ContactBean _clickItemViewData = _mPresentContactsInABInfoArray
-			// .get((int) id);
-			//
-			// // get contact is selected flag
-			// Boolean _isSelected = (Boolean) _clickItemViewData.getExtension()
-			// .get(CONTACT_IS_SELECTED);
-			//
-			// // check the click item view data(contact object) is selected
-			// if (_isSelected) {
-			// // mark contact unselected
-			// markContactUnselected((int) id, true);
-			// } else {
-			// // check the click item view data
-			// if (null == _clickItemViewData.getPhoneNumbers()) {
-			// // show contact has no phone number alert dialog
-			// new AlertDialog.Builder(ContactSelectActivity.this)
-			// .setTitle(
-			// R.string.contact_hasNoPhone_alertDialog_title)
-			// .setMessage(_clickItemViewData.getDisplayName())
-			// .setPositiveButton(
-			// R.string.contact_hasNoPhone_alertDialog_reselectBtn_title,
-			// null).show();
-			// } else {
-			// switch (_clickItemViewData.getPhoneNumbers().size()) {
-			// case 1:
-			// // mark contact selected
-			// markContactSelected(_clickItemViewData
-			// .getPhoneNumbers().get(0), (int) id, true);
-			//
-			// break;
-			//
-			// default:
-			// // set contact phone numbers for selecting
-			// _mContactPhoneNumbersSelectPopupWindow
-			// .setContactPhones4Selecting(
-			// _clickItemViewData.getDisplayName(),
-			// _clickItemViewData.getPhoneNumbers(),
-			// position);
-			//
-			// // show contact phone numbers select popup window
-			// _mContactPhoneNumbersSelectPopupWindow.showAtLocation(
-			// parent, Gravity.CENTER, 0, 0);
-			//
-			// break;
-			// }
-			// }
-			// }
+			// get the click item view data: contact object
+			ContactBean _clickItemViewData = _mPresentContactsInABInfoArray
+					.get((int) id);
+
+			// get contact is selected flag
+			Boolean _isSelected = (Boolean) _clickItemViewData.getExtension()
+					.get(CONTACT_IS_SELECTED);
+
+			// check the click item view data(contact object) is selected
+			if (_isSelected) {
+				// mark contact unselected
+				markContactUnselected((int) id, true);
+			} else {
+				// check the click item view data
+				if (null == _clickItemViewData.getPhoneNumbers()) {
+					// show contact has no phone number alert dialog
+					new AlertDialog.Builder(getContext())
+							.setTitle(
+									R.string.contactsSelect_contactHasNoPhone_alertDialog_title)
+							.setMessage(_clickItemViewData.getDisplayName())
+							.setPositiveButton(
+									R.string.contactsSelect_contactHasNoPhone_alertDialog_reselectBtn_title,
+									null).show();
+				} else {
+					switch (_clickItemViewData.getPhoneNumbers().size()) {
+					case 1:
+						// mark contact selected
+						markContactSelected(_clickItemViewData
+								.getPhoneNumbers().get(0), (int) id, true);
+						break;
+
+					default:
+						// {
+						// // set contact phone numbers for selecting
+						// _mContactPhoneNumbersSelectPopupWindow
+						// .setContactPhones4Selecting(
+						// _clickItemViewData.getDisplayName(),
+						// _clickItemViewData.getPhoneNumbers(),
+						// position);
+						//
+						// // show contact phone numbers select popup window
+						// _mContactPhoneNumbersSelectPopupWindow.showAtLocation(
+						// parent, Gravity.CENTER, 0, 0);
+						// }
+						break;
+					}
+				}
+			}
 		}
 
 	}
@@ -466,8 +650,6 @@ public class ContactsSelectView extends SIMBaseView {
 
 		@Override
 		public void afterTextChanged(Editable s) {
-			Log.d(LOG_TAG, "afterTextChanged");
-
 			// update contact search type
 			if (null == s || 0 == s.length()) {
 				_mContactSearchType = ContactSearchType.NONE;
@@ -515,6 +697,22 @@ public class ContactsSelectView extends SIMBaseView {
 		@Override
 		public void onTextChanged(CharSequence s, int start, int before,
 				int count) {
+		}
+
+	}
+
+	// contacts in and prein talking group listView on item click listener
+	class ContactsIn7PreinTalkingGroupListViewOnItemClickListener implements
+			OnItemClickListener {
+
+		@Override
+		public void onItemClick(AdapterView<?> parent, View view, int position,
+				long id) {
+			// check clicked item position
+			if (position >= _mTalkingGroupContactsPhoneArray.size()) {
+				// mark contact unselected
+				markContactUnselected((int) id, false);
+			}
 		}
 
 	}

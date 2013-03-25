@@ -33,6 +33,10 @@
     <string name="contactsSelect_contactsList_contactSearchEditText_hint">搜索联系人</string>
     <string name="contactsSelect_addressbookContact_unsel6sel_imageView_content_description">contact select address book contact unselected or selected image view</string>
     <string name="contactsSelect_selectedContacts_headTip_textViewText">邀请参与者</string>
+    <string name="contactsSelect_contactHasNoPhone_alertDialog_title">此人没有号码</string>
+    <string name="contactsSelect_contactHasNoPhone_alertDialog_reselectBtn_title">重新选择</string>
+    <string name="toast_selectedContact_existedInTalkingGroup_attendees"> 已使用此号码加入群聊</string>
+    <string name="contactsSelect_in7preinTalkingGroupContact_sel_imageView_content_description">it is contact select in and prein talking group contact selected image view</string>
     <!-- my talking group view -->
     <string name="myTalkingGroup_leftBarButtonItem_navTitle">通讯录</string>
     <string name="myTalkingGroup_talkingGroupList_headTip_textViewText">会议列表</string>

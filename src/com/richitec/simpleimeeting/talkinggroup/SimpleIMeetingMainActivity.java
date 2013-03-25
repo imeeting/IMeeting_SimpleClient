@@ -37,18 +37,19 @@ public class SimpleIMeetingMainActivity extends
 
 		// set navigation bar
 		setMainActivityNavigationBar();
-
-		Log.d(LOG_TAG, "_mInABContactsPresentListView = "
-				+ findViewById(R.id.cs_contactsListView));
 	}
 
 	// set main activity content view
-	private void setMainActivityContentView() {
+	private void setMainActivityContentView(
+			SimpleIMeetingMainViewType mainViewType) {
 		// main activity content view
 		View _contentView;
 
+		// save main view type
+		_mMainViewType = mainViewType;
+
 		// check main view type and content view
-		switch (_mMainViewType) {
+		switch (mainViewType) {
 		case MY_TALKINGGROUP_LIST: {
 			// check my talking groups view
 			if (null == _mMyTalkingGroupsView) {
@@ -106,6 +107,10 @@ public class SimpleIMeetingMainActivity extends
 		}
 	}
 
+	private void setMainActivityContentView() {
+		setMainActivityContentView(_mMainViewType);
+	}
+
 	// set main activity navigation bar
 	private void setMainActivityNavigationBar() {
 		// set title
@@ -144,60 +149,6 @@ public class SimpleIMeetingMainActivity extends
 				new MoreMenuImageBarButtonItemOnClickListener()));
 	}
 
-	// // mark the contact unselected
-	// private void markContactUnselected(int contactPosition,
-	// boolean isClickedOnInABContactsPresentListView) {
-	// // get the selected contact
-	// ContactBean _selectedContact;
-	// if (isClickedOnInABContactsPresentListView) {
-	// _selectedContact = _mPresentContactsInABInfoArray
-	// .get(contactPosition);
-	// } else {
-	// _selectedContact = _mPreinTalkingGroupContactsInfoArray
-	// .get(contactPosition
-	// - _mTalkingGroupContactsPhoneArray.size());
-	// }
-	//
-	// // update contact is selected flag
-	// _selectedContact.getExtension().put(CONTACT_IS_SELECTED, false);
-	//
-	// // update in addressbook contacts present listView, if the selected
-	// // contact is present in addressbook contacts present listView
-	// if (_mPresentContactsInABInfoArray.contains(_selectedContact)) {
-	// // get in addressbook present contacts adapter
-	// InAB6In7PreinTalkingGroupContactAdapter _inABContactAdapter =
-	// (InAB6In7PreinTalkingGroupContactAdapter) _mABContactsListView
-	// .getAdapter();
-	//
-	// // get in addressbook present contacts adapter data map
-	// @SuppressWarnings("unchecked")
-	// Map<String, Object> _inABContactAdapterDataMap = (Map<String, Object>)
-	// _inABContactAdapter
-	// .getItem(_mPresentContactsInABInfoArray
-	// .indexOf(_selectedContact));
-	//
-	// // update addressbook present contacts adapter data map and notify
-	// // adapter changed
-	// _inABContactAdapterDataMap.put(CONTACT_IS_SELECTED,
-	// _selectedContact.getExtension().get(CONTACT_IS_SELECTED));
-	// _inABContactAdapter.notifyDataSetChanged();
-	// }
-	//
-	// // get select contact in prein talking contacts detail info list
-	// // position
-	// int _index = _mPreinTalkingGroupContactsInfoArray
-	// .indexOf(_selectedContact);
-	//
-	// // remove from in and prein talking group contacts adapter data list and
-	// // notify adapter changed
-	// _mPreinTalkingGroupContactsInfoArray.remove(_index);
-	// _mIn7PreinTalkingGroupContactsAdapterDataList
-	// .remove(_mTalkingGroupContactsPhoneArray.size() + _index);
-	// ((InAB6In7PreinTalkingGroupContactAdapter)
-	// _mIn7PreinTalkingGroupContactsListView
-	// .getAdapter()).notifyDataSetChanged();
-	// }
-
 	// inner class
 	// simple imeeting main view type
 	enum SimpleIMeetingMainViewType {
@@ -213,8 +164,7 @@ public class SimpleIMeetingMainActivity extends
 			Log.d(LOG_TAG, "Switch to my talking group view");
 
 			//
-			_mMainViewType = SimpleIMeetingMainViewType.MY_TALKINGGROUP_LIST;
-			setMainActivityContentView();
+			setMainActivityContentView(SimpleIMeetingMainViewType.MY_TALKINGGROUP_LIST);
 			setMainActivityNavigationBar();
 		}
 
@@ -230,8 +180,7 @@ public class SimpleIMeetingMainActivity extends
 			Log.d(LOG_TAG, "Switch to addressbook contacts view");
 
 			//
-			_mMainViewType = SimpleIMeetingMainViewType.ADDRESSBOOK_CONTACTS;
-			setMainActivityContentView();
+			setMainActivityContentView(SimpleIMeetingMainViewType.ADDRESSBOOK_CONTACTS);
 			setMainActivityNavigationBar();
 		}
 
