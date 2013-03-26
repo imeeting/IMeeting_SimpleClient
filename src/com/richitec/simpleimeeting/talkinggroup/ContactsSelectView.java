@@ -617,6 +617,10 @@ public class ContactsSelectView extends SIMBaseView {
 									R.string.contactsSelect_contactHasNoPhone_alertDialog_reselectBtn_title,
 									null).show();
 				} else {
+					// test by ares
+					((RelativeLayout) findViewById(R.id.cs_selectedContacts_relativeLayout))
+							.setVisibility(View.VISIBLE);
+
 					switch (_clickItemViewData.getPhoneNumbers().size()) {
 					case 1:
 						// mark contact selected

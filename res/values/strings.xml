@@ -26,6 +26,7 @@
 
     <!-- simple imeeting main activity -->
     <string name="title_activity_simple_imeeting_main">SimpleIMeetingMainActivity</string>
+    <string name="tap2generateNewTalkingGroup_title">点击安排新会议</string>
     <!-- contacts select view -->
     <string name="contactsSelect_leftBarButtonItem_navTitle">我的会议</string>
     <string name="contactsSelect_contactsList_headTip_textViewText">通讯录</string>
