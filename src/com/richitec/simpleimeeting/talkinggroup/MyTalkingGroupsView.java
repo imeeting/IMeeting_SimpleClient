@@ -8,7 +8,7 @@ public class MyTalkingGroupsView extends SIMBaseView {
 	@Override
 	public int presentViewLayout() {
 		// return my talking group list view layout
-		return R.layout.my_talkinggroup_view_layout;
+		return R.layout.my_talkinggroups_view_layout;
 	}
 
 	@Override

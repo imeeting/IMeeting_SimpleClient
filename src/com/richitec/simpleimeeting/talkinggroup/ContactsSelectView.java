@@ -34,6 +34,7 @@ import com.richitec.commontoolkit.addressbook.ContactBean;
 import com.richitec.commontoolkit.customadapter.CTListAdapter;
 import com.richitec.commontoolkit.customcomponent.ListViewQuickAlphabetBar;
 import com.richitec.commontoolkit.customcomponent.ListViewQuickAlphabetBar.OnTouchListener;
+import com.richitec.commontoolkit.utils.DisplayScreenUtils;
 import com.richitec.commontoolkit.utils.StringUtils;
 import com.richitec.simpleimeeting.R;
 import com.richitec.simpleimeeting.view.SIMBaseView;
@@ -334,6 +335,26 @@ public class ContactsSelectView extends SIMBaseView {
 	// mark contact selected
 	private void markContactSelected(String selectedPhone, int contactPosition,
 			boolean isPresentInABContactsListView) {
+		// get selected contacts relativeLayout
+		RelativeLayout _selectedContactsRelativeLayout = (RelativeLayout) findViewById(R.id.cs_selectedContacts_relativeLayout);
+
+		// check selected contacts is visible or invisible or gone
+		if (View.VISIBLE != _selectedContactsRelativeLayout.getVisibility()) {
+			// get contacts list relativeLayout
+			RelativeLayout _contactsListRelativeLayout = (RelativeLayout) findViewById(R.id.cs_contactsList_relativeLayout);
+
+			// add padding right 6dp for contacts list relativeLayout
+			_contactsListRelativeLayout.setPadding(0, 0,
+					DisplayScreenUtils.dp2pix(6), 0);
+
+			// update contacts list relativeLayout background
+			_contactsListRelativeLayout
+					.setBackgroundResource(R.drawable.img_contactslist4select_relativelayout_bg);
+
+			// show selected contacts relativeLayout
+			_selectedContactsRelativeLayout.setVisibility(View.VISIBLE);
+		}
+
 		// get selected contact object
 		ContactBean _selectedContact;
 
@@ -617,10 +638,7 @@ public class ContactsSelectView extends SIMBaseView {
 									R.string.contactsSelect_contactHasNoPhone_alertDialog_reselectBtn_title,
 									null).show();
 				} else {
-					// test by ares
-					((RelativeLayout) findViewById(R.id.cs_selectedContacts_relativeLayout))
-							.setVisibility(View.VISIBLE);
-
+					// check click item view data
 					switch (_clickItemViewData.getPhoneNumbers().size()) {
 					case 1:
 						// mark contact selected

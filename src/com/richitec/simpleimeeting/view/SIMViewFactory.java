@@ -1,5 +1,6 @@
 package com.richitec.simpleimeeting.view;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 import android.view.View;
@@ -15,6 +16,11 @@ public class SIMViewFactory {
 		View _presentView = null;
 
 		try {
+			// check context if it is or not activity context
+			if (!(context instanceof Activity)) {
+				throw new NotActivityContextException();
+			}
+
 			// instantiate simple imeeting view instance
 			SIMBaseView _simBaseView = simViewClass.newInstance();
 
@@ -26,6 +32,12 @@ public class SIMViewFactory {
 
 			// init the present view's sub components
 			_simBaseView.initSubComponents();
+		} catch (NotActivityContextException e) {
+			Log.e(LOG_TAG,
+					"Create simple imeeting view for present error, exception message = "
+							+ e.getMessage());
+
+			e.printStackTrace();
 		} catch (InstantiationException e) {
 			Log.e(LOG_TAG,
 					"Instantiate "
@@ -43,6 +55,22 @@ public class SIMViewFactory {
 		}
 
 		return _presentView;
+	}
+
+	// inner class
+	// not activity context exception
+	static class NotActivityContextException extends Exception {
+
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 2467239117577148297L;
+
+		public NotActivityContextException() {
+			// new not activity context exception
+			super("There is no activity context");
+		}
+
 	}
 
 }

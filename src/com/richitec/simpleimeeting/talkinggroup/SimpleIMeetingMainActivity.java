@@ -7,11 +7,10 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
-import android.view.ViewGroup;
-import android.view.ViewParent;
 import android.widget.TextView;
 
 import com.richitec.commontoolkit.customcomponent.BarButtonItem.BarButtonItemStyle;
+import com.richitec.commontoolkit.utils.DisplayScreenUtils;
 import com.richitec.simpleimeeting.R;
 import com.richitec.simpleimeeting.assistant.AboutActivity;
 import com.richitec.simpleimeeting.customcomponent.SimpleIMeetingBarButtonItem;
@@ -28,52 +27,32 @@ public class SimpleIMeetingMainActivity extends
 	// simple imeeting main view type
 	private SimpleIMeetingMainViewType _mMainViewType = SimpleIMeetingMainViewType.ADDRESSBOOK_CONTACTS;
 
+	// contacts select and my talking group list subViews
+	private View _mContactsSelectView;
+	private View _mMyTalkingGroupsView;
+
 	// tap to generate new talking group title textView
 	private TextView _mTap2GenNewTalkingGroupTitleTextView;
 
 	// left bar button item, switch to my talking group list and switch to
 	// contacts select bar button item
-	private SimpleIMeetingBarButtonItem _fmSwitch2MyTalkingGroupsLeftBarButtonItem;
-	private SimpleIMeetingBarButtonItem _fmSwitch2ContactsSelectLeftBarButtonItem;
-
-	// right bar button item, about info image bar button item
-	private SimpleIMeetingImageBarButtonItem _fmAboutInfoImageBarButtonItem;
-
-	// contacts select and my talking groups subViews
-	private View _fmContactsSelectView;
-	private View _fmMyTalkingGroupsView;
+	private SimpleIMeetingBarButtonItem _mSwitch2MyTalkingGroupsLeftBarButtonItem;
+	private SimpleIMeetingBarButtonItem _mSwitch2ContactsSelectLeftBarButtonItem;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		//
-		_fmContactsSelectView = SIMViewFactory.createSIMView4Present(this,
-				ContactsSelectView.class);
-		_fmMyTalkingGroupsView = SIMViewFactory.createSIMView4Present(this,
-				MyTalkingGroupsView.class);
-
 		// set content view
 		setMainActivityContentView();
 
-		//
-		_fmSwitch2MyTalkingGroupsLeftBarButtonItem = new SimpleIMeetingBarButtonItem(
-				this, BarButtonItemStyle.RIGHT_GO,
-				R.string.contactsSelect_leftBarButtonItem_navTitle,
-				new MyTalkingGroupBarButtonItemOnClickListener());
-		_fmSwitch2ContactsSelectLeftBarButtonItem = new SimpleIMeetingBarButtonItem(
-				this, BarButtonItemStyle.RIGHT_GO,
-				R.string.myTalkingGroup_leftBarButtonItem_navTitle,
-				new AddressBookContactsBarButtonItemOnClickListener());
+		// set navigation title and left bar button item
+		setMainActivityNavigationTitle7LeftBarButtonItem();
 
-		//
-		_fmAboutInfoImageBarButtonItem = new SimpleIMeetingImageBarButtonItem(
-				this, android.R.drawable.ic_dialog_info,
-				BarButtonItemStyle.RIGHT_GO,
-				new MoreMenuImageBarButtonItemOnClickListener());
-
-		// set navigation bar
-		setMainActivityNavigationBar();
+		// set right image bar button item, about info image bar button item
+		setRightBarButtonItem(new SimpleIMeetingImageBarButtonItem(this,
+				android.R.drawable.ic_dialog_info, BarButtonItemStyle.RIGHT_GO,
+				new MoreMenuImageBarButtonItemOnClickListener()));
 	}
 
 	// set main activity content view
@@ -88,40 +67,32 @@ public class SimpleIMeetingMainActivity extends
 		// check main view type and content view
 		switch (mainViewType) {
 		case MY_TALKINGGROUP_LIST: {
-			// get my talking groups' parent view
-			ViewParent _myTalkingGroupsParentView = _fmMyTalkingGroupsView
-					.getParent();
-
-			// check my talking groups' parent view
-			if (null != _myTalkingGroupsParentView) {
-				// remove my talking group list view from its parent view
-				((ViewGroup) _myTalkingGroupsParentView)
-						.removeView(_fmMyTalkingGroupsView);
+			// check my talking group list content view
+			if (null == _mMyTalkingGroupsView) {
+				// init my talking group list content view and save
+				_mMyTalkingGroupsView = SIMViewFactory.createSIMView4Present(
+						this, MyTalkingGroupsView.class);
 			}
 
-			_contentView = _fmMyTalkingGroupsView;
+			_contentView = _mMyTalkingGroupsView;
 		}
 			break;
 
 		default:
 		case ADDRESSBOOK_CONTACTS: {
-			// get contacts select's parent view
-			ViewParent _contactsSelectParentView = _fmContactsSelectView
-					.getParent();
-
-			// check contacts select's parent view
-			if (null != _contactsSelectParentView) {
-				// remove contacts select view from its parent view
-				((ViewGroup) _contactsSelectParentView)
-						.removeView(_fmContactsSelectView);
+			// check contacts select content view
+			if (null == _mContactsSelectView) {
+				// init contacts select content view and save
+				_mContactsSelectView = SIMViewFactory.createSIMView4Present(
+						this, ContactsSelectView.class);
 			}
 
-			_contentView = _fmContactsSelectView;
+			_contentView = _mContactsSelectView;
 		}
 			break;
 		}
 
-		// check content view and set content view
+		// check content view and set it
 		if (null != _contentView) {
 			setContentView(_contentView);
 		} else {
@@ -134,19 +105,21 @@ public class SimpleIMeetingMainActivity extends
 		setMainActivityContentView(_mMainViewType);
 	}
 
-	// set main activity navigation bar
-	private void setMainActivityNavigationBar() {
+	// set navigation title and left bar button item
+	private void setMainActivityNavigationTitle7LeftBarButtonItem() {
 		// set title
+		String _titleTag;
+
 		// check tap to generate new talking group title textView
 		if (null == _mTap2GenNewTalkingGroupTitleTextView) {
-			// init title textView
+			// init tap to generate new talking group title textView
 			_mTap2GenNewTalkingGroupTitleTextView = new TextView(this);
 
-			// set title textView text, appearance and color
+			// set title textView text, font size and color
 			_mTap2GenNewTalkingGroupTitleTextView
 					.setText(R.string.tap2generateNewTalkingGroup_title);
-			_mTap2GenNewTalkingGroupTitleTextView.setTextAppearance(this,
-					android.R.attr.textAppearanceLarge);
+			_mTap2GenNewTalkingGroupTitleTextView
+					.setTextSize(DisplayScreenUtils.sp2pix(14));
 			_mTap2GenNewTalkingGroupTitleTextView.setTextColor(Color.WHITE);
 
 			// set title on touch listener
@@ -154,22 +127,59 @@ public class SimpleIMeetingMainActivity extends
 					.setOnTouchListener(new TitleOnTouchListener());
 		}
 
-		setTitle(R.string.tap2generateNewTalkingGroup_title);
+		// main activity left bar button item
+		SimpleIMeetingBarButtonItem _leftBarButtonItem;
 
 		// check main view type and set left bar button item
 		switch (_mMainViewType) {
-		case MY_TALKINGGROUP_LIST:
-			setLeftBarButtonItem(_fmSwitch2ContactsSelectLeftBarButtonItem);
+		case MY_TALKINGGROUP_LIST: {
+			// check switch to contacts select left bar button item
+			if (null == _mSwitch2ContactsSelectLeftBarButtonItem) {
+				// init switch to contacts select left bar button item and save
+				_mSwitch2ContactsSelectLeftBarButtonItem = new SimpleIMeetingBarButtonItem(
+						this, BarButtonItemStyle.RIGHT_GO,
+						R.string.myTalkingGroup_leftBarButtonItem_navTitle,
+						new AddressBookContactsBarButtonItemOnClickListener());
+			}
+
+			_titleTag = getResources().getString(
+					R.string.contactsSelect_leftBarButtonItem_navTitle);
+
+			_leftBarButtonItem = _mSwitch2ContactsSelectLeftBarButtonItem;
+		}
 			break;
 
 		default:
-		case ADDRESSBOOK_CONTACTS:
-			setLeftBarButtonItem(_fmSwitch2MyTalkingGroupsLeftBarButtonItem);
+		case ADDRESSBOOK_CONTACTS: {
+			// check switch to my talking group list left bar button item
+			if (null == _mSwitch2MyTalkingGroupsLeftBarButtonItem) {
+				// init switch to my talking group list left bar button item and
+				// save
+				_mSwitch2MyTalkingGroupsLeftBarButtonItem = new SimpleIMeetingBarButtonItem(
+						this, BarButtonItemStyle.RIGHT_GO,
+						R.string.contactsSelect_leftBarButtonItem_navTitle,
+						new MyTalkingGroupBarButtonItemOnClickListener());
+			}
+
+			_titleTag = getResources().getString(
+					R.string.myTalkingGroup_leftBarButtonItem_navTitle);
+
+			_leftBarButtonItem = _mSwitch2MyTalkingGroupsLeftBarButtonItem;
+		}
 			break;
 		}
 
-		// set right image bar button item
-		setRightBarButtonItem(_fmAboutInfoImageBarButtonItem);
+		// set title with tag
+		setTitle(_mTap2GenNewTalkingGroupTitleTextView, _titleTag);
+
+		// set left bar button item
+		// check left bar button item and set it
+		if (null != _leftBarButtonItem) {
+			setLeftBarButtonItem(_leftBarButtonItem);
+		} else {
+			Log.e(LOG_TAG,
+					"No, no no ...! There is no main activity left bar button item.");
+		}
 	}
 
 	// inner class
@@ -203,7 +213,7 @@ public class SimpleIMeetingMainActivity extends
 
 			//
 			setMainActivityContentView(SimpleIMeetingMainViewType.MY_TALKINGGROUP_LIST);
-			setMainActivityNavigationBar();
+			setMainActivityNavigationTitle7LeftBarButtonItem();
 		}
 
 	}
@@ -219,7 +229,7 @@ public class SimpleIMeetingMainActivity extends
 
 			//
 			setMainActivityContentView(SimpleIMeetingMainViewType.ADDRESSBOOK_CONTACTS);
-			setMainActivityNavigationBar();
+			setMainActivityNavigationTitle7LeftBarButtonItem();
 		}
 
 	}

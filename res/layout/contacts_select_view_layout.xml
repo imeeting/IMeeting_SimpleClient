@@ -10,13 +10,16 @@
         android:id="@+id/cs_contactsList_relativeLayout"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_weight="1"
+        android:layout_weight="5"
         android:background="@drawable/img_contactslist_relativelayout_bg" >
 
         <TextView
             android:id="@+id/cs_cl_headTip_textView"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/img_contactsselect_header_bg"
+            android:gravity="center_vertical"
+            android:paddingLeft="12dp"
             android:text="@string/contactsSelect_contactsList_headTip_textViewText" />
 
         <RelativeLayout
@@ -57,7 +60,8 @@
                 android:divider="@drawable/img_addressbook_contact_listview_divider_bg"
                 android:fadingEdge="none"
                 android:headerDividersEnabled="false"
-                android:listSelector="@android:color/transparent" >
+                android:listSelector="@android:color/transparent"
+                android:scrollbars="none" >
             </ListView>
         </FrameLayout>
     </RelativeLayout>
@@ -66,20 +70,32 @@
         android:id="@+id/cs_selectedContacts_relativeLayout"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_weight="2"
+        android:layout_marginLeft="-7dp"
+        android:layout_weight="12"
         android:visibility="gone" >
 
         <TextView
             android:id="@+id/cs_sc_headTip_textView"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/img_selectedcontacts_header_bg"
+            android:gravity="center_vertical"
+            android:paddingLeft="12dp"
             android:text="@string/contactsSelect_selectedContacts_headTip_textViewText" />
 
         <ListView
             android:id="@+id/cs_selectedContactsListView"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:layout_below="@id/cs_sc_headTip_textView" >
+            android:layout_below="@id/cs_sc_headTip_textView"
+            android:layout_marginLeft="1dp"
+            android:background="@drawable/img_selectedcontacts_listview_bg"
+            android:cacheColorHint="@android:color/transparent"
+            android:divider="@drawable/img_selectedcontacts_listview_divider_bg"
+            android:fadingEdge="none"
+            android:headerDividersEnabled="false"
+            android:listSelector="@android:color/transparent"
+            android:scrollbars="none" >
         </ListView>
     </RelativeLayout>
 
