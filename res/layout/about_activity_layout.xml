@@ -18,7 +18,7 @@
             android:gravity="center" >
 
             <ImageView
-                android:id="@+id/product_small_icon_imageView"
+                android:id="@+id/ab_product_small_icon_imageView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/product_small_icon_imageView_contentDescription"
@@ -29,7 +29,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="10dp"
-                android:layout_toRightOf="@id/product_small_icon_imageView"
+                android:layout_toRightOf="@id/ab_product_small_icon_imageView"
                 android:text="@string/product_name"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textColor="@android:color/black" />
@@ -55,7 +55,7 @@
                 android:textColor="@color/light_dim_gray" />
 
             <TextView
-                android:id="@+id/product_versionName_textView"
+                android:id="@+id/ab_product_versionName_textView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"

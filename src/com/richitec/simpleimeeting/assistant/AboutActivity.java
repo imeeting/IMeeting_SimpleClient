@@ -20,7 +20,7 @@ public class AboutActivity extends SimpleIMeetingNavigationActivity {
 		setTitle(R.string.about_nav_title_text);
 
 		// set product version name
-		((TextView) findViewById(R.id.product_versionName_textView))
+		((TextView) findViewById(R.id.ab_product_versionName_textView))
 				.setText(VersionUtils.versionName());
 	}
 

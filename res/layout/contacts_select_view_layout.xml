@@ -83,20 +83,34 @@
             android:paddingLeft="12dp"
             android:text="@string/contactsSelect_selectedContacts_headTip_textViewText" />
 
-        <ListView
-            android:id="@+id/cs_selectedContactsListView"
+        <RelativeLayout
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_below="@id/cs_sc_headTip_textView"
             android:layout_marginLeft="1dp"
-            android:background="@drawable/img_selectedcontacts_listview_bg"
-            android:cacheColorHint="@android:color/transparent"
-            android:divider="@drawable/img_selectedcontacts_listview_divider_bg"
-            android:fadingEdge="none"
-            android:headerDividersEnabled="false"
-            android:listSelector="@android:color/transparent"
-            android:scrollbars="none" >
-        </ListView>
+            android:background="@drawable/img_selectedcontacts_listview_relativelayout_bg" >
+
+            <Button
+                android:id="@+id/cs_inviteSelectedContacts2talkingGroup_button"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_margin="1dp"
+                android:text="@string/contactsSelect_inviteSelectedContacts2talkgingGroup_buttonText" />
+
+            <ListView
+                android:id="@+id/cs_selectedContactsListView"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_above="@id/cs_inviteSelectedContacts2talkingGroup_button"
+                android:cacheColorHint="@android:color/transparent"
+                android:divider="@drawable/img_selectedcontacts_listview_divider_bg"
+                android:fadingEdge="none"
+                android:headerDividersEnabled="false"
+                android:listSelector="@android:color/transparent"
+                android:scrollbars="none" >
+            </ListView>
+        </RelativeLayout>
     </RelativeLayout>
 
 </LinearLayout>

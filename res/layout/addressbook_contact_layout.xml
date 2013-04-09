@@ -12,24 +12,24 @@
     tools:context=".talkinggroup.SimpleIMeetingMainActivity" >
 
     <FrameLayout
-        android:id="@+id/addressBook_contact_unsel6sel_imageView_parentFrameLayout"
+        android:id="@+id/abc_contact_unsel6sel_imageView_parentFrameLayout"
         android:layout_width="wrap_content"
         android:layout_height="fill_parent" >
 
         <ImageView
-            android:id="@+id/addressBook_contact_unselected_imageView"
+            android:id="@+id/abc_contactUnselected_imageView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:contentDescription="@string/contactsSelect_addressbookContact_unsel6sel_imageView_content_description"
+            android:contentDescription="@string/contactsSelect_addressbookContact_unselected_imageView_content_description"
             android:paddingTop="10dp"
             android:src="@drawable/img_addressbook_contact_unselected"
             android:visibility="gone" />
 
         <ImageView
-            android:id="@+id/addressBook_contact_selected_imageView"
+            android:id="@+id/abc_contactSelected_imageView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:contentDescription="@string/contactsSelect_addressbookContact_unsel6sel_imageView_content_description"
+            android:contentDescription="@string/contactsSelect_addressbookContact_selected_imageView_content_description"
             android:paddingTop="10dp"
             android:src="@drawable/img_addressbook_contact_selected"
             android:visibility="gone" />
@@ -42,7 +42,7 @@
         android:orientation="vertical" >
 
         <TextView
-            android:id="@+id/adressBook_contact_displayName_textView"
+            android:id="@+id/abc_contactDisplayName_textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ellipsize="end"
@@ -51,7 +51,7 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/addressBook_contact_phoneNumber_textView"
+            android:id="@+id/abc_contactPhoneNumber_textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"

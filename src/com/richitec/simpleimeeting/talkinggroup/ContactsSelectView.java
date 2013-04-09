@@ -8,7 +8,9 @@ import java.util.Map;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.text.Editable;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -16,24 +18,33 @@ import android.text.TextWatcher;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.util.SparseIntArray;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.richitec.commontoolkit.CTApplication;
 import com.richitec.commontoolkit.addressbook.AddressBookManager;
 import com.richitec.commontoolkit.addressbook.ContactBean;
 import com.richitec.commontoolkit.customadapter.CTListAdapter;
+import com.richitec.commontoolkit.customcomponent.CTPopupWindow;
 import com.richitec.commontoolkit.customcomponent.ListViewQuickAlphabetBar;
 import com.richitec.commontoolkit.customcomponent.ListViewQuickAlphabetBar.OnTouchListener;
+import com.richitec.commontoolkit.utils.CommonUtils;
 import com.richitec.commontoolkit.utils.DisplayScreenUtils;
 import com.richitec.commontoolkit.utils.StringUtils;
 import com.richitec.simpleimeeting.R;
@@ -67,6 +78,11 @@ public class ContactsSelectView extends SIMBaseView {
 
 	// in addressbook contacts present list view
 	private ListView _mInABContactsPresentListView;
+
+	// define contact phone numbers select popup window
+	private final ContactPhoneNumbersSelectPopupWindow _mContactPhoneNumbersSelectPopupWindow = new ContactPhoneNumbersSelectPopupWindow(
+			R.layout.contact_phonenumbers_select_layout,
+			LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
 
 	// in and prein talking group contacts list view
 	private ListView _mIn7PreinTalkingGroupContactsListView;
@@ -138,13 +154,17 @@ public class ContactsSelectView extends SIMBaseView {
 						R.layout.in7prein_talkinggroup_contact_layout,
 						new String[] { SELECTED_CONTACT_DISPLAYNAME,
 								SELECTED_CONTACT_IS_IN_TALKINGGROUP },
-						new int[] {
-								R.id.in7preinTalkingGroup_contact_displayName_textView,
-								R.id.in7preinTalkingGroup_contactInTalkingGroup_imageView }));
+						new int[] { R.id.ipitgc_contactDisplayName_textView,
+								R.id.ipitgc_contactPreinTalkingGroup_imageView }));
 
 		// bind contacts in and prein talking group listView item click listener
 		_mIn7PreinTalkingGroupContactsListView
 				.setOnItemClickListener(new ContactsIn7PreinTalkingGroupListViewOnItemClickListener());
+
+		// bind invite selected contacts to talking group button on click
+		// listener
+		((Button) findViewById(R.id.cs_inviteSelectedContacts2talkingGroup_button))
+				.setOnClickListener(new InviteSelectedContacts2TalkingGroupButtonOnClickListener());
 	}
 
 	// generate in addressbook contact adapter
@@ -264,10 +284,9 @@ public class ContactsSelectView extends SIMBaseView {
 				R.layout.addressbook_contact_layout,
 				new String[] { PRESENT_CONTACT_NAME, PRESENT_CONTACT_PHONES,
 						CONTACT_IS_SELECTED },
-				new int[] {
-						R.id.adressBook_contact_displayName_textView,
-						R.id.addressBook_contact_phoneNumber_textView,
-						R.id.addressBook_contact_unsel6sel_imageView_parentFrameLayout })
+				new int[] { R.id.abc_contactDisplayName_textView,
+						R.id.abc_contactPhoneNumber_textView,
+						R.id.abc_contact_unsel6sel_imageView_parentFrameLayout })
 				: _addressBookContactsListViewAdapter
 						.setData(_addressBookContactsPresentDataList);
 	}
@@ -470,6 +489,34 @@ public class ContactsSelectView extends SIMBaseView {
 				.getAdapter()).notifyDataSetChanged();
 	}
 
+	// send invite to talking group sms
+	private void sendInviteSMS(List<String> invitedContactsPhone) {
+		// sms recipient
+		StringBuilder _recipients = new StringBuilder();
+		for (int i = 0; i < invitedContactsPhone.size(); i++) {
+			_recipients.append(invitedContactsPhone.get(i));
+
+			// add more recipient
+			if (invitedContactsPhone.size() - 1 != i) {
+				_recipients.append(',');
+			}
+		}
+
+		// define send sms intent
+		Intent _sendSMSIntent = new Intent(Intent.ACTION_SENDTO,
+				Uri.parse("smsto:" + _recipients));
+
+		// send sms body
+		_sendSMSIntent.putExtra("sms_body", "测试发送短信。。。");
+
+		// check and start send sms activity
+		if (CommonUtils.isIntentAvailable(_sendSMSIntent)) {
+			getContext().startActivity(_sendSMSIntent);
+		} else {
+			Log.e(LOG_TAG, "Device not support send SMS");
+		}
+	}
+
 	// inner class
 	// contact search type
 	enum ContactSearchType {
@@ -536,9 +583,9 @@ public class ContactsSelectView extends SIMBaseView {
 						// imageView parent frameLayout get selected and
 						// unselected imageView
 						ImageView _selectedImageView = (ImageView) ((FrameLayout) view)
-								.findViewById(R.id.addressBook_contact_selected_imageView);
+								.findViewById(R.id.abc_contactSelected_imageView);
 						ImageView _unselectedImageView = (ImageView) ((FrameLayout) view)
-								.findViewById(R.id.addressBook_contact_unselected_imageView);
+								.findViewById(R.id.abc_contactUnselected_imageView);
 
 						if (_itemDataBoolean) {
 							// show selected imageView and hide unselected
@@ -646,23 +693,191 @@ public class ContactsSelectView extends SIMBaseView {
 								.getPhoneNumbers().get(0), (int) id, true);
 						break;
 
-					default:
-						// {
-						// // set contact phone numbers for selecting
-						// _mContactPhoneNumbersSelectPopupWindow
-						// .setContactPhones4Selecting(
-						// _clickItemViewData.getDisplayName(),
-						// _clickItemViewData.getPhoneNumbers(),
-						// position);
-						//
-						// // show contact phone numbers select popup window
-						// _mContactPhoneNumbersSelectPopupWindow.showAtLocation(
-						// parent, Gravity.CENTER, 0, 0);
-						// }
+					default: {
+						// set contact phone numbers for selecting
+						_mContactPhoneNumbersSelectPopupWindow
+								.setContactPhones4Selecting(
+										_clickItemViewData.getDisplayName(),
+										_clickItemViewData.getPhoneNumbers(),
+										position);
+
+						// show contact phone numbers select popup window
+						_mContactPhoneNumbersSelectPopupWindow.showAtLocation(
+								parent, Gravity.CENTER, 0, 0);
+					}
 						break;
 					}
 				}
 			}
+		}
+
+	}
+
+	// contact phone numbers select popup window
+	class ContactPhoneNumbersSelectPopupWindow extends CTPopupWindow {
+
+		// select contact position
+		private int _mSelectContactPosition;
+
+		public ContactPhoneNumbersSelectPopupWindow(int resource, int width,
+				int height, boolean focusable, boolean isBindDefListener) {
+			super(resource, width, height, focusable, isBindDefListener);
+		}
+
+		public ContactPhoneNumbersSelectPopupWindow(int resource, int width,
+				int height) {
+			super(resource, width, height);
+		}
+
+		@Override
+		protected void bindPopupWindowComponentsListener() {
+			// get contact phones select phone button parent linearLayout
+			LinearLayout _phoneBtnParentLinearLayout = (LinearLayout) getContentView()
+					.findViewById(
+							R.id.cps_contactPhonesSelect_phoneButtons_linearLayout);
+
+			// bind contact phone select phone button click listener
+			for (int i = 0; i < _phoneBtnParentLinearLayout.getChildCount(); i++) {
+				((Button) _phoneBtnParentLinearLayout.getChildAt(i))
+						.setOnClickListener(new ContactPhoneSelectPhoneBtnOnClickListener());
+			}
+
+			// bind contact phone select phone listView item click listener
+			((ListView) getContentView().findViewById(
+					R.id.cps_contactPhonesSelect_phonesListView))
+					.setOnItemClickListener(new ContactPhoneSelectPhoneListViewOnItemClickListener());
+
+			// bind contact phone select cancel button click listener
+			((Button) getContentView().findViewById(
+					R.id.cps_contactPhonesSelect_cancelBtn))
+					.setOnClickListener(new ContactPhoneSelectCancelBtnOnClickListener());
+		}
+
+		@Override
+		protected void resetPopupWindow() {
+			// hide contact phones select phone list view
+			((ListView) getContentView().findViewById(
+					R.id.cps_contactPhonesSelect_phonesListView))
+					.setVisibility(View.GONE);
+
+			// get contact phones select phone button parent linearLayout and
+			// hide it
+			LinearLayout _phoneBtnParentLinearLayout = (LinearLayout) getContentView()
+					.findViewById(
+							R.id.cps_contactPhonesSelect_phoneButtons_linearLayout);
+			_phoneBtnParentLinearLayout.setVisibility(View.GONE);
+
+			// process phone button
+			for (int i = 0; i < _phoneBtnParentLinearLayout.getChildCount(); i++) {
+				// hide contact phones select phone button
+				((Button) _phoneBtnParentLinearLayout.getChildAt(i))
+						.setVisibility(View.GONE);
+			}
+		}
+
+		// set contact phone number for selecting
+		public void setContactPhones4Selecting(String displayName,
+				List<String> phoneNumbers, int position) {
+			// update select contact position
+			_mSelectContactPosition = position;
+
+			// set contact phones select title textView text
+			((TextView) getContentView().findViewById(
+					R.id.cps_contactPhonesSelect_titleTextView))
+					.setText(getContext()
+							.getResources()
+							.getString(
+									R.string.contactPhonesSelect_selectPopupWindow_titleTextView_text)
+							.replace("***", displayName));
+
+			// check phone numbers for selecting
+			if (2 <= phoneNumbers.size() && phoneNumbers.size() <= 3) {
+				// get contact phones select phone button parent linearLayout
+				// and show it
+				LinearLayout _phoneBtnParentLinearLayout = (LinearLayout) getContentView()
+						.findViewById(
+								R.id.cps_contactPhonesSelect_phoneButtons_linearLayout);
+				_phoneBtnParentLinearLayout.setVisibility(View.VISIBLE);
+
+				// process phone button
+				for (int i = 0; i < phoneNumbers.size(); i++) {
+					// get contact phones select phone button
+					Button _phoneBtn = (Button) _phoneBtnParentLinearLayout
+							.getChildAt(i);
+
+					// set button text and show it
+					_phoneBtn.setText(phoneNumbers.get(i));
+					_phoneBtn.setVisibility(View.VISIBLE);
+				}
+			} else {
+				// get contact phones select phone list view
+				ListView _phoneListView = (ListView) getContentView()
+						.findViewById(
+								R.id.cps_contactPhonesSelect_phonesListView);
+
+				// set phone list view adapter
+				_phoneListView
+						.setAdapter(new ArrayAdapter<String>(
+								CTApplication.getContext(),
+								R.layout.contact_phonenumbers_select_phoneslist_item_layout,
+								phoneNumbers));
+
+				// show phone list view
+				_phoneListView.setVisibility(View.VISIBLE);
+			}
+		}
+
+		// inner class
+		// contact phone select phone button on click listener
+		class ContactPhoneSelectPhoneBtnOnClickListener implements
+				OnClickListener {
+
+			@Override
+			public void onClick(View v) {
+				// get phone button text
+				String _selectedPhone = (String) ((Button) v).getText();
+
+				// dismiss contact phone select popup window
+				dismiss();
+
+				// mark contact selected
+				markContactSelected(_selectedPhone, _mSelectContactPosition,
+						true);
+			}
+
+		}
+
+		// contact phone select phone listView on item click listener
+		class ContactPhoneSelectPhoneListViewOnItemClickListener implements
+				OnItemClickListener {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				// get phone listView item data
+				String _selectedPhone = (String) ((TextView) view).getText();
+
+				// dismiss contact phone select popup window
+				dismiss();
+
+				// mark contact selected
+				markContactSelected(_selectedPhone, _mSelectContactPosition,
+						true);
+
+			}
+
+		}
+
+		// contact phone select cancel button on click listener
+		class ContactPhoneSelectCancelBtnOnClickListener implements
+				OnClickListener {
+
+			@Override
+			public void onClick(View v) {
+				// dismiss contact phone select popup window
+				dismiss();
+			}
+
 		}
 
 	}
@@ -734,6 +949,44 @@ public class ContactsSelectView extends SIMBaseView {
 			if (position >= _mTalkingGroupContactsPhoneArray.size()) {
 				// mark contact unselected
 				markContactUnselected((int) id, false);
+			}
+		}
+
+	}
+
+	// invite selected contacts to talking group button on click listener
+	class InviteSelectedContacts2TalkingGroupButtonOnClickListener implements
+			OnClickListener {
+
+		@Override
+		public void onClick(View v) {
+			// check in and prein talking group contacts size
+			if (!_mPreinTalkingGroupContactsInfoArray.isEmpty()) {
+				// check needs to show select talking group start date and time
+				// popup window
+				if (!_mTalkingGroupContactsPhoneArray.isEmpty()) {
+					// show talking group start date and time select popup
+					// window
+					// ??
+				} else {
+					// define invited contacts phone numbers
+					List<String> _invitedContactsPhone = new ArrayList<String>();
+
+					// set invited contacts phone numbers
+					for (ContactBean selectedContact : _mPreinTalkingGroupContactsInfoArray) {
+						_invitedContactsPhone.add((String) selectedContact
+								.getExtension().get(
+										SELECTED_CONTACT_SELECTEDPHONE));
+					}
+
+					// send invite sms
+					sendInviteSMS(_invitedContactsPhone);
+				}
+			} else {
+				// show select one contact at least toast
+				Toast.makeText(getContext(),
+						R.string.toast_selectedContact_atLeastSelectOneContact,
+						Toast.LENGTH_SHORT).show();
 			}
 		}
 
