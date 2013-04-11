@@ -863,7 +863,6 @@ public class ContactsSelectView extends SIMBaseView {
 				// mark contact selected
 				markContactSelected(_selectedPhone, _mSelectContactPosition,
 						true);
-
 			}
 
 		}
@@ -964,7 +963,7 @@ public class ContactsSelectView extends SIMBaseView {
 			if (!_mPreinTalkingGroupContactsInfoArray.isEmpty()) {
 				// check needs to show select talking group start date and time
 				// popup window
-				if (!_mTalkingGroupContactsPhoneArray.isEmpty()) {
+				if (_mTalkingGroupContactsPhoneArray.isEmpty()) {
 					// show talking group start date and time select popup
 					// window
 					// ??

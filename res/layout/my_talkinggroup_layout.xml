@@ -6,41 +6,42 @@
     android:padding="6dp" >
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_weight="9"
         android:orientation="vertical" >
 
         <TextView
-            android:id="@+id/my_talkinggroup_startDate"
+            android:id="@+id/my_talkinggroup_startedDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/myTalkingGroup_startDate_hint" />
+            android:hint="@string/myTalkingGroup_startedDate_hint" />
 
         <TextView
-            android:id="@+id/my_talkinggroup_startTime"
+            android:id="@+id/my_talkinggroup_startedTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/myTalkingGroup_startTime_hint" />
+            android:hint="@string/myTalkingGroup_startedTime_hint" />
 
         <TextView
             android:id="@+id/my_talkinggroup_groupId"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/myTalkingGroup_groupId_hint" />
+            android:hint="@string/myTalkingGroup_groupId_hint" />
 
         <TextView
-            android:id="@+id/my_talkinggroup_groupState"
+            android:id="@+id/my_talkinggroup_groupStatus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/myTalkingGroup_groupState_hint" />
+            android:hint="@string/myTalkingGroup_groupStatus_hint" />
     </LinearLayout>
 
     <ImageView
         android:id="@+id/my_talkinggroup_detailInfo_imageView"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="fill_parent"
         android:layout_gravity="center"
+        android:layout_marginLeft="4dp"
         android:layout_weight="1"
         android:contentDescription="@string/myTalkingGroup_detailInfo_imageView_contentDescription"
         android:src="@android:drawable/ic_menu_send" />

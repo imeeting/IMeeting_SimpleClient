@@ -8,8 +8,7 @@
     android:paddingBottom="6dp"
     android:paddingLeft="10dp"
     android:paddingRight="26dp"
-    android:paddingTop="6dp"
-    tools:context=".talkinggroup.SimpleIMeetingMainActivity" >
+    android:paddingTop="6dp" >
 
     <FrameLayout
         android:id="@+id/abc_contact_unsel6sel_imageView_parentFrameLayout"

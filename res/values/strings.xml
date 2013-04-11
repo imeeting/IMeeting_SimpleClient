@@ -48,10 +48,10 @@
     <string name="myTalkingGroup_talkingGroupList_headTip_textViewText">会议列表</string>
     <string name="myTalkingGroup_talkingGroupAttendeeList_headTip_textViewText">与会者</string>
     <string name="no_myTalkingGroup_tip_textViewText">当前没有待参与的会议，你可以点击来开启一个新的会议</string>
-    <string name="myTalkingGroup_startDate_hint">会议日期：</string>
-    <string name="myTalkingGroup_startTime_hint">开始时间：</string>
+    <string name="myTalkingGroup_startedDate_hint">会议日期：</string>
+    <string name="myTalkingGroup_startedTime_hint">开始时间：</string>
     <string name="myTalkingGroup_groupId_hint">会议号码：</string>
-    <string name="myTalkingGroup_groupState_hint">会议状态：</string>
+    <string name="myTalkingGroup_groupStatus_hint">会议状态：</string>
     <string name="myTalkingGroup_detailInfo_imageView_contentDescription">indicate it is my talking group detail info image view</string>
     <string name="myTalkingGroup_talkingGroupAttendeeStatus_imageView_content_description">talking group attendee status image view</string>
 
