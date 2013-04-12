@@ -12,32 +12,32 @@
         android:orientation="vertical" >
 
         <TextView
-            android:id="@+id/my_talkinggroup_startedDate"
+            android:id="@+id/my_talkingGroup_startedDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:hint="@string/myTalkingGroup_startedDate_hint" />
 
         <TextView
-            android:id="@+id/my_talkinggroup_startedTime"
+            android:id="@+id/my_talkingGroup_startedTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:hint="@string/myTalkingGroup_startedTime_hint" />
 
         <TextView
-            android:id="@+id/my_talkinggroup_groupId"
+            android:id="@+id/my_talkingGroup_groupId"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:hint="@string/myTalkingGroup_groupId_hint" />
 
         <TextView
-            android:id="@+id/my_talkinggroup_groupStatus"
+            android:id="@+id/my_talkingGroup_groupStatus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:hint="@string/myTalkingGroup_groupStatus_hint" />
     </LinearLayout>
 
     <ImageView
-        android:id="@+id/my_talkinggroup_detailInfo_imageView"
+        android:id="@+id/my_talkingGroup_detailInfo_imageView"
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
         android:layout_gravity="center"

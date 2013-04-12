@@ -51,7 +51,7 @@
             android:id="@+id/mtg_talkingGroupAttendeeList_relativeLayout"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:layout_weight="12"
+            android:layout_weight="11"
             android:visibility="gone" >
 
             <TextView
@@ -64,7 +64,12 @@
                 android:id="@+id/mtg_talkingGroupAttendeeListView"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:layout_below="@id/mtg_tga_headTip_textView" >
+                android:layout_below="@id/mtg_tga_headTip_textView"
+                android:cacheColorHint="@android:color/transparent"
+                android:fadingEdge="none"
+                android:headerDividersEnabled="false"
+                android:listSelector="@android:color/transparent"
+                android:scrollbars="none" >
             </ListView>
         </RelativeLayout>
     </LinearLayout>

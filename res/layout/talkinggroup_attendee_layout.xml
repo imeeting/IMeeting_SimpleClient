@@ -2,26 +2,23 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="6dp"
-    android:paddingLeft="10dp"
-    android:paddingRight="6dp"
-    android:paddingTop="6dp" >
+    android:padding="6dp" >
 
     <ImageView
-        android:id="@+id/tga_attendeeStatus_imageView"
+        android:id="@+id/talkingGroup_attendee_status_imageView"
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
         android:layout_marginTop="2dp"
         android:contentDescription="@string/myTalkingGroup_talkingGroupAttendeeStatus_imageView_content_description"
-        android:src="@android:drawable/presence_online" />
+        android:src="@android:drawable/presence_offline" />
 
     <TextView
-        android:id="@+id/tga_attendeeDisplayName_textView"
+        android:id="@+id/talkingGroup_attendee_displayName_textView"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_marginLeft="10dp"
-        android:layout_toRightOf="@id/tga_attendeeStatus_imageView"
-        android:ellipsize="end"
+        android:layout_marginLeft="6dp"
+        android:layout_toRightOf="@id/talkingGroup_attendee_status_imageView"
+        android:ellipsize="middle"
         android:singleLine="true"
         android:textColor="@color/dim_gray" />
 

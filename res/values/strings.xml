@@ -37,12 +37,10 @@
     <string name="contactsSelect_selectedContacts_headTip_textViewText">预邀参与者</string>
     <string name="contactsSelect_contactHasNoPhone_alertDialog_title">此人没有号码</string>
     <string name="contactsSelect_contactHasNoPhone_alertDialog_reselectBtn_title">重新选择</string>
-    <string name="toast_selectedContact_existedInTalkingGroup_attendees">已使用此号码加入群聊</string>
     <string name="contactPhonesSelect_selectPopupWindow_titleTextView_text">选择 *** 加入群聊的号码</string>
     <string name="contactPhonesSelect_selectPopupWindow_cancelBtn_title">取消</string>
     <string name="contactsSelect_preinTalkingGroupContact_imageView_content_description">prein talking group contact image view</string>
     <string name="contactsSelect_inviteSelectedContacts2talkgingGroup_buttonText">邀请</string>
-    <string name="toast_selectedContact_atLeastSelectOneContact">请添加一个联系人到群聊</string>
     <!-- my talking group view -->
     <string name="myTalkingGroup_leftBarButtonItem_navTitle">通讯录</string>
     <string name="myTalkingGroup_talkingGroupList_headTip_textViewText">会议列表</string>
@@ -52,6 +50,8 @@
     <string name="myTalkingGroup_startedTime_hint">开始时间：</string>
     <string name="myTalkingGroup_groupId_hint">会议号码：</string>
     <string name="myTalkingGroup_groupStatus_hint">会议状态：</string>
+    <string name="myTalkingGroup_groupStatus_opened">进行中</string>
+    <string name="myTalkingGroup_groupStatus_unopened">尚未开始</string>
     <string name="myTalkingGroup_detailInfo_imageView_contentDescription">indicate it is my talking group detail info image view</string>
     <string name="myTalkingGroup_talkingGroupAttendeeStatus_imageView_content_description">talking group attendee status image view</string>
 
