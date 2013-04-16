@@ -53,7 +53,7 @@ public class MyTalkingGroupsView extends SIMBaseView {
 	private ListView _mMyTalkingGroupListView;
 
 	// selected talking group index
-	private Integer _mSelectedTalkingGroupIndex = 0;
+	private Integer _mSelectedTalkingGroupIndex = null;
 
 	// my talking group attendees info array
 	private JSONArray _mMyTalkingGroupAttendeesInfoArray = new JSONArray();
@@ -97,7 +97,7 @@ public class MyTalkingGroupsView extends SIMBaseView {
 			// hide no talking group tip textView and show my talking groups
 			((TextView) findViewById(R.id.mtg_noTalkingGroup_tip_textView))
 					.setVisibility(View.GONE);
-			((LinearLayout) findViewById(R.id.mtg_myTalkingGroup_linearLayout))
+			((LinearLayout) findViewById(R.id.mtg_myTalkingGroup7attendees_linearLayout))
 					.setVisibility(View.VISIBLE);
 
 			// get my talking group list view
@@ -340,6 +340,24 @@ public class MyTalkingGroupsView extends SIMBaseView {
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position,
 				long id) {
+			// define and get last pressed talking group index
+			Integer _lastPressedTalkingGroupIndex = _mSelectedTalkingGroupIndex;
+
+			// mark selected row
+			_mSelectedTalkingGroupIndex = position;
+
+			// update selected talking group item
+			if (null != _lastPressedTalkingGroupIndex
+					&& _mSelectedTalkingGroupIndex != position) {
+				// check last pressed talking group index
+				if (null != _lastPressedTalkingGroupIndex) {
+					//
+				}
+
+				// update selected talking group item background drawable
+				//
+			}
+
 			// update selected talking group attendee listView adapter
 			_mMyTalkingGroupAttendeeListView
 					.setAdapter(new MyTalkingGroup7MyTalkingGroupAttendeeAdapter(

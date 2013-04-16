@@ -17,7 +17,7 @@
             android:id="@+id/cs_cl_headTip_textView"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/img_contactsselect_header_bg"
+            android:background="@drawable/img_contactsselect6mytalkinggroups_header_bg"
             android:gravity="center_vertical"
             android:paddingLeft="12dp"
             android:text="@string/contactsSelect_contactsList_headTip_textViewText" />
@@ -78,7 +78,7 @@
             android:id="@+id/cs_sc_headTip_textView"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/img_selectedcontacts_header_bg"
+            android:background="@drawable/img_selectedcontacts6talkinggroupattendees_header_bg"
             android:gravity="center_vertical"
             android:paddingLeft="12dp"
             android:text="@string/contactsSelect_selectedContacts_headTip_textViewText" />
