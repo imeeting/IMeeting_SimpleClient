@@ -9,8 +9,7 @@
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
         android:layout_marginTop="2dp"
-        android:contentDescription="@string/myTalkingGroup_talkingGroupAttendeeStatus_imageView_content_description"
-        android:src="@android:drawable/presence_offline" />
+        android:contentDescription="@string/myTalkingGroup_talkingGroupAttendeeStatus_imageView_content_description" />
 
     <TextView
         android:id="@+id/talkingGroup_attendee_displayName_textView"

@@ -9,6 +9,5 @@
     <string name="bg_server_talkingGroupAttendee_phone">phone</string>
     <string name="bg_server_talkingGroupAttendee_status">status</string>
     <string name="bg_server_talkingGroupAttendee_attendeeIn">in</string>
-    <string name="bg_server_talkingGroupAttendee_attendeeOut">out</string>
 
 </resources>

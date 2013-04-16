@@ -38,7 +38,6 @@ public class MyTalkingGroupsView extends SIMBaseView {
 			.getCanonicalName();
 
 	// my talking group listView item adapter data keys
-	private final String GROUP_STARTEDDATE = "group_startedDate";
 	private final String GROUP_STARTEDTIME = "group_startedTime";
 	private final String GROUP_ID = "group_id";
 	private final String GROUP_STATUS = "group_status";
@@ -109,10 +108,9 @@ public class MyTalkingGroupsView extends SIMBaseView {
 					.setAdapter(new MyTalkingGroup7MyTalkingGroupAttendeeAdapter(
 							getContext(),
 							generateMyTalkingGroupListDataList(_mMyTalkingGroupsInfoArray),
-							R.layout.my_talkinggroup_layout, new String[] {
-									GROUP_STARTEDDATE, GROUP_STARTEDTIME,
-									GROUP_ID, GROUP_STATUS }, new int[] {
-									R.id.my_talkingGroup_startedDate,
+							R.layout.my_talkinggroup_layout,
+							new String[] { GROUP_STARTEDTIME, GROUP_ID,
+									GROUP_STATUS }, new int[] {
 									R.id.my_talkingGroup_startedTime,
 									R.id.my_talkingGroup_groupId,
 									R.id.my_talkingGroup_groupStatus }));
@@ -131,12 +129,9 @@ public class MyTalkingGroupsView extends SIMBaseView {
 	// generate my talking group listView adapter data list
 	private List<Map<String, ?>> generateMyTalkingGroupListDataList(
 			JSONArray myTalkingGroupsInfoArray) {
-		// my talking group started date and time date format, format unix
-		// timeStamp
-		final DateFormat _myTalkingGroupStartedDateDateFormat = new SimpleDateFormat(
-				"yyyy-MM-dd", Locale.getDefault());
+		// my talking group started time date format, format unix timeStamp
 		final DateFormat _myTalkingGroupStartedTimeDateFormat = new SimpleDateFormat(
-				"HH:mm", Locale.getDefault());
+				"yyyy-MM-dd HH:mm", Locale.getDefault());
 
 		// my talking group list data list
 		List<Map<String, ?>> _dataList = new ArrayList<Map<String, ?>>();
@@ -147,7 +142,7 @@ public class MyTalkingGroupsView extends SIMBaseView {
 			JSONObject _groupInfoJsonObject = JSONUtils
 					.getJSONObjectFromJSONArray(myTalkingGroupsInfoArray, i);
 
-			// get group started timestamp, date, time, id and status
+			// get group started timestamp, time, id and status
 			Long _groupStartedTimestamp = 1000 * JSONUtils
 					.getLongFromJSONObject(
 							_groupInfoJsonObject,
@@ -155,10 +150,6 @@ public class MyTalkingGroupsView extends SIMBaseView {
 									.getResources()
 									.getString(
 											R.string.bg_server_myTalkingGroup_startedTimestamp));
-			Object _groupStartedDate = getContext().getResources().getString(
-					R.string.myTalkingGroup_startedDate_hint)
-					+ _myTalkingGroupStartedDateDateFormat
-							.format(_groupStartedTimestamp);
 			Object _groupStartedTime = getContext().getResources().getString(
 					R.string.myTalkingGroup_startedTime_hint)
 					+ _myTalkingGroupStartedTimeDateFormat
@@ -175,7 +166,7 @@ public class MyTalkingGroupsView extends SIMBaseView {
 							R.string.bg_server_myTalkingGroup_status));
 
 			// check my talking group status and reset my talking group started
-			// date, time, group id and status
+			// time, group id and status
 			if (getContext()
 					.getResources()
 					.getString(
@@ -185,13 +176,6 @@ public class MyTalkingGroupsView extends SIMBaseView {
 				ForegroundColorSpan _darkSeaGreenForegroundColorSpan = new ForegroundColorSpan(
 						getContext().getResources().getColor(
 								R.color.dark_seagreen));
-
-				_groupStartedDate = new SpannableString(
-						(String) _groupStartedDate);
-				((SpannableString) _groupStartedDate).setSpan(
-						_darkSeaGreenForegroundColorSpan, 0,
-						((SpannableString) _groupStartedDate).length(),
-						Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
 				_groupStartedTime = new SpannableString(
 						(String) _groupStartedTime);
@@ -226,7 +210,6 @@ public class MyTalkingGroupsView extends SIMBaseView {
 			Map<String, Object> _dataMap = new HashMap<String, Object>();
 
 			// set data
-			_dataMap.put(GROUP_STARTEDDATE, _groupStartedDate);
 			_dataMap.put(GROUP_STARTEDTIME, _groupStartedTime);
 			_dataMap.put(GROUP_ID, _groupId);
 			_dataMap.put(GROUP_STATUS, _groupStatus);
@@ -281,12 +264,9 @@ public class MyTalkingGroupsView extends SIMBaseView {
 						_darkSeaGreenForegroundColorSpan, 0,
 						((SpannableString) _attendeePhone).length(),
 						Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-			} else if (getContext()
-					.getResources()
-					.getString(
-							R.string.bg_server_talkingGroupAttendee_attendeeOut)
-					.equalsIgnoreCase((String) _attendeeStatus)) {
-				_attendeeStatus = Boolean.valueOf(true);
+			} else {
+				_attendeeStatus = getContext().getResources().getDrawable(
+						android.R.drawable.presence_invisible);
 
 				//
 			}
@@ -334,31 +314,19 @@ public class MyTalkingGroupsView extends SIMBaseView {
 			// my talking group detail info or my talking group attendee status
 			// imageView
 			else if (view instanceof ImageView) {
-				// check item data type
-				if (_itemData instanceof Boolean) {
-					// define item data boolean and convert item data to
-					// boolean
-					Boolean _itemDataBoolean = (Boolean) _itemData;
+				try {
+					// define item data drawable and convert item data to
+					// drawable
+					Drawable _itemDataDrawable = (Drawable) _itemData;
 
-					// set imageView visibility
-					if (false == _itemDataBoolean) {
-						((ImageView) view).setVisibility(View.GONE);
-					}
-				} else {
-					try {
-						// define item data drawable and convert item data to
-						// drawable
-						Drawable _itemDataDrawable = (Drawable) _itemData;
+					// set imageView image
+					((ImageView) view).setImageDrawable(_itemDataDrawable);
+				} catch (Exception e) {
+					e.printStackTrace();
 
-						// set imageView image
-						((ImageView) view).setImageDrawable(_itemDataDrawable);
-					} catch (Exception e) {
-						e.printStackTrace();
-
-						Log.e(LOG_TAG,
-								"Convert item data to drawable error, item data = "
-										+ _itemData);
-					}
+					Log.e(LOG_TAG,
+							"Convert item data to drawable error, item data = "
+									+ _itemData);
 				}
 			}
 		}
