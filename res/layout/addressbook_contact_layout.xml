@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/addressbook_contact_bg"
+    android:orientation="horizontal"
+    android:paddingBottom="6dp"
+    android:paddingLeft="10dp"
+    android:paddingRight="26dp"
+    android:paddingTop="6dp" >
+
+    <FrameLayout
+        android:id="@+id/abc_contact_unsel6sel_imageView_parentFrameLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent" >
+
+        <ImageView
+            android:id="@+id/abc_contactUnselected_imageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/contactsSelect_addressbookContact_unselected_imageView_content_description"
+            android:paddingTop="10dp"
+            android:src="@drawable/img_addressbook_contact_unselected"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/abc_contactSelected_imageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/contactsSelect_addressbookContact_selected_imageView_content_description"
+            android:paddingTop="10dp"
+            android:src="@drawable/img_addressbook_contact_selected"
+            android:visibility="gone" />
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_marginLeft="16dp"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/abc_contactDisplayName_textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/abc_contactPhoneNumber_textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/dark_gray" />
+    </LinearLayout>
+
+</LinearLayout>

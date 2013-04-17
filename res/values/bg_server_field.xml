@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- my talking group view -->
+    <string name="bg_server_myTalkingGroup_startedTimestamp">startedtimestamp</string>
+    <string name="bg_server_myTalkingGroup_id">id</string>
+    <string name="bg_server_myTalkingGroup_status">status</string>
+    <string name="bg_server_myTalkingGroup_talkingGroupOpened">opened</string>
+    <string name="bg_server_talkingGroupAttendee_phone">phone</string>
+    <string name="bg_server_talkingGroupAttendee_status">status</string>
+    <string name="bg_server_talkingGroupAttendee_attendeeIn">in</string>
+
+</resources>

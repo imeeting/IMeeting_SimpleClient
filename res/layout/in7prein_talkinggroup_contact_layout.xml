@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/in7preintalkinggroup_contact_bg"
+    android:paddingBottom="6dp"
+    android:paddingLeft="10dp"
+    android:paddingRight="6dp"
+    android:paddingTop="6dp" >
+
+    <ImageView
+        android:id="@+id/ipitgc_contactPreinTalkingGroup_imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:layout_marginTop="2dp"
+        android:contentDescription="@string/contactsSelect_preinTalkingGroupContact_imageView_content_description"
+        android:src="@drawable/img_preintalkinggroup_contact"
+        android:visibility="invisible" />
+
+    <TextView
+        android:id="@+id/ipitgc_contactDisplayName_textView"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@id/ipitgc_contactPreinTalkingGroup_imageView"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:textColor="@color/dim_gray" />
+
+</RelativeLayout>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="6dp" >
+
+    <ImageView
+        android:id="@+id/talkingGroup_attendee_status_imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:layout_marginTop="2dp"
+        android:contentDescription="@string/myTalkingGroup_talkingGroupAttendeeStatus_imageView_content_description" />
+
+    <TextView
+        android:id="@+id/talkingGroup_attendee_displayName_textView"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_marginLeft="6dp"
+        android:layout_toRightOf="@id/talkingGroup_attendee_status_imageView"
+        android:ellipsize="middle"
+        android:singleLine="true"
+        android:textColor="@color/dim_gray" />
+
+</RelativeLayout>

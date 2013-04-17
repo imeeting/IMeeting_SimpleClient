@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- contacts select view -->
+    <string name="toast_selectedContact_existedInTalkingGroup_attendees">已使用此号码加入群聊</string>
+    <string name="toast_selectedContact_atLeastSelectOneContact">请添加一个联系人到群聊</string>
+
+</resources>

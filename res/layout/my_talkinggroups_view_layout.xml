@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".talkinggroup.SimpleIMeetingMainActivity" >
+
+    <TextView
+        android:id="@+id/mtg_noTalkingGroup_tip_textView"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="40dp"
+        android:text="@string/no_myTalkingGroup_tip_textViewText"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <LinearLayout
+        android:id="@+id/mtg_myTalkingGroup_linearLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:baselineAligned="false"
+        android:orientation="horizontal"
+        android:visibility="gone" >
+
+        <RelativeLayout
+            android:id="@+id/mtg_talkingGroupList_relativeLayout"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="5" >
+
+            <TextView
+                android:id="@+id/mtg_tgl_headTip_textView"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/myTalkingGroup_talkingGroupList_headTip_textViewText" />
+
+            <ListView
+                android:id="@+id/mtg_talkingGroupListView"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_below="@id/mtg_tgl_headTip_textView"
+                android:background="@drawable/img_mytalkinggroups_bg"
+                android:cacheColorHint="@android:color/transparent"
+                android:divider="@android:color/transparent"
+                android:fadingEdge="none"
+                android:footerDividersEnabled="false"
+                android:headerDividersEnabled="false"
+                android:listSelector="@android:color/transparent"
+                android:scrollbars="none" >
+            </ListView>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/mtg_talkingGroupAttendeeList_relativeLayout"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="11"
+            android:visibility="gone" >
+
+            <TextView
+                android:id="@+id/mtg_tga_headTip_textView"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/myTalkingGroup_talkingGroupAttendeeList_headTip_textViewText" />
+
+            <ListView
+                android:id="@+id/mtg_talkingGroupAttendeeListView"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_below="@id/mtg_tga_headTip_textView"
+                android:background="@drawable/img_talkinggroup_attendees_bg"
+                android:cacheColorHint="@android:color/transparent"
+                android:fadingEdge="none"
+                android:headerDividersEnabled="false"
+                android:listSelector="@android:color/transparent"
+                android:scrollbars="none" >
+            </ListView>
+        </RelativeLayout>
+    </LinearLayout>
+
+</FrameLayout>
