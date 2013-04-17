@@ -7,6 +7,7 @@ import com.richitec.commontoolkit.activityextension.AppLaunchActivity;
 import com.richitec.commontoolkit.addressbook.AddressBookManager;
 import com.richitec.simpleimeeting.talkinggroup.ContactsSelectView;
 import com.richitec.simpleimeeting.talkinggroup.SimpleIMeetingMainActivity;
+import com.richitec.simpleimeeting.util.AppDataSaveRestoreUtil;
 
 public class SimpleIMeetingAppLaunchActivity extends AppLaunchActivity {
 
@@ -17,8 +18,8 @@ public class SimpleIMeetingAppLaunchActivity extends AppLaunchActivity {
 
 	@Override
 	public Intent intentActivity() {
-		// // load account
-		// loadAccount();
+		 // load account
+		AppDataSaveRestoreUtil.loadAccount();
 
 		// Intent intent = null;
 		// UserBean user = UserManager.getInstance().getUser();
@@ -43,22 +44,11 @@ public class SimpleIMeetingAppLaunchActivity extends AppLaunchActivity {
 	@Override
 	public void didFinishLaunching() {
 		// traversal address book
+		AddressBookManager.setFilterMode(AddressBookManager.FILTER_IP_AND_CODE_PREFIX);
 		AddressBookManager.getInstance().traversalAddressBook();
 
 		// init all name phonetic sorted contacts info array
 		ContactsSelectView.initNamePhoneticSortedContactsInfoArray();
 	}
-
-	// private void loadAccount() {
-	// String userName = DataStorageUtils.getString(User.username.name());
-	// String userkey = DataStorageUtils.getString(User.userkey.name());
-	// String password = DataStorageUtils.getString(User.password.name());
-	// UserBean userBean = new UserBean();
-	// userBean.setName(userName);
-	// userBean.setUserKey(userkey);
-	// userBean.setPassword(password);
-	// UserManager.getInstance().setUser(userBean);
-	// Log.d(SystemConstants.TAG, "load account: " + userBean.toString());
-	// }
 
 }
