@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/my_talkingGroup_parentRelativeLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/img_mytalkinggroup_normal_bg"
     android:paddingLeft="14dp"
     android:paddingRight="14dp"
     android:paddingTop="10dp" >
@@ -43,6 +43,7 @@
         android:layout_height="fill_parent"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:contentDescription="@string/myTalkingGroup_detailInfo_imageView_contentDescription" />
+        android:contentDescription="@string/myTalkingGroup_detailInfo_imageView_contentDescription"
+        android:visibility="gone" />
 
 </RelativeLayout>
