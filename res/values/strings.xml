@@ -41,6 +41,14 @@
     <string name="contactPhonesSelect_selectPopupWindow_cancelBtn_title">取消</string>
     <string name="contactsSelect_preinTalkingGroupContact_imageView_content_description">prein talking group contact image view</string>
     <string name="contactsSelect_inviteSelectedContacts2talkgingGroup_buttonText">邀请</string>
+    <string name="talkingGroupStartedTimeSelect_cancelBtn_title">取消</string>
+    <string name="talkingGroupStartedTimeSelect_titleTextView_text">请选择会议开始时间</string>
+    <string name="talkingGroupStartedTimeSelect_confirmBtn_title">确定</string>
+    <string name="talkingGroupStartedTimeSelect_inviteNoteTextView_hint">请于 *** 拨打0551&#8211;62379997参加电话会议(会议号: ***)</string>
+    <string name="datePicker_yearSuffix">年</string>
+    <string name="datePicker_monthSuffix">月</string>
+    <string name="datePicker_daySuffix">日</string>
+    <string name="talkingGroupStartedTimeSelect_inviteNoteCpoyBtn_title">点击拷贝</string>
     <!-- my talking group view -->
     <string name="myTalkingGroup_leftBarButtonItem_navTitle">通讯录</string>
     <string name="myTalkingGroup_talkingGroupList_headTip_textViewText">会议列表</string>
@@ -49,8 +57,12 @@
     <string name="myTalkingGroup_startedTime_hint">开始时间：</string>
     <string name="myTalkingGroup_groupId_hint">会议号码：</string>
     <string name="myTalkingGroup_groupStatus_hint">会议状态：</string>
-    <string name="myTalkingGroup_groupStatus_opened">进行中</string>
-    <string name="myTalkingGroup_groupStatus_unopened">尚未开始</string>
+    <string name="myTalkingGroup_groupStatus_opened">进行中&#8230;</string>
+    <string name="myTalkingGroup_groupStatus_broken">会议已坏</string>
+    <string name="myTalkingGroup_groupStatus_unopened">***后开始</string>
+    <string name="remainderTime_daySuffix">天</string>
+    <string name="remainderTime_hourSuffix">小时</string>
+    <string name="remainderTime_minuteSuffix">分钟</string>
     <string name="myTalkingGroup_detailInfo_imageView_contentDescription">indicate it is my talking group detail info image view</string>
     <string name="myTalkingGroup_talkingGroupAttendeeStatus_imageView_content_description">talking group attendee status image view</string>
 

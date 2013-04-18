@@ -1,6 +1,7 @@
 package com.richitec.simpleimeeting.talkinggroup;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -27,6 +28,8 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.DatePicker.OnDateChangedListener;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -35,6 +38,8 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.TimePicker;
+import android.widget.TimePicker.OnTimeChangedListener;
 import android.widget.Toast;
 
 import com.richitec.commontoolkit.CTApplication;
@@ -96,6 +101,11 @@ public class ContactsSelectView extends SIMBaseView {
 	// in and prein talking group contacts adapter data list
 	private final List<Map<String, ?>> _mIn7PreinTalkingGroupContactsAdapterDataList = new ArrayList<Map<String, ?>>();
 
+	// define new talking group atarted time select popup window
+	private final NewTalkingGroupStartedTimeSelectPopupWindow _mNewTalkingGroupStartedTimeSelectPopupWindow = new NewTalkingGroupStartedTimeSelectPopupWindow(
+			R.layout.talkinggroup_startedtime_select_layout,
+			LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
+
 	// init all name phonetic sorted contacts info array
 	public static void initNamePhoneticSortedContactsInfoArray() {
 		_mAllNamePhoneticSortedContactsInfoArray = AddressBookManager
@@ -110,6 +120,10 @@ public class ContactsSelectView extends SIMBaseView {
 
 	@Override
 	public void initSubComponents() {
+		// test by ares
+		_mTalkingGroupContactsPhoneArray.add("13770662051");
+		_mTalkingGroupContactsPhoneArray.add("14756498708");
+
 		// init contacts in addressbook present list view
 		// get contacts in addressbook present list view
 		_mInABContactsPresentListView = (ListView) findViewById(R.id.cs_contactsListView);
@@ -490,14 +504,17 @@ public class ContactsSelectView extends SIMBaseView {
 	}
 
 	// send invite to talking group sms
-	private void sendInviteSMS(List<String> invitedContactsPhone) {
+	private void sendInviteSMS(String inviteNote) {
 		// sms recipient
 		StringBuilder _recipients = new StringBuilder();
-		for (int i = 0; i < invitedContactsPhone.size(); i++) {
-			_recipients.append(invitedContactsPhone.get(i));
+
+		// process each invited contacts phone numbers
+		for (int i = 0; i < _mPreinTalkingGroupContactsInfoArray.size(); i++) {
+			_recipients.append(_mPreinTalkingGroupContactsInfoArray.get(i)
+					.getExtension().get(SELECTED_CONTACT_SELECTEDPHONE));
 
 			// add more recipient
-			if (invitedContactsPhone.size() - 1 != i) {
+			if (_mPreinTalkingGroupContactsInfoArray.size() - 1 != i) {
 				_recipients.append(',');
 			}
 		}
@@ -507,7 +524,7 @@ public class ContactsSelectView extends SIMBaseView {
 				Uri.parse("smsto:" + _recipients));
 
 		// send sms body
-		_sendSMSIntent.putExtra("sms_body", "测试发送短信。。。");
+		_sendSMSIntent.putExtra("sms_body", inviteNote);
 
 		// check and start send sms activity
 		if (CommonUtils.isIntentAvailable(_sendSMSIntent)) {
@@ -964,22 +981,26 @@ public class ContactsSelectView extends SIMBaseView {
 				// check needs to show select talking group start date and time
 				// popup window
 				if (_mTalkingGroupContactsPhoneArray.isEmpty()) {
-					// show talking group start date and time select popup
-					// window
+					// send get new talking group id http request
 					// ??
+
+					// test by ares
+					// set got new talking group id
+					_mNewTalkingGroupStartedTimeSelectPopupWindow
+							.setGotNewTalkingGroupId("233455");
+
+					// set current calendar for new talking group started time
+					// select date and time picker
+					_mNewTalkingGroupStartedTimeSelectPopupWindow
+							.setCurrentCalendar4Date7timePicker(Calendar
+									.getInstance());
+
+					// show new talking group started time select popup window
+					_mNewTalkingGroupStartedTimeSelectPopupWindow
+							.showAtLocation(v, Gravity.CENTER, 0, 0);
 				} else {
-					// define invited contacts phone numbers
-					List<String> _invitedContactsPhone = new ArrayList<String>();
-
-					// set invited contacts phone numbers
-					for (ContactBean selectedContact : _mPreinTalkingGroupContactsInfoArray) {
-						_invitedContactsPhone.add((String) selectedContact
-								.getExtension().get(
-										SELECTED_CONTACT_SELECTEDPHONE));
-					}
-
 					// send invite sms
-					sendInviteSMS(_invitedContactsPhone);
+					sendInviteSMS("再次邀请的。。。");
 				}
 			} else {
 				// show select one contact at least toast
@@ -987,6 +1008,221 @@ public class ContactsSelectView extends SIMBaseView {
 						R.string.toast_selectedContact_atLeastSelectOneContact,
 						Toast.LENGTH_SHORT).show();
 			}
+		}
+
+	}
+
+	// new talking group started time select popup window
+	class NewTalkingGroupStartedTimeSelectPopupWindow extends CTPopupWindow {
+
+		// new talking group id
+		private String _mNewTalkingGroupId;
+
+		// new talking group started time select date and time picker
+		private DatePicker _mNewTalkingGroupStartedTimeSelectDatePicker;
+		private TimePicker _mNewTalkingGroupStartedTimeSelectTimePicker;
+
+		public NewTalkingGroupStartedTimeSelectPopupWindow(int resource,
+				int width, int height, boolean focusable,
+				boolean isBindDefListener) {
+			super(resource, width, height, focusable, isBindDefListener);
+		}
+
+		public NewTalkingGroupStartedTimeSelectPopupWindow(int resource,
+				int width, int height) {
+			super(resource, width, height);
+		}
+
+		@Override
+		protected void bindPopupWindowComponentsListener() {
+			// bind new talking group started time select cancel button click
+			// listener
+			((Button) getContentView().findViewById(
+					R.id.tgsts_talkingGroupStartedTimeSelect_cancelBtn))
+					.setOnClickListener(new NewTalkingGroupStartedTimeSelectCancelButtonOnClickListener());
+
+			// bind new talking group started time select confirm button click
+			// listener
+			((Button) getContentView().findViewById(
+					R.id.tgsts_talkingGroupStartedTimeSelect_confirmBtn))
+					.setOnClickListener(new NewTalkingGroupStartedTimeSelectConfirmButtonOnClickListener());
+
+			// bind new talking group started time select copy invite note
+			// button on click listener
+			((Button) getContentView().findViewById(
+					R.id.tgsts_talkingGroupStartedTimeSelect_copyInviteNoteBtn))
+					.setOnClickListener(new NewTalkingGroupStartedTimeSelectCopyInviteNoteButtonOnClickListener());
+
+			// get new talking group started time select date picker
+			_mNewTalkingGroupStartedTimeSelectDatePicker = (DatePicker) getContentView()
+					.findViewById(
+							R.id.tgsts_talkingGroupStartedTimeSelect_datePicker);
+
+			// bind its on date changed listener
+			_mNewTalkingGroupStartedTimeSelectDatePicker
+					.init(1970,
+							1,
+							1,
+							new NewTalkingGroupStartedTimeSelectDatePickerOnDateChangedListener());
+
+			// get new talking group started time select time picker
+			_mNewTalkingGroupStartedTimeSelectTimePicker = (TimePicker) getContentView()
+					.findViewById(
+							R.id.tgsts_talkingGroupStartedTimeSelect_timePicker);
+
+			// set its is 24 hour view
+			_mNewTalkingGroupStartedTimeSelectTimePicker
+					.setIs24HourView(Boolean.valueOf(true));
+
+			// bind its on time changed listener
+			_mNewTalkingGroupStartedTimeSelectTimePicker
+					.setOnTimeChangedListener(new NewTalkingGroupStartedTimeSelectTimePickerOnTimeChangedListener());
+		}
+
+		@Override
+		protected void resetPopupWindow() {
+			// nothing to do
+		}
+
+		// set got new talking group id
+		public void setGotNewTalkingGroupId(String talkingGroupId) {
+			// save got new talking group id
+			_mNewTalkingGroupId = talkingGroupId;
+		}
+
+		// set current calendar for new talking group started time select date
+		// and time picker
+		public void setCurrentCalendar4Date7timePicker(Calendar calendar) {
+			// get current calendar year, month, day, hour and minute
+			int _year = calendar.get(Calendar.YEAR);
+			int _month = calendar.get(Calendar.MONTH);
+			int _day = calendar.get(Calendar.DAY_OF_MONTH);
+			int _hour = calendar.get(Calendar.HOUR_OF_DAY);
+			int _minute = calendar.get(Calendar.MINUTE);
+
+			// update new talking group started time select date picker
+			_mNewTalkingGroupStartedTimeSelectDatePicker.updateDate(_year,
+					_month, _day);
+
+			// update new talking group started time select time picker hour and
+			// minute
+			_mNewTalkingGroupStartedTimeSelectTimePicker.setCurrentHour(_hour);
+			_mNewTalkingGroupStartedTimeSelectTimePicker
+					.setCurrentMinute(_minute);
+		}
+
+		// show new talking group selected started time
+		private void showSelectedStartedTime() {
+			// get selected date and time string format
+			StringBuilder _selectedDate7timeString = new StringBuilder();
+
+			// format selected date and time string
+			_selectedDate7timeString
+					.append(_mNewTalkingGroupStartedTimeSelectDatePicker
+							.getYear())
+					.append(getContext().getResources().getString(
+							R.string.datePicker_yearSuffix))
+					.append(_mNewTalkingGroupStartedTimeSelectDatePicker
+							.getMonth())
+					.append(getContext().getResources().getString(
+							R.string.datePicker_monthSuffix))
+					.append(_mNewTalkingGroupStartedTimeSelectDatePicker
+							.getDayOfMonth())
+					.append(getContext().getResources().getString(
+							R.string.datePicker_daySuffix))
+					.append(" ")
+					.append(_mNewTalkingGroupStartedTimeSelectTimePicker
+							.getCurrentHour())
+					.append(":")
+					.append(_mNewTalkingGroupStartedTimeSelectTimePicker
+							.getCurrentMinute());
+
+			// set new talking group invite note textView text
+			((TextView) getContentView()
+					.findViewById(
+							R.id.tgsts_talkingGroupStartedTimeSelect_inviteNoteTextView))
+					.setText(getContext()
+							.getResources()
+							.getString(
+									R.string.talkingGroupStartedTimeSelect_inviteNoteTextView_hint)
+							.replaceFirst("\\*\\*\\*",
+									_selectedDate7timeString.toString())
+							.replace("***", _mNewTalkingGroupId));
+		}
+
+		// inner class
+		// new talking group started time select cancel button on click
+		// listener
+		class NewTalkingGroupStartedTimeSelectCancelButtonOnClickListener
+				implements OnClickListener {
+
+			@Override
+			public void onClick(View v) {
+				// dismiss new talking group started time select popup window
+				dismiss();
+			}
+
+		}
+
+		// new talking group started time select confirm button on click
+		// listener
+		class NewTalkingGroupStartedTimeSelectConfirmButtonOnClickListener
+				implements OnClickListener {
+
+			@Override
+			public void onClick(View v) {
+				// dismiss new talking group started time select popup window
+				dismiss();
+
+				// send new talking group http request
+				// ??
+
+				// send invite sms
+				sendInviteSMS("第一次邀请的。。。");
+			}
+
+		}
+
+		// new talking group started time select copy invite note button on
+		// click listener
+		class NewTalkingGroupStartedTimeSelectCopyInviteNoteButtonOnClickListener
+				implements OnClickListener {
+
+			@Override
+			public void onClick(View v) {
+				Log.d(LOG_TAG, "Copy new talking group invite note paste board");
+
+				// copy new talking group invite note paste board
+				// ??
+			}
+
+		}
+
+		// new talking group started time select date picker on date changed
+		// listener
+		class NewTalkingGroupStartedTimeSelectDatePickerOnDateChangedListener
+				implements OnDateChangedListener {
+
+			@Override
+			public void onDateChanged(DatePicker view, int year,
+					int monthOfYear, int dayOfMonth) {
+				// update talking group started time
+				showSelectedStartedTime();
+			}
+
+		}
+
+		// new talking group started time select time picker on time changed
+		// listener
+		class NewTalkingGroupStartedTimeSelectTimePickerOnTimeChangedListener
+				implements OnTimeChangedListener {
+
+			@Override
+			public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
+				// update talking group started time
+				showSelectedStartedTime();
+			}
+
 		}
 
 	}

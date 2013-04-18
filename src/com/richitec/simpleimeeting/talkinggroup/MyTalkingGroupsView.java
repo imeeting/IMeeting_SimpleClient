@@ -3,6 +3,7 @@ package com.richitec.simpleimeeting.talkinggroup;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -19,8 +20,10 @@ import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
@@ -73,6 +76,9 @@ public class MyTalkingGroupsView extends SIMBaseView {
 							"{\"startedtimestamp\":\"1365739200\", \"id\":\"123456\", \"status\":\"opened\"}"));
 			_mMyTalkingGroupsInfoArray
 					.put(new JSONObject(
+							"{\"startedtimestamp\":\"1366333200\", \"id\":\"112113\", \"status\":\"unopened\"}"));
+			_mMyTalkingGroupsInfoArray
+					.put(new JSONObject(
 							"{\"startedtimestamp\":\"1366430400\", \"id\":\"452316\", \"status\":\"unopened\"}"));
 		} catch (JSONException e) {
 			Log.e(LOG_TAG, "Set my talking groups info array for test error");
@@ -115,6 +121,10 @@ public class MyTalkingGroupsView extends SIMBaseView {
 		} else {
 			Log.i(LOG_TAG, "There is no talking group with me now");
 		}
+
+		// bind add contacts to talking group button on click listener
+		((Button) findViewById(R.id.mtg_addContacts2talkingGroup_button))
+				.setOnClickListener(new AddContacts2talkingGroupButtonOnClickListener());
 	}
 
 	// generate my talking group listView adapter data list
@@ -196,11 +206,73 @@ public class MyTalkingGroupsView extends SIMBaseView {
 					.getString(
 							R.string.bg_server_myTalkingGroup_talkingGroupUnopened)
 					.equalsIgnoreCase((String) _groupStatus)) {
+				// milliseconds per second， seconds per day, hour and minute
+				final Long MILLISECONDS_PER_SECOND = 1000L;
+				final Long SECONDS_PER_DAY = 24 * 60 * 60L;
+				final Long SECONDS_PER_HOUR = 60 * 60L;
+				final Long SECONDS_PER_MINUTE = 60L;
+
+				// get talking group start remainder time
+				Long _remainderTime = (_groupStartedTimestamp - Calendar
+						.getInstance().getTimeInMillis())
+						/ MILLISECONDS_PER_SECOND;
+
+				// check it and init talking group status string format
+				String _talkingGroupStatusString;
+				if (0 >= _remainderTime) {
+					_talkingGroupStatusString = getContext().getResources()
+							.getString(
+									R.string.myTalkingGroup_groupStatus_broken);
+
+					Log.e(LOG_TAG, "This is a invalidate talking group");
+				} else {
+					_talkingGroupStatusString = getContext()
+							.getResources()
+							.getString(
+									R.string.myTalkingGroup_groupStatus_unopened);
+
+					// days
+					if (SECONDS_PER_DAY <= _remainderTime) {
+						_talkingGroupStatusString = _talkingGroupStatusString
+								.replace(
+										"***",
+										_remainderTime
+												/ SECONDS_PER_DAY
+												+ getContext()
+														.getResources()
+														.getString(
+																R.string.remainderTime_daySuffix));
+					}
+					// hours
+					else if (SECONDS_PER_HOUR <= _remainderTime) {
+						_talkingGroupStatusString = _talkingGroupStatusString
+								.replace(
+										"***",
+										_remainderTime
+												/ SECONDS_PER_HOUR
+												+ getContext()
+														.getResources()
+														.getString(
+																R.string.remainderTime_hourSuffix));
+					}
+					// minutes
+					else {
+						_talkingGroupStatusString = _talkingGroupStatusString
+								.replace(
+										"***",
+										_remainderTime
+												/ SECONDS_PER_MINUTE
+												+ getContext()
+														.getResources()
+														.getString(
+																R.string.remainderTime_minuteSuffix));
+					}
+				}
+
 				// update my talking group status
 				_groupStatus = getContext().getResources().getString(
 						R.string.myTalkingGroup_groupStatus_hint)
-						+ getContext().getResources().getString(
-								R.string.myTalkingGroup_groupStatus_unopened);
+						+ _talkingGroupStatusString;
 			}
 
 			// set data
@@ -492,6 +564,20 @@ public class MyTalkingGroupsView extends SIMBaseView {
 							.setVisibility(View.VISIBLE);
 				}
 			}
+		}
+
+	}
+
+	// add contacts to talking group button on click listener
+	class AddContacts2talkingGroupButtonOnClickListener implements
+			OnClickListener {
+
+		@Override
+		public void onClick(View v) {
+			Log.d(LOG_TAG, "Add contacts to talking group");
+
+			// switch to contacts select view
+			//
 		}
 
 	}
