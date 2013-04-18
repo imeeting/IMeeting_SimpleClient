@@ -6,8 +6,11 @@
     <string name="bg_server_myTalkingGroup_id">id</string>
     <string name="bg_server_myTalkingGroup_status">status</string>
     <string name="bg_server_myTalkingGroup_talkingGroupOpened">opened</string>
+    <string name="bg_server_myTalkingGroup_talkingGroupUnopened">unopened</string>
+    <string name="bg_server_talkingGroupAttendee_nickname">nickname</string>
     <string name="bg_server_talkingGroupAttendee_phone">phone</string>
     <string name="bg_server_talkingGroupAttendee_status">status</string>
     <string name="bg_server_talkingGroupAttendee_attendeeIn">in</string>
+    <string name="bg_server_talkingGroupAttendee_attendeeOut">out</string>
 
 </resources>

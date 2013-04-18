@@ -23,6 +23,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -41,10 +42,8 @@ public class MyTalkingGroupsView extends SIMBaseView {
 	private final String GROUP_STARTEDTIME = "group_startedTime";
 	private final String GROUP_ID = "group_id";
 	private final String GROUP_STATUS = "group_status";
-
-	// my talking group attendee listView item adapter data keys
-	private final String ATTENDEE_NAME = "attendee_name";
-	private final String ATTENDEE_STATUS = "attendee_status";
+	private final String GROUP_SELECTED4ITEM = "group_selected_for_item";
+	private final String GROUP_SELECTED4DETAIL = "group_selected_for_detail";
 
 	// my talking groups info array
 	private JSONArray _mMyTalkingGroupsInfoArray = new JSONArray();
@@ -53,10 +52,7 @@ public class MyTalkingGroupsView extends SIMBaseView {
 	private ListView _mMyTalkingGroupListView;
 
 	// selected talking group index
-	private Integer _mSelectedTalkingGroupIndex = 0;
-
-	// my talking group attendees info array
-	private JSONArray _mMyTalkingGroupAttendeesInfoArray = new JSONArray();
+	private Integer _mSelectedTalkingGroupIndex = null;
 
 	// my talking group attendee list view
 	private ListView _mMyTalkingGroupAttendeeListView;
@@ -78,14 +74,6 @@ public class MyTalkingGroupsView extends SIMBaseView {
 			_mMyTalkingGroupsInfoArray
 					.put(new JSONObject(
 							"{\"startedtimestamp\":\"1366430400\", \"id\":\"452316\", \"status\":\"unopened\"}"));
-
-			// set my talking group attendees info array
-			_mMyTalkingGroupAttendeesInfoArray.put(new JSONObject(
-					"{\"phone\":\"18001582338\", \"status\":\"in\"}"));
-			_mMyTalkingGroupAttendeesInfoArray.put(new JSONObject(
-					"{\"phone\":\"13813005146\", \"status\":\"out\"}"));
-			_mMyTalkingGroupAttendeesInfoArray.put(new JSONObject(
-					"{\"phone\":\"18652970325\", \"status\":\"in\"}"));
 		} catch (JSONException e) {
 			Log.e(LOG_TAG, "Set my talking groups info array for test error");
 
@@ -97,7 +85,7 @@ public class MyTalkingGroupsView extends SIMBaseView {
 			// hide no talking group tip textView and show my talking groups
 			((TextView) findViewById(R.id.mtg_noTalkingGroup_tip_textView))
 					.setVisibility(View.GONE);
-			((LinearLayout) findViewById(R.id.mtg_myTalkingGroup_linearLayout))
+			((LinearLayout) findViewById(R.id.mtg_myTalkingGroup7attendees_linearLayout))
 					.setVisibility(View.VISIBLE);
 
 			// get my talking group list view
@@ -108,12 +96,15 @@ public class MyTalkingGroupsView extends SIMBaseView {
 					.setAdapter(new MyTalkingGroup7MyTalkingGroupAttendeeAdapter(
 							getContext(),
 							generateMyTalkingGroupListDataList(_mMyTalkingGroupsInfoArray),
-							R.layout.my_talkinggroup_layout,
-							new String[] { GROUP_STARTEDTIME, GROUP_ID,
-									GROUP_STATUS }, new int[] {
+							R.layout.my_talkinggroup_layout, new String[] {
+									GROUP_SELECTED4ITEM, GROUP_STARTEDTIME,
+									GROUP_ID, GROUP_STATUS,
+									GROUP_SELECTED4DETAIL }, new int[] {
+									R.id.my_talkingGroup_parentRelativeLayout,
 									R.id.my_talkingGroup_startedTime,
 									R.id.my_talkingGroup_groupId,
-									R.id.my_talkingGroup_groupStatus }));
+									R.id.my_talkingGroup_groupStatus,
+									R.id.my_talkingGroup_detailInfo_imageView }));
 
 			// set my talking group listView on item click listener
 			_mMyTalkingGroupListView
@@ -136,8 +127,10 @@ public class MyTalkingGroupsView extends SIMBaseView {
 		// my talking group list data list
 		List<Map<String, ?>> _dataList = new ArrayList<Map<String, ?>>();
 
-		// generate data
 		for (int i = 0; i < myTalkingGroupsInfoArray.length(); i++) {
+			// generate data
+			Map<String, Object> _dataMap = new HashMap<String, Object>();
+
 			// get group info json object
 			JSONObject _groupInfoJsonObject = JSONUtils
 					.getJSONObjectFromJSONArray(myTalkingGroupsInfoArray, i);
@@ -198,7 +191,11 @@ public class MyTalkingGroupsView extends SIMBaseView {
 						_darkSeaGreenForegroundColorSpan, 0,
 						((SpannableString) _groupStatus).length(),
 						Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-			} else {
+			} else if (getContext()
+					.getResources()
+					.getString(
+							R.string.bg_server_myTalkingGroup_talkingGroupUnopened)
+					.equalsIgnoreCase((String) _groupStatus)) {
 				// update my talking group status
 				_groupStatus = getContext().getResources().getString(
 						R.string.myTalkingGroup_groupStatus_hint)
@@ -206,13 +203,13 @@ public class MyTalkingGroupsView extends SIMBaseView {
 								R.string.myTalkingGroup_groupStatus_unopened);
 			}
 
-			// define each my talking group data map
-			Map<String, Object> _dataMap = new HashMap<String, Object>();
-
 			// set data
+			_dataMap.put(GROUP_SELECTED4ITEM, getContext().getResources()
+					.getDrawable(R.drawable.mytalkinggroup_normal_bg));
 			_dataMap.put(GROUP_STARTEDTIME, _groupStartedTime);
 			_dataMap.put(GROUP_ID, _groupId);
 			_dataMap.put(GROUP_STATUS, _groupStatus);
+			_dataMap.put(GROUP_SELECTED4DETAIL, null);
 
 			// add to data list
 			_dataList.add(_dataMap);
@@ -221,32 +218,62 @@ public class MyTalkingGroupsView extends SIMBaseView {
 		return _dataList;
 	}
 
-	// generate my talking group attendee listView adapter data list
-	private List<Map<String, ?>> generateMyTalkingGroupAttendeeListDataList(
+	// generate my talking group attendee adapter
+	private ListAdapter generateMyTalkingGroupAttendeeAdapter(
+			String myTalkingGroupStatus,
 			JSONArray myTalkingGroupAttendeesInfoArray) {
-		// my talking group attendee list data list
-		List<Map<String, ?>> _dataList = new ArrayList<Map<String, ?>>();
+		// my talking group attendee listView item adapter data keys
+		final String ATTENDEE_DISPLAYNAME = "attendee_displayName";
+		final String ATTENDEE_STATUS = "attendee_status";
 
-		// generate data
+		// my talking group attendee list data list
+		List<Map<String, ?>> _myTalkingGroupAttendeesDataList = new ArrayList<Map<String, ?>>();
+
 		for (int i = 0; i < myTalkingGroupAttendeesInfoArray.length(); i++) {
+			// generate data
+			Map<String, Object> _dataMap = new HashMap<String, Object>();
+
+			// define attendee display name
+			Object _attendeeDisplayName;
+
 			// get attendee info json object
 			JSONObject _attendeeInfoJsonObject = JSONUtils
 					.getJSONObjectFromJSONArray(
 							myTalkingGroupAttendeesInfoArray, i);
 
-			// get attendee status and phone
+			// get attendee status, nickname and phone
 			Object _attendeeStatus = JSONUtils.getStringFromJSONObject(
 					_attendeeInfoJsonObject,
 					getContext().getResources().getString(
 							R.string.bg_server_talkingGroupAttendee_status));
-			Object _attendeePhone = JSONUtils.getStringFromJSONObject(
+			String _attebdeeNickname = JSONUtils.getStringFromJSONObject(
+					_attendeeInfoJsonObject,
+					getContext().getResources().getString(
+							R.string.bg_server_talkingGroupAttendee_nickname));
+			String _attendeePhone = JSONUtils.getStringFromJSONObject(
 					_attendeeInfoJsonObject,
 					getContext().getResources().getString(
 							R.string.bg_server_talkingGroupAttendee_phone));
 
-			// check talking group attendee status and reset talking group
-			// attendee status and name
+			// check attendee nickname and phone to set attendee display name
+			if (null != _attebdeeNickname
+					&& !"".equalsIgnoreCase(_attebdeeNickname)) {
+				// use nickname if has
+				_attendeeDisplayName = _attebdeeNickname;
+			} else {
+				// get phone ownership in addressbook
+				_attendeeDisplayName = _attendeePhone;
+			}
+
+			// check talking group status, its attendee status and reset talking
+			// group attendee display name
 			if (getContext()
+					.getResources()
+					.getString(
+							R.string.bg_server_myTalkingGroup_talkingGroupUnopened)
+					.equalsIgnoreCase((String) myTalkingGroupStatus)) {
+				_attendeeStatus = null;
+			} else if (getContext()
 					.getResources()
 					.getString(
 							R.string.bg_server_talkingGroupAttendee_attendeeIn)
@@ -259,30 +286,41 @@ public class MyTalkingGroupsView extends SIMBaseView {
 						getContext().getResources().getColor(
 								R.color.dark_seagreen));
 
-				_attendeePhone = new SpannableString((String) _attendeePhone);
-				((SpannableString) _attendeePhone).setSpan(
+				_attendeeDisplayName = new SpannableString(
+						(String) _attendeeDisplayName);
+				((SpannableString) _attendeeDisplayName).setSpan(
 						_darkSeaGreenForegroundColorSpan, 0,
-						((SpannableString) _attendeePhone).length(),
+						((SpannableString) _attendeeDisplayName).length(),
 						Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-			} else {
+			} else if (getContext()
+					.getResources()
+					.getString(
+							R.string.bg_server_talkingGroupAttendee_attendeeOut)
+					.equalsIgnoreCase((String) _attendeeStatus)) {
 				_attendeeStatus = getContext().getResources().getDrawable(
 						android.R.drawable.presence_invisible);
-
-				//
 			}
-
-			// define each my talking group data map
-			Map<String, Object> _dataMap = new HashMap<String, Object>();
 
 			// set data
 			_dataMap.put(ATTENDEE_STATUS, _attendeeStatus);
-			_dataMap.put(ATTENDEE_NAME, _attendeePhone);
+			_dataMap.put(ATTENDEE_DISPLAYNAME, _attendeeDisplayName);
 
 			// add to data list
-			_dataList.add(_dataMap);
+			_myTalkingGroupAttendeesDataList.add(_dataMap);
 		}
 
-		return _dataList;
+		// get my talking group attendee listView adapter
+		MyTalkingGroup7MyTalkingGroupAttendeeAdapter _myTalkingGroupAttendeesListViewAdapter = (MyTalkingGroup7MyTalkingGroupAttendeeAdapter) _mMyTalkingGroupAttendeeListView
+				.getAdapter();
+
+		return null == _myTalkingGroupAttendeesListViewAdapter ? new MyTalkingGroup7MyTalkingGroupAttendeeAdapter(
+				getContext(), _myTalkingGroupAttendeesDataList,
+				R.layout.talkinggroup_attendee_layout, new String[] {
+						ATTENDEE_STATUS, ATTENDEE_DISPLAYNAME }, new int[] {
+						R.id.talkingGroup_attendee_status_imageView,
+						R.id.talkingGroup_attendee_displayName_textView })
+				: _myTalkingGroupAttendeesListViewAdapter
+						.setData(_myTalkingGroupAttendeesDataList);
 	}
 
 	// inner class
@@ -313,14 +351,26 @@ public class MyTalkingGroupsView extends SIMBaseView {
 			}
 			// my talking group detail info or my talking group attendee status
 			// imageView
-			else if (view instanceof ImageView) {
+			else if (view instanceof ImageView
+					|| view instanceof RelativeLayout) {
 				try {
 					// define item data drawable and convert item data to
 					// drawable
 					Drawable _itemDataDrawable = (Drawable) _itemData;
 
-					// set imageView image
-					((ImageView) view).setImageDrawable(_itemDataDrawable);
+					// check, set imageView image and set its visibility
+					if (null != _itemDataDrawable && view instanceof ImageView) {
+						((ImageView) view).setImageDrawable(_itemDataDrawable);
+
+						if (View.VISIBLE != view.getVisibility()) {
+							view.setVisibility(View.VISIBLE);
+						}
+					} else if (null != _itemDataDrawable
+							&& view instanceof RelativeLayout) {
+						view.setBackgroundDrawable(_itemDataDrawable);
+					} else {
+						view.setVisibility(View.GONE);
+					}
 				} catch (Exception e) {
 					e.printStackTrace();
 
@@ -340,26 +390,107 @@ public class MyTalkingGroupsView extends SIMBaseView {
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position,
 				long id) {
-			// update selected talking group attendee listView adapter
-			_mMyTalkingGroupAttendeeListView
-					.setAdapter(new MyTalkingGroup7MyTalkingGroupAttendeeAdapter(
-							getContext(),
-							generateMyTalkingGroupAttendeeListDataList(_mMyTalkingGroupAttendeesInfoArray),
-							R.layout.talkinggroup_attendee_layout,
-							new String[] { ATTENDEE_STATUS, ATTENDEE_NAME },
-							new int[] {
-									R.id.talkingGroup_attendee_status_imageView,
-									R.id.talkingGroup_attendee_displayName_textView }));
+			// define and get last pressed talking group index
+			Integer _lastPressedTalkingGroupIndex = _mSelectedTalkingGroupIndex;
 
-			// get my talking group attendee listView relativeLayout
-			RelativeLayout _myTalkingGroupAttendeeListViewRelativeLayout = (RelativeLayout) findViewById(R.id.mtg_talkingGroupAttendeeList_relativeLayout);
+			// mark selected row
+			_mSelectedTalkingGroupIndex = position;
 
-			// check my talking group attendee listView relativeLayout
-			// visibility and show it
-			if (View.VISIBLE != _myTalkingGroupAttendeeListViewRelativeLayout
-					.getVisibility()) {
-				_myTalkingGroupAttendeeListViewRelativeLayout
-						.setVisibility(View.VISIBLE);
+			// get selected talking group info
+			JSONObject _myTalkingGroupInfo = JSONUtils
+					.getJSONObjectFromJSONArray(_mMyTalkingGroupsInfoArray,
+							(int) id);
+
+			// update selected talking group item
+			if (_lastPressedTalkingGroupIndex != _mSelectedTalkingGroupIndex) {
+				// get my talking group adapter
+				MyTalkingGroup7MyTalkingGroupAttendeeAdapter _myTalkingGroupAdapter = (MyTalkingGroup7MyTalkingGroupAttendeeAdapter) _mMyTalkingGroupListView
+						.getAdapter();
+
+				// check last pressed talking group index
+				if (null != _lastPressedTalkingGroupIndex) {
+					// get my talking group adapter data map for last selected
+					@SuppressWarnings("unchecked")
+					Map<String, Object> _myTalkingGroupAdapterDataMap = (Map<String, Object>) _myTalkingGroupAdapter
+							.getItem(_lastPressedTalkingGroupIndex);
+
+					// recover last selected talking group item background and
+					// hide detail info
+					// update adapter data map for last selected
+					_myTalkingGroupAdapterDataMap.put(
+							GROUP_SELECTED4ITEM,
+							getContext().getResources().getDrawable(
+									R.drawable.mytalkinggroup_normal_bg));
+					_myTalkingGroupAdapterDataMap.put(GROUP_SELECTED4DETAIL,
+							null);
+				}
+
+				// get my talking group adapter data map for current selected
+				@SuppressWarnings("unchecked")
+				Map<String, Object> _myTalkingGroupAdapterDataMap = (Map<String, Object>) _myTalkingGroupAdapter
+						.getItem((int) id);
+
+				// update selected talking group item background and show detail
+				// info
+				// update adapter data map for current selected
+				_myTalkingGroupAdapterDataMap.put(
+						GROUP_SELECTED4ITEM,
+						getContext().getResources().getDrawable(
+								R.drawable.img_mytalkinggroup_touchdown_bg));
+				_myTalkingGroupAdapterDataMap.put(
+						GROUP_SELECTED4DETAIL,
+						getContext().getResources().getDrawable(
+								R.drawable.img_mytalkinggroup_detailinfo));
+
+				// notify adapter changed
+				_myTalkingGroupAdapter.notifyDataSetChanged();
+
+				// test by ares
+				// get my talking group attendees info array with id
+				JSONArray _myTalkingGroupAttendeesInfoArray = new JSONArray();
+				try {
+					// set my talking group attendees info array
+					_myTalkingGroupAttendeesInfoArray
+							.put(new JSONObject(
+									"{\"nickname\":\"Ares\", \"phone\":\"18001582338\", \"status\":\"in\"}"));
+					_myTalkingGroupAttendeesInfoArray
+							.put(new JSONObject(
+									"{\"nickname\":\"\", \"phone\":\"02566083090\", \"status\":\"out\"}"));
+					_myTalkingGroupAttendeesInfoArray
+							.put(new JSONObject(
+									"{\"nickname\":\"Star King\", \"phone\":\"13813005146\", \"status\":\"out\"}"));
+					_myTalkingGroupAttendeesInfoArray
+							.put(new JSONObject(
+									"{\"nickname\":\"小胡\", \"phone\":\"18652970325\", \"status\":\"in\"}"));
+				} catch (JSONException e) {
+					Log.e(LOG_TAG,
+							"Set my talking group attendee array for test error");
+
+					e.printStackTrace();
+				}
+
+				// update selected talking group attendee listView adapter
+				_mMyTalkingGroupAttendeeListView
+						.setAdapter(generateMyTalkingGroupAttendeeAdapter(
+								JSONUtils
+										.getStringFromJSONObject(
+												_myTalkingGroupInfo,
+												getContext()
+														.getResources()
+														.getString(
+																R.string.bg_server_myTalkingGroup_status)),
+								_myTalkingGroupAttendeesInfoArray));
+
+				// get my talking group attendee listView relativeLayout
+				RelativeLayout _myTalkingGroupAttendeeListViewRelativeLayout = (RelativeLayout) findViewById(R.id.mtg_talkingGroupAttendeeList_relativeLayout);
+
+				// check my talking group attendee listView relativeLayout
+				// visibility and show it
+				if (View.VISIBLE != _myTalkingGroupAttendeeListViewRelativeLayout
+						.getVisibility()) {
+					_myTalkingGroupAttendeeListViewRelativeLayout
+							.setVisibility(View.VISIBLE);
+				}
 			}
 		}
 
