@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/half_transparent" >
+
+    <RelativeLayout
+        android:id="@+id/amic_addManualInputContactPopupWindow_relativeLayout"
+        android:layout_width="260dp"
+        android:layout_height="148dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="120dp"
+        android:background="@drawable/add_manualinputcontact_popupwindow_relativelayout_bg" >
+
+        <Button
+            android:id="@+id/amic_addManualInputContact_popupWindowDismissBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="-6dp"
+            android:background="@android:color/transparent"
+            android:text="@string/addManualInputContact_popupWindowDismissBtn_title"
+            android:textColor="@android:color/white"
+            android:textSize="30sp" />
+
+        <EditText
+            android:id="@+id/amic_addManualInputContact_editText"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="44dp"
+            android:ellipsize="end"
+            android:hint="@string/addManualInputContact_editText_hint"
+            android:inputType="phone" >
+
+            <requestFocus />
+        </EditText>
+
+        <Button
+            android:id="@+id/amic_addManualInputContact_confirmBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="12dp"
+            android:background="@drawable/add_manualinputcontact_popupwindow_confirmbtn_bg"
+            android:text="@string/addManualInputContact_confirmBtn_title"
+            android:textColor="@drawable/action_sheet_button_fc" />
+    </RelativeLayout>
+
+</FrameLayout>

@@ -30,8 +30,10 @@
     <!-- contacts select view -->
     <string name="contactsSelect_leftBarButtonItem_navTitle">我的会议</string>
     <string name="contactsSelect_contactsList_headTip_textViewText">通讯录</string>
-    <string name="contactsSelect_contactsList_contactSearchImgBtn_contentDescription">contact search image button</string>
     <string name="contactsSelect_contactsList_contactSearchEditText_hint">搜索联系人</string>
+    <string name="addManualInputContact_popupWindowDismissBtn_title">×</string>
+    <string name="addManualInputContact_editText_hint">请输入手机号码</string>
+    <string name="addManualInputContact_confirmBtn_title">添加</string>
     <string name="contactsSelect_addressbookContact_unselected_imageView_content_description">address book contact unselected image view</string>
     <string name="contactsSelect_addressbookContact_selected_imageView_content_description">address book contact selected image view</string>
     <string name="contactsSelect_selectedContacts_headTip_textViewText">预邀参与者</string>

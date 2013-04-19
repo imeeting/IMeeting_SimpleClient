@@ -84,6 +84,11 @@ public class ContactsSelectView extends SIMBaseView {
 	// in addressbook contacts present list view
 	private ListView _mInABContactsPresentListView;
 
+	// define add manual input contact popup window
+	private final AddManualInputContactPopupWindow _mAddManualInputContactPopupWindow = new AddManualInputContactPopupWindow(
+			R.layout.add_manualinputcontact_popupwindow_layout,
+			LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
+
 	// define contact phone numbers select popup window
 	private final ContactPhoneNumbersSelectPopupWindow _mContactPhoneNumbersSelectPopupWindow = new ContactPhoneNumbersSelectPopupWindow(
 			R.layout.contact_phonenumbers_select_layout,
@@ -121,8 +126,8 @@ public class ContactsSelectView extends SIMBaseView {
 	@Override
 	public void initSubComponents() {
 		// test by ares
-		_mTalkingGroupContactsPhoneArray.add("13770662051");
-		_mTalkingGroupContactsPhoneArray.add("14756498708");
+		// _mTalkingGroupContactsPhoneArray.add("13770662051");
+		// _mTalkingGroupContactsPhoneArray.add("14756498708");
 
 		// init contacts in addressbook present list view
 		// get contacts in addressbook present list view
@@ -145,6 +150,10 @@ public class ContactsSelectView extends SIMBaseView {
 		// bind contact search editText text watcher
 		((EditText) findViewById(R.id.cs_cl_contactSearchEditText))
 				.addTextChangedListener(new ContactSearchEditTextTextWatcher());
+
+		// bind add manual input contact button on click listener
+		((Button) findViewById(R.id.cs_cl_add_manualInputContactBtn))
+				.setOnClickListener(new AddManualInputContactBtnOnClickListener());
 
 		// init attendees phone in talking group and contacts in prein talking
 		// group list view
@@ -950,6 +959,212 @@ public class ContactsSelectView extends SIMBaseView {
 		@Override
 		public void onTextChanged(CharSequence s, int start, int before,
 				int count) {
+		}
+
+	}
+
+	// add manual input contact button on click listener
+	class AddManualInputContactBtnOnClickListener implements OnClickListener {
+
+		@Override
+		public void onClick(View v) {
+			// show add manual input contact popup window
+			_mAddManualInputContactPopupWindow.showAtLocation(v,
+					Gravity.CENTER, 0, 0);
+		}
+
+	}
+
+	// add manual input contact popup window
+	class AddManualInputContactPopupWindow extends CTPopupWindow {
+
+		public AddManualInputContactPopupWindow(int resource, int width,
+				int height, boolean focusable, boolean isBindDefListener) {
+			super(resource, width, height, focusable, isBindDefListener);
+		}
+
+		public AddManualInputContactPopupWindow(int resource, int width,
+				int height) {
+			super(resource, width, height);
+		}
+
+		@Override
+		protected void bindPopupWindowComponentsListener() {
+			// bind add manual input contact popup window dismiss and confirm
+			// added button on click listener
+			((Button) getContentView().findViewById(
+					R.id.amic_addManualInputContact_popupWindowDismissBtn))
+					.setOnClickListener(new AddManualInputContactPopupWindowDismissBtnOnClickListener());
+			((Button) getContentView().findViewById(
+					R.id.amic_addManualInputContact_confirmBtn))
+					.setOnClickListener(new AddManualInputContactConfirmAddedBtnOnClickListener());
+		}
+
+		@Override
+		protected void resetPopupWindow() {
+			// clear add not manual input contact editText text
+			((EditText) getContentView().findViewById(
+					R.id.amic_addManualInputContact_editText)).setText("");
+		}
+
+		// inner class
+		// add manual input contact popup window dismiss button on click
+		// listener
+		class AddManualInputContactPopupWindowDismissBtnOnClickListener
+				implements OnClickListener {
+
+			@Override
+			public void onClick(View v) {
+				// dismiss add manual input contact popup window
+				dismiss();
+			}
+
+		}
+
+		// add manual input contact confirm added button on click listener
+		class AddManualInputContactConfirmAddedBtnOnClickListener implements
+				OnClickListener {
+
+			@Override
+			public void onClick(View v) {
+				// get added manual input contact phone number
+				String _addedManualInputContactPhoneNumber = ((EditText) getContentView()
+						.findViewById(R.id.amic_addManualInputContact_editText))
+						.getText().toString();
+
+				// check added manual input contact phone number
+				if (null == _addedManualInputContactPhoneNumber
+						|| _addedManualInputContactPhoneNumber
+								.equalsIgnoreCase("")) {
+					Toast.makeText(getContext(),
+							R.string.toast_manualInputContact_phoneNumber_null,
+							Toast.LENGTH_SHORT).show();
+
+					return;
+				}
+
+				// dismiss add manual input contact popup window
+				dismiss();
+
+				// get address book manager
+				AddressBookManager _addressBookManager = AddressBookManager
+						.getInstance();
+
+				// check the added manual input contact with phone number is in
+				// address book
+				Long _manualInputContactId = _addressBookManager
+						.isContactWithPhoneInAddressBook(_addedManualInputContactPhoneNumber);
+				if (null == _manualInputContactId) {
+					// check the new added contact is in talking group attendees
+					if (_mTalkingGroupContactsPhoneArray
+							.contains(_addedManualInputContactPhoneNumber)) {
+						Toast.makeText(
+								getContext(),
+								AddressBookManager
+										.getInstance()
+										.getContactsDisplayNamesByPhone(
+												_addedManualInputContactPhoneNumber)
+										.get(0)
+										+ getContext()
+												.getResources()
+												.getString(
+														R.string.toast_selectedContact_existedInTalkingGroup_attendees),
+								Toast.LENGTH_SHORT).show();
+
+						return;
+					}
+					// check the new added contact is in prein talking group
+					// contacts
+					for (ContactBean _preinTalkingGroupContact : _mPreinTalkingGroupContactsInfoArray) {
+						if (_addedManualInputContactPhoneNumber
+								.equalsIgnoreCase((String) _preinTalkingGroupContact
+										.getExtension().get(
+												SELECTED_CONTACT_SELECTEDPHONE))) {
+							Toast.makeText(
+									getContext(),
+									_preinTalkingGroupContact.getDisplayName()
+											+ getContext()
+													.getResources()
+													.getString(
+															R.string.toast_selectedContact_useTheSelectedPhone_existedInPreinTalkingGroup_contacts),
+									Toast.LENGTH_SHORT).show();
+
+							return;
+						}
+					}
+
+					// generate new added contact
+					ContactBean _newAddedContact = new ContactBean();
+
+					// init new added contact
+					// set aggregated id
+					_newAddedContact.setId(-1L);
+					// set display name
+					_newAddedContact
+							.setDisplayName(_addedManualInputContactPhoneNumber);
+					// set phone numbers
+					List<String> _phoneNumbersList = new ArrayList<String>();
+					_phoneNumbersList.add(_addedManualInputContactPhoneNumber);
+					_newAddedContact.setPhoneNumbers(_phoneNumbersList);
+					// set selected contact the selected phone
+					_newAddedContact.getExtension().put(
+							SELECTED_CONTACT_SELECTEDPHONE,
+							_addedManualInputContactPhoneNumber);
+					// set contact is selected flag
+					_newAddedContact.getExtension().put(CONTACT_IS_SELECTED,
+							true);
+
+					// add new added contact to in and prein talking group
+					// contacts adapter data list and notify adapter changed
+					_mPreinTalkingGroupContactsInfoArray.add(_newAddedContact);
+					_mIn7PreinTalkingGroupContactsAdapterDataList
+							.add(generateIn6PreinTalkingGroupAdapterData(
+									_addedManualInputContactPhoneNumber, false));
+					((InAB6In7PreinTalkingGroupContactAdapter) _mIn7PreinTalkingGroupContactsListView
+							.getAdapter()).notifyDataSetChanged();
+				} else {
+					// get the matched contact
+					ContactBean _matchedContact = _addressBookManager
+							.getContactByAggregatedId(_manualInputContactId);
+
+					// check the matched contact is selected flag
+					if ((Boolean) _matchedContact.getExtension().get(
+							CONTACT_IS_SELECTED)) {
+						Toast.makeText(
+								getContext(),
+								_matchedContact.getDisplayName()
+										+ getContext()
+												.getResources()
+												.getString(
+														_addedManualInputContactPhoneNumber
+																.equalsIgnoreCase((String) _matchedContact
+																		.getExtension()
+																		.get(SELECTED_CONTACT_SELECTEDPHONE)) ? R.string.toast_selectedContact_useTheSelectedPhone_existedInPreinTalkingGroup_contacts
+																: R.string.toast_selectedContact_useAnotherPhone_existedInPreinTalkingGroup_contacts),
+								Toast.LENGTH_SHORT).show();
+
+						return;
+					}
+
+					// check the matched contact in address book listView
+					// present contacts list
+					if (_mPresentContactsInABInfoArray
+							.contains(_matchedContact)) {
+						// mark contact selected
+						markContactSelected(
+								_addedManualInputContactPhoneNumber,
+								_mPresentContactsInABInfoArray
+										.indexOf(_matchedContact), true);
+					} else {
+						// mark contact selected
+						markContactSelected(
+								_addedManualInputContactPhoneNumber,
+								_mAllNamePhoneticSortedContactsInfoArray
+										.indexOf(_matchedContact), false);
+					}
+				}
+			}
+
 		}
 
 	}

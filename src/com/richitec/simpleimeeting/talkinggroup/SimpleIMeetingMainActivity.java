@@ -12,7 +12,6 @@ import android.widget.TextView;
 import com.richitec.commontoolkit.customcomponent.BarButtonItem.BarButtonItemStyle;
 import com.richitec.commontoolkit.utils.DisplayScreenUtils;
 import com.richitec.simpleimeeting.R;
-import com.richitec.simpleimeeting.assistant.AboutActivity;
 import com.richitec.simpleimeeting.customcomponent.SimpleIMeetingBarButtonItem;
 import com.richitec.simpleimeeting.customcomponent.SimpleIMeetingImageBarButtonItem;
 import com.richitec.simpleimeeting.customcomponent.SimpleIMeetingNavigationActivity;
@@ -239,8 +238,11 @@ public class SimpleIMeetingMainActivity extends
 
 		@Override
 		public void onClick(View v) {
+			// show more menu
+			// ??
+
 			// go to about activity
-			pushActivity(AboutActivity.class);
+			// pushActivity(AboutActivity.class);
 		}
 
 	}

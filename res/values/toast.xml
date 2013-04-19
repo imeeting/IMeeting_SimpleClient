@@ -2,7 +2,10 @@
 <resources>
 
     <!-- contacts select view -->
+    <string name="toast_manualInputContact_phoneNumber_null">添加的手机号码不能为空</string>
     <string name="toast_selectedContact_existedInTalkingGroup_attendees">已使用此号码加入群聊</string>
     <string name="toast_selectedContact_atLeastSelectOneContact">请添加一个联系人到群聊</string>
+    <string name="toast_selectedContact_useTheSelectedPhone_existedInPreinTalkingGroup_contacts">已使用此号码准备加入群聊</string>
+    <string name="toast_selectedContact_useAnotherPhone_existedInPreinTalkingGroup_contacts">已使用其他号码准备加入群聊</string>
 
 </resources>
