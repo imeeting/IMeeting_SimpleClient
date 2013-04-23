@@ -31,6 +31,16 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".assistant.SettingActivity"
+            android:label="@string/title_activity_setting"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".assistant.SupportActivity"
+            android:label="@string/title_activity_support"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
             android:name=".assistant.AboutActivity"
             android:label="@string/title_activity_about"
             android:screenOrientation="portrait" >

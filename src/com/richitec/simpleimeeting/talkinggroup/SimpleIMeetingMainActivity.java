@@ -10,8 +10,13 @@ import android.view.View.OnTouchListener;
 import android.widget.TextView;
 
 import com.richitec.commontoolkit.customcomponent.BarButtonItem.BarButtonItemStyle;
+import com.richitec.commontoolkit.customcomponent.CTMenu;
+import com.richitec.commontoolkit.customcomponent.CTMenu.CTMenuOnItemSelectedListener;
 import com.richitec.commontoolkit.utils.DisplayScreenUtils;
 import com.richitec.simpleimeeting.R;
+import com.richitec.simpleimeeting.assistant.AboutActivity;
+import com.richitec.simpleimeeting.assistant.SettingActivity;
+import com.richitec.simpleimeeting.assistant.SupportActivity;
 import com.richitec.simpleimeeting.customcomponent.SimpleIMeetingBarButtonItem;
 import com.richitec.simpleimeeting.customcomponent.SimpleIMeetingImageBarButtonItem;
 import com.richitec.simpleimeeting.customcomponent.SimpleIMeetingNavigationActivity;
@@ -22,6 +27,11 @@ public class SimpleIMeetingMainActivity extends
 
 	private static final String LOG_TAG = SimpleIMeetingMainActivity.class
 			.getCanonicalName();
+
+	// more menu ids
+	private static final int SETTING_MENU = 10;
+	private static final int SUPPORT_MENU = 11;
+	private static final int ABOUT_MENU = 12;
 
 	// simple imeeting main view type
 	private SimpleIMeetingMainViewType _mMainViewType = SimpleIMeetingMainViewType.ADDRESSBOOK_CONTACTS;
@@ -38,6 +48,9 @@ public class SimpleIMeetingMainActivity extends
 	private SimpleIMeetingBarButtonItem _mSwitch2MyTalkingGroupsLeftBarButtonItem;
 	private SimpleIMeetingBarButtonItem _mSwitch2ContactsSelectLeftBarButtonItem;
 
+	// more popup menu
+	private CTMenu _mMorePopupMenu;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -47,6 +60,18 @@ public class SimpleIMeetingMainActivity extends
 
 		// set navigation title and left bar button item
 		setMainActivityNavigationTitle7LeftBarButtonItem();
+
+		// init more popup menu
+		_mMorePopupMenu = new CTMenu(this);
+
+		// add menu item
+		_mMorePopupMenu.add(SETTING_MENU, R.string.moreMenu_settingMenuItem);
+		_mMorePopupMenu.add(SUPPORT_MENU, R.string.moreMenu_supportMenuItem);
+		_mMorePopupMenu.add(ABOUT_MENU, R.string.moreMenu_aboutMenuItem);
+
+		// set more menu on item selected listener
+		_mMorePopupMenu
+				.setMenuOnItemSelectedListener(new MoreMenuOnItemSelectedListener());
 
 		// set right image bar button item, about info image bar button item
 		setRightBarButtonItem(new SimpleIMeetingImageBarButtonItem(this,
@@ -239,10 +264,43 @@ public class SimpleIMeetingMainActivity extends
 		@Override
 		public void onClick(View v) {
 			// show more menu
-			// ??
+			_mMorePopupMenu.showAsDropDown(v);
+		}
 
-			// go to about activity
-			// pushActivity(AboutActivity.class);
+	}
+
+	// more menu on item selected listener
+	class MoreMenuOnItemSelectedListener implements
+			CTMenuOnItemSelectedListener {
+
+		@Override
+		public boolean onMenuItemSelected(CTMenu menu, int menuItemId) {
+			// check popup menu
+			if (_mMorePopupMenu == menu) {
+				// more menu dismiss
+				menu.dismiss();
+
+				// check more menu item id
+				switch (menuItemId) {
+				case SETTING_MENU:
+					// goto setting activity
+					pushActivity(SettingActivity.class);
+					break;
+
+				case SUPPORT_MENU:
+					// goto support activity
+					pushActivity(SupportActivity.class);
+					break;
+
+				case ABOUT_MENU:
+				default:
+					// goto about activity
+					pushActivity(AboutActivity.class);
+					break;
+				}
+			}
+
+			return false;
 		}
 
 	}

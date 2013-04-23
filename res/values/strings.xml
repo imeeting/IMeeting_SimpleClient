@@ -4,6 +4,16 @@
     <!-- iMeeting simple project -->
     <string name="app_name">智会预约版</string>
 
+    <!-- setting activity -->
+    <string name="title_activity_setting">SettingActivity</string>
+    <string name="setting_nav_title_text">设置</string>
+
+    <!-- support activity -->
+    <string name="title_activity_support">SupportActivity</string>
+    <string name="support_nav_title_text">帮助</string>
+    <string name="supportLoading_textView_textHeader">正在加载&#8230;，</string>
+    <string name="supportLoading_progressBar_max">100</string>
+
     <!-- about activity -->
     <string name="title_activity_about">AboutActivity</string>
     <string name="about_nav_title_text">关于</string>
@@ -27,6 +37,9 @@
     <!-- simple imeeting main activity -->
     <string name="title_activity_simple_imeeting_main">SimpleIMeetingMainActivity</string>
     <string name="tap2generateNewTalkingGroup_title">点击安排新会议</string>
+    <string name="moreMenu_settingMenuItem">设置</string>
+    <string name="moreMenu_supportMenuItem">帮助</string>
+    <string name="moreMenu_aboutMenuItem">关于</string>
     <!-- contacts select view -->
     <string name="contactsSelect_leftBarButtonItem_navTitle">我的会议</string>
     <string name="contactsSelect_contactsList_headTip_textViewText">通讯录</string>
