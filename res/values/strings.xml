@@ -7,6 +7,15 @@
     <!-- setting activity -->
     <string name="title_activity_setting">SettingActivity</string>
     <string name="setting_nav_title_text">设置</string>
+    <string name="myAccountGroup_tipTextView_text">我的账户</string>
+    <string name="myAccount_labelTextView_text">用户名：</string>
+    <string name="deviceId_labelTextView_text">设备号：</string>
+    <string name="bindedContactInfo_accountLogoutBtn_title">注销</string>
+    <string name="bindContactInfoGroup_tipTextView_text">绑定联系方式</string>
+    <string name="bindContactInfo_tipTextView_text">绑定以下联系方式，可让您在任何设备上同步，查看和安排您的会议，以便更好的使用智会。</string>
+    <string name="phoneBinded_imageBtn_contentDescription">bind contact phone image button</string>
+    <string name="emailBinded_imageBtn_contentDescription">bind contact email image button</string>
+    <string name="bindContactInfo_accountLoginBtn_title">绑定过联系方式的用户登录</string>
 
     <!-- support activity -->
     <string name="title_activity_support">SupportActivity</string>
