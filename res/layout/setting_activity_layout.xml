@@ -122,7 +122,7 @@
                         android:layout_marginRight="16dp"
                         android:layout_weight="1"
                         android:background="@android:color/transparent"
-                        android:contentDescription="@string/phoneBinded_imageBtn_contentDescription"
+                        android:contentDescription="@string/phoneBind_imageBtn_contentDescription"
                         android:scaleType="centerCrop"
                         android:src="@drawable/phonebind_bg" />
 
@@ -133,7 +133,7 @@
                         android:layout_marginLeft="16dp"
                         android:layout_weight="1"
                         android:background="@android:color/transparent"
-                        android:contentDescription="@string/emailBinded_imageBtn_contentDescription"
+                        android:contentDescription="@string/emailBind_imageBtn_contentDescription"
                         android:scaleType="centerCrop"
                         android:src="@drawable/emailbind_bg" />
                 </LinearLayout>

@@ -13,9 +13,23 @@
     <string name="bindedContactInfo_accountLogoutBtn_title">注销</string>
     <string name="bindContactInfoGroup_tipTextView_text">绑定联系方式</string>
     <string name="bindContactInfo_tipTextView_text">绑定以下联系方式，可让您在任何设备上同步，查看和安排您的会议，以便更好的使用智会。</string>
-    <string name="phoneBinded_imageBtn_contentDescription">bind contact phone image button</string>
-    <string name="emailBinded_imageBtn_contentDescription">bind contact email image button</string>
+    <string name="phoneBind_imageBtn_contentDescription">bind contact phone image button</string>
+    <string name="phoneBind_alertDialog_title">手机号码绑定</string>
+    <string name="phoneBind_alertDialog_bindingPhoneTextView_text">手机号码：</string>
+    <string name="phoneBind_alertDialog_verificationCodeTextView_text">验证码：</string>
+    <string name="phoneBind_alertDialog_getVerificationCodeBtn_normalTitle">获取验证码</string>
+    <string name="phoneBind_alertDialog_getVerificationCodeBtn_disableTitle">***秒后再获取</string>
+    <string name="phoneBind_alertDialog_bindingAccount_loginPwdTextView_text">密码：</string>
+    <string name="phoneBind_alertDialog_bindingAccount_loginPwdConfirmTextView_text">确认密码：</string>
+    <string name="phoneBind_alertDialog_phonebind_cancelBindBtn_title">取消</string>
+    <string name="phoneBind_alertDialog_phonebind_confirmBindBtn_title">绑定</string>
+    <string name="emailBind_imageBtn_contentDescription">bind contact email image button</string>
     <string name="bindContactInfo_accountLoginBtn_title">绑定过联系方式的用户登录</string>
+    <string name="bindedAccountLogin_alertDialog_title">用户登录</string>
+    <string name="bindedAccountLogin_alertDialog_loginNameTextView_text">用户名：</string>
+    <string name="bindedAccountLogin_alertDialog_loginPwdTextView_text">密码：</string>
+    <string name="bindedAccountLogin_alertDialog_loginCancelBtn_title">取消</string>
+    <string name="bindedAccountLogin_alertDialog_loginConfirmBtn_title">登录</string>
 
     <!-- support activity -->
     <string name="title_activity_support">SupportActivity</string>
