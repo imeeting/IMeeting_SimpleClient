@@ -151,7 +151,9 @@ public class SimpleIMeetingAppLaunchActivity extends AppLaunchActivity {
 			Log.e(LOG_TAG,
 					"Register and login with device combined unique id failed!");
 
-			//
+			// go to network unavailable or remote bgServer internal error
+			// activity
+			// ??
 		}
 
 	}
