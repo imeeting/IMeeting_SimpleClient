@@ -3,8 +3,13 @@
 
     <!-- iMeeting server url -->
     <!-- <string name="server_url">https://www.wetalking.net/imeeting</string> -->
-    <string name="server_url">http://192.168.1.121:8080/imeeting</string>
+    <string name="server_url">http://192.168.1.50:8080/imeeting</string>
+
+    <!-- binded account login and register, login with device combined unique id -->
     <string name="login_url">/user/login</string>
+    <string name="reg7LoginWithDeviceId_url">/user/regAndLoginWithDeviceID</string>
+
+    <!--  -->
     <string name="retrieve_auth_code_url">/user/getPhoneCode</string>
     <string name="check_auth_code_url">/user/checkPhoneCode</string>
     <string name="user_register_url">/user/regUser</string>
@@ -26,12 +31,15 @@
     <string name="account_balance_url">/accountBalance</string>
     <string name="card_charge_url">/cardCharge</string>
     <string name="upload_addressbook_url">/addressbook/upload</string>
+
     <!-- support url -->
     <string name="support_url">/help</string>
+
     <!-- version and app download -->
     <string name="appvcenter_url">http://www.wetalking.net/appvcenter</string>
     <string name="app_download_url">/downloadapp/2/android</string>
     <string name="app_version_url">/version/2/android</string>
+
     <!-- other -->
     <string name="notify_url">http://msg.wetalking.net</string>
     <string name="rtmp_server_url">rtmp://rtmp.wetalking.net/quick_server</string>

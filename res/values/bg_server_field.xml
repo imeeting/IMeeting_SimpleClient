@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- android device common info -->
+    <string name="bg_server_deviceBrand">brand</string>
+    <string name="bg_server_deviceModel">model</string>
+    <string name="bg_server_deviceOS_version">release</string>
+    <string name="bg_server_deviceOS_APILevel">sdk</string>
+    <string name="bg_server_deviceDisplayScreen_width">width</string>
+    <string name="bg_server_deviceDisplayScreen_height">height</string>
+
+    <!-- binded account login and register, login with device combined unique id -->
+    <string name="bg_server_userLoginName">loginName</string>
+    <string name="bg_server_userLoginPwd">loginPwd</string>
+    <string name="bg_server_reg7LoginWithDeviceId_deviceId">deviceId</string>
+
     <!-- my talking group view -->
     <string name="bg_server_myTalkingGroup_startedTimestamp">startedtimestamp</string>
     <string name="bg_server_myTalkingGroup_id">id</string>

@@ -1,4 +1,4 @@
-package com.richitec.simpleimeeting.util;
+package com.richitec.simpleimeeting.utils;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -8,11 +8,12 @@ import com.richitec.commontoolkit.user.User;
 import com.richitec.commontoolkit.user.UserBean;
 import com.richitec.commontoolkit.user.UserManager;
 import com.richitec.commontoolkit.utils.DataStorageUtils;
-import com.richitec.simpleimeeting.constants.SIMUserExtAttributes;
+import com.richitec.simpleimeeting.user.SIMUserExtension;
+import com.richitec.simpleimeeting.user.SIMUserExtension.SIMUserExtAttributes;
 
-public class AppDataSaveRestoreUtil {
+public class AppDataSaveRestoreUtils {
 
-	private static final String LOG_TAG = AppDataSaveRestoreUtil.class
+	private static final String LOG_TAG = AppDataSaveRestoreUtils.class
 			.getCanonicalName();
 
 	public static void onSaveInstanceState(Bundle outState) {
@@ -21,7 +22,7 @@ public class AppDataSaveRestoreUtil {
 	}
 
 	public static void onRestoreInstanceState(Bundle savedInstanceState) {
-		Log.d(LOG_TAG, "AppDataSaveRestoreUtil - onRestoreInstanceState");
+		Log.d(LOG_TAG, "AppDataSaveRestoreUtils - onRestoreInstanceState");
 
 		if (!AddressBookManager.getInstance().isInited()) {
 			AddressBookManager.getInstance().traversalAddressBook();
@@ -41,19 +42,20 @@ public class AppDataSaveRestoreUtil {
 	public static void loadAccount() {
 		// get binded account login user info from storage and add to user
 		// manager
-		UserBean _localStorageUser = new UserBean(
-				DataStorageUtils.getString(User.username.name()),
-				DataStorageUtils.getString(User.password.name()),
-				DataStorageUtils.getString(User.userkey.name()));
-		_localStorageUser.setValue(SIMUserExtAttributes.bindContactInfo.name(),
-				DataStorageUtils.getString(SIMUserExtAttributes.bindContactInfo
+		UserBean _localStorageUser = new UserBean();
+
+		// set bind contact info and password
+		_localStorageUser.setPassword(DataStorageUtils.getString(User.password
+				.name()));
+		SIMUserExtension.setUserBindContactInfo(_localStorageUser,
+				DataStorageUtils.getString(SIMUserExtAttributes.BindContactInfo
 						.name()));
 
 		// save user bean and add to user manager
 		UserManager.getInstance().setUser(_localStorageUser);
 
 		Log.d(LOG_TAG,
-				"AppDataSaveRestoreUtil - loadAccount, loaded account = "
+				"AppDataSaveRestoreUtils - loadAccount, loaded account = "
 						+ _localStorageUser.toString());
 	}
 
