@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.richitec.commontoolkit.utils.DeviceUtils;
 import com.richitec.simpleimeeting.R;
 import com.richitec.simpleimeeting.customcomponent.SimpleIMeetingNavigationActivity;
 
@@ -106,7 +107,7 @@ public class SettingActivity extends SimpleIMeetingNavigationActivity {
 		((TextView) findViewById(R.id.set_account6deviceIdLabel_textView))
 				.setText(R.string.deviceId_labelTextView_text);
 		((TextView) findViewById(R.id.set_account6deviceId_textView))
-				.setText("1qaz2wsx-cde3vfr4-45rtfgvb");
+				.setText(DeviceUtils.combinedUniqueId());
 	}
 
 	// inner class

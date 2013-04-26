@@ -5,6 +5,10 @@ import android.graphics.drawable.Drawable;
 
 import com.richitec.commontoolkit.activityextension.AppLaunchActivity;
 import com.richitec.commontoolkit.addressbook.AddressBookManager;
+import com.richitec.commontoolkit.user.User;
+import com.richitec.commontoolkit.user.UserBean;
+import com.richitec.commontoolkit.user.UserManager;
+import com.richitec.commontoolkit.utils.DataStorageUtils;
 import com.richitec.simpleimeeting.talkinggroup.ContactsSelectView;
 import com.richitec.simpleimeeting.talkinggroup.SimpleIMeetingMainActivity;
 
@@ -17,23 +21,7 @@ public class SimpleIMeetingAppLaunchActivity extends AppLaunchActivity {
 
 	@Override
 	public Intent intentActivity() {
-		// // load account
-		// loadAccount();
-
-		// Intent intent = null;
-		// UserBean user = UserManager.getInstance().getUser();
-		// if (user.getPassword() != null && !user.getPassword().equals("")
-		// && user.getUserKey() != null && !user.getUserKey().equals("")) {
-		// intent = new Intent(SimpleIMeetingAppLaunchActivity.this,
-		// MeetingCreateActivity.class);
-		// } else {
-		// intent = new Intent(SimpleIMeetingAppLaunchActivity.this,
-		// AccountSettingActivity.class);
-		// }
-		//
-		// return intent;
-
-		// define target intent activity
+		// define target intent activity, simple iMeeting main activity
 		Intent _targetIntent = new Intent(this,
 				SimpleIMeetingMainActivity.class);
 
@@ -47,18 +35,22 @@ public class SimpleIMeetingAppLaunchActivity extends AppLaunchActivity {
 
 		// init all name phonetic sorted contacts info array
 		ContactsSelectView.initNamePhoneticSortedContactsInfoArray();
-	}
 
-	// private void loadAccount() {
-	// String userName = DataStorageUtils.getString(User.username.name());
-	// String userkey = DataStorageUtils.getString(User.userkey.name());
-	// String password = DataStorageUtils.getString(User.password.name());
-	// UserBean userBean = new UserBean();
-	// userBean.setName(userName);
-	// userBean.setUserKey(userkey);
-	// userBean.setPassword(password);
-	// UserManager.getInstance().setUser(userBean);
-	// Log.d(SystemConstants.TAG, "load account: " + userBean.toString());
-	// }
+		// get binded account login user info from storage and add to user
+		// manager
+		UserBean _localStorageUser;
+
+		// save user bean and add to user manager
+		UserManager.getInstance().setUser(
+				_localStorageUser = new UserBean(DataStorageUtils
+						.getString(User.username.name()), DataStorageUtils
+						.getString(User.password.name()), DataStorageUtils
+						.getString(User.userkey.name())));
+
+		// check the generate user from local storage
+		if (1) {
+			//
+		}
+	}
 
 }
