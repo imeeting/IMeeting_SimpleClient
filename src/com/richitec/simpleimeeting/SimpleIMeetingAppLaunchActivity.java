@@ -5,12 +5,9 @@ import android.graphics.drawable.Drawable;
 
 import com.richitec.commontoolkit.activityextension.AppLaunchActivity;
 import com.richitec.commontoolkit.addressbook.AddressBookManager;
-import com.richitec.commontoolkit.user.User;
-import com.richitec.commontoolkit.user.UserBean;
-import com.richitec.commontoolkit.user.UserManager;
-import com.richitec.commontoolkit.utils.DataStorageUtils;
 import com.richitec.simpleimeeting.talkinggroup.ContactsSelectView;
 import com.richitec.simpleimeeting.talkinggroup.SimpleIMeetingMainActivity;
+import com.richitec.simpleimeeting.util.AppDataSaveRestoreUtil;
 
 public class SimpleIMeetingAppLaunchActivity extends AppLaunchActivity {
 
@@ -31,24 +28,18 @@ public class SimpleIMeetingAppLaunchActivity extends AppLaunchActivity {
 	@Override
 	public void didFinishLaunching() {
 		// traversal address book
+		AddressBookManager
+				.setFilterMode(AddressBookManager.FILTER_IP_AND_CODE_PREFIX);
 		AddressBookManager.getInstance().traversalAddressBook();
 
 		// init all name phonetic sorted contacts info array
 		ContactsSelectView.initNamePhoneticSortedContactsInfoArray();
 
-		// get binded account login user info from storage and add to user
-		// manager
-		UserBean _localStorageUser;
-
-		// save user bean and add to user manager
-		UserManager.getInstance().setUser(
-				_localStorageUser = new UserBean(DataStorageUtils
-						.getString(User.username.name()), DataStorageUtils
-						.getString(User.password.name()), DataStorageUtils
-						.getString(User.userkey.name())));
+		// load account
+		AppDataSaveRestoreUtil.loadAccount();
 
 		// check the generate user from local storage
-		if (1) {
+		if (true) {
 			//
 		}
 	}
