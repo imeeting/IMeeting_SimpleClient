@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- common -->
+    <string name="bg_server_req_resp_result">result</string>
+
     <!-- android device common info -->
     <string name="bg_server_deviceBrand">brand</string>
     <string name="bg_server_deviceModel">model</string>
@@ -9,10 +12,18 @@
     <string name="bg_server_deviceDisplayScreen_width">width</string>
     <string name="bg_server_deviceDisplayScreen_height">height</string>
 
-    <!-- binded account login and register, login with device combined unique id -->
+    <!-- binded account login, register&login with device combined unique id, phone and email bind -->
     <string name="bg_server_userLoginName">loginName</string>
     <string name="bg_server_userLoginPwd">loginPwd</string>
+    <string name="bg_server_login6ContactInfoBindReq_resp_userId">userId</string>
+    <string name="bg_server_login6ContactInfoBindReq_resp_userName">username</string>
+    <string name="bg_server_login6ContactInfoBindReq_resp_userKey">userkey</string>
+    <string name="bg_server_login6ContactInfoBindReq_resp_nickname">nickname</string>
     <string name="bg_server_reg7LoginWithDeviceId_deviceId">deviceId</string>
+    <string name="bg_server_phoneBind_phoneNumber">phone</string>
+    <string name="bg_server_phoneBind_verificationCode">phonecode</string>
+    <string name="bg_server_phoneBind_loginPassword">password</string>
+    <string name="bg_server_phoneBind_loginConfirmationPwd">password1</string>
 
     <!-- my talking group view -->
     <string name="bg_server_myTalkingGroup_startedTimestamp">startedtimestamp</string>

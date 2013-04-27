@@ -1,6 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- common -->
+    <string name="toast_request_exception">连接服务器异常，请稍候重试</string>
+
+    <!-- binded account login, register&login with device combined unique id, phone and email bind -->
+    <string name="toast_login_userName6Pwd_wrong">登录用户名或者密码错误，请稍后重新登录</string>
+    <string name="toast_phoneBind_phoneNumber_null">绑定的手机号码不能为空</string>
+    <string name="toast_phoneBind_phoneNumber_invalid">绑定的手机号码不可用</string>
+    <string name="toast_phoneBind_phoneNumber_binded">此手机号码已与其他设备绑定过</string>
+    <string name="toast_phoneBind_verificationCode_null">验证码不能为空</string>
+    <string name="toast_phoneBind_loginPassword_null">手机绑定的密码不能为空</string>
+    <string name="toast_phoneBind_loginConfirmationPwd_null">手机绑定的验证密码不能为空</string>
+    <string name="toast_phoneBind_loginTwoPwd_notMatched">手机的绑定密码和验证密码不一致</string>
+    <string name="toast_phoneBind_verificationCode_wrong">验证码错误</string>
+    <string name="toast_phoneBind_verificationCode_timeout">验证码超时，请重新获取</string>
+
     <!-- contacts select view -->
     <string name="toast_manualInputContact_phoneNumber_null">添加的手机号码不能为空</string>
     <string name="toast_selectedContact_existedInTalkingGroup_attendees">已使用此号码加入群聊</string>

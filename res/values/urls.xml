@@ -5,14 +5,13 @@
     <!-- <string name="server_url">https://www.wetalking.net/imeeting</string> -->
     <string name="server_url">http://192.168.1.50:8080/imeeting</string>
 
-    <!-- binded account login and register, login with device combined unique id -->
+    <!-- binded account login, register&login with device combined unique id, phone and email bind -->
     <string name="login_url">/user/login</string>
     <string name="reg7LoginWithDeviceId_url">/user/regAndLoginWithDeviceID</string>
+    <string name="retrieve_auth_code_url">/user/getPhoneCode</string>
+    <string name="user_register_url">/user/regUser</string>
 
     <!--  -->
-    <string name="retrieve_auth_code_url">/user/getPhoneCode</string>
-    <string name="check_auth_code_url">/user/checkPhoneCode</string>
-    <string name="user_register_url">/user/regUser</string>
     <string name="user_get_pwd_url">/user/getUserPwd</string>
     <string name="modify_psw_url">/profile/changePwd</string>
     <string name="conf_list_url">/conference/conflist</string>

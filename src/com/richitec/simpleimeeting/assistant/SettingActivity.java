@@ -1,7 +1,12 @@
 package com.richitec.simpleimeeting.assistant;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import org.apache.http.HttpStatus;
+import org.json.JSONObject;
 
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
@@ -16,10 +21,24 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.richitec.commontoolkit.user.User;
+import com.richitec.commontoolkit.user.UserBean;
+import com.richitec.commontoolkit.user.UserManager;
+import com.richitec.commontoolkit.utils.DataStorageUtils;
 import com.richitec.commontoolkit.utils.DeviceUtils;
+import com.richitec.commontoolkit.utils.HttpUtils;
+import com.richitec.commontoolkit.utils.HttpUtils.HttpRequestType;
+import com.richitec.commontoolkit.utils.HttpUtils.HttpResponseResult;
+import com.richitec.commontoolkit.utils.HttpUtils.OnHttpRequestListener;
+import com.richitec.commontoolkit.utils.HttpUtils.PostRequestFormat;
+import com.richitec.commontoolkit.utils.JSONUtils;
+import com.richitec.commontoolkit.utils.StringUtils;
 import com.richitec.simpleimeeting.R;
 import com.richitec.simpleimeeting.customcomponent.SimpleIMeetingNavigationActivity;
+import com.richitec.simpleimeeting.user.SIMUserExtension;
+import com.richitec.simpleimeeting.user.SIMUserExtension.SIMUserExtAttributes;
 
 public class SettingActivity extends SimpleIMeetingNavigationActivity {
 
@@ -110,6 +129,26 @@ public class SettingActivity extends SimpleIMeetingNavigationActivity {
 				.setText(DeviceUtils.combinedUniqueId());
 	}
 
+	// check and cancel the get phone bind verification code again timer task
+	private void cancelGetPhoneBindVerificationCodeAgainTimerTask() {
+		// check and cancel the get phone bind verification code again timer
+		// task
+		if (null != _mGetPhoneBindVerificationCodeAgainTimerTask) {
+			_mGetPhoneBindVerificationCodeAgainTimerTask.cancel();
+
+			// get get phone bind verification code button
+			Button _getPhoneBindVerificationCodeBtn = (Button) _mPhoneBindAlertDialog
+					.findViewById(R.id.pbd_phoneBind_getVerificationCodeBtn);
+
+			// enable get phone bind verification code button
+			_getPhoneBindVerificationCodeBtn.setEnabled(true);
+
+			// update get phone bind verification code button title
+			_getPhoneBindVerificationCodeBtn
+					.setText(R.string.phoneBind_alertDialog_getVerificationCodeBtn_normalTitle);
+		}
+	}
+
 	// inner class
 	// binded account logout button on click listener
 	class BindedAccountLogoutButtonOnClickListener implements OnClickListener {
@@ -158,69 +197,224 @@ public class SettingActivity extends SimpleIMeetingNavigationActivity {
 			// 60 seconds per minute
 			final Integer SECONDS_PER_MINUTE = 60;
 
-			// clear get verification code again counter
-			_mGetVerificationCodeAgainCounter = 0;
+			// get phone bind will be binded phone number
+			String _willBeBindedPhone = ((EditText) _mPhoneBindAlertDialog
+					.findViewById(R.id.pbd_phoneBind_phoneEditText)).getText()
+					.toString();
 
-			// set get phone bind verification code button disable
-			v.setEnabled(false);
+			// check phone bind will be binded phone number
+			if (null == _willBeBindedPhone
+					|| "".equalsIgnoreCase(_willBeBindedPhone)) {
+				Log.w(LOG_TAG, "There is no phone to being binded");
 
-			// update get phone bind verification code button title every 1
-			// second
-			GET_PHONEBIND_VERIFICATIONCODEAGAIN_TIMER
-					.schedule(
-							_mGetPhoneBindVerificationCodeAgainTimerTask = new TimerTask() {
+				Toast.makeText(SettingActivity.this,
+						R.string.toast_phoneBind_phoneNumber_null,
+						Toast.LENGTH_SHORT).show();
+			} else {
+				// clear get verification code again counter
+				_mGetVerificationCodeAgainCounter = 0;
 
-								@Override
-								public void run() {
-									// handle on UI thread with handle
-									UPDATE_PHONEBIND_VERIFICATIONCODEBTNTITLE_HANDLE
-											.post(new Runnable() {
+				// set get phone bind verification code button disable
+				v.setEnabled(false);
 
-												@Override
-												public void run() {
-													// increase get verification
-													// code again counter and
-													// check
-													if (SECONDS_PER_MINUTE > ++_mGetVerificationCodeAgainCounter) {
-														// update get phone bind
+				// update get phone bind verification code button title every 1
+				// second
+				GET_PHONEBIND_VERIFICATIONCODEAGAIN_TIMER
+						.schedule(
+								_mGetPhoneBindVerificationCodeAgainTimerTask = new TimerTask() {
+
+									@Override
+									public void run() {
+										// handle on UI thread with handle
+										UPDATE_PHONEBIND_VERIFICATIONCODEBTNTITLE_HANDLE
+												.post(new Runnable() {
+
+													@Override
+													public void run() {
+														// increase get
 														// verification code
-														// button title
-														((Button) v)
-																.setText(getResources()
-																		.getString(
-																				R.string.phoneBind_alertDialog_getVerificationCodeBtn_disableTitle)
-																		.replace(
-																				"***",
-																				((Integer) (SECONDS_PER_MINUTE - _mGetVerificationCodeAgainCounter))
-																						.toString()));
-													} else {
-														// cancel the get phone
-														// bind verification
-														// code again timer task
-														_mGetPhoneBindVerificationCodeAgainTimerTask
-																.cancel();
+														// again counter and
+														// check
+														if (SECONDS_PER_MINUTE > ++_mGetVerificationCodeAgainCounter) {
+															// update get phone
+															// bind verification
+															// code button title
+															((Button) v)
+																	.setText(getResources()
+																			.getString(
+																					R.string.phoneBind_alertDialog_getVerificationCodeBtn_disableTitle)
+																			.replace(
+																					"***",
+																					((Integer) (SECONDS_PER_MINUTE - _mGetVerificationCodeAgainCounter))
+																							.toString()));
+														} else {
+															// cancel the get
+															// phone bind
+															// verification code
+															// again timer task
+															_mGetPhoneBindVerificationCodeAgainTimerTask
+																	.cancel();
 
-														// enable get phone bind
-														// verification code
-														// button
-														v.setEnabled(true);
+															// enable get phone
+															// bind verification
+															// code button
+															v.setEnabled(true);
 
-														// update get phone bind
-														// verification code
-														// button title
-														((Button) v)
-																.setText(R.string.phoneBind_alertDialog_getVerificationCodeBtn_normalTitle);
+															// update get phone
+															// bind verification
+															// code button title
+															((Button) v)
+																	.setText(R.string.phoneBind_alertDialog_getVerificationCodeBtn_normalTitle);
+														}
 													}
-												}
-											});
-								}
-							}, 0, 1000);
+												});
+									}
+								}, 0, 1000);
 
-			Log.d(LOG_TAG, "Get phone bind verification code");
+				// get phone bind verification code
+				// generate get phone bind verification code param map
+				Map<String, String> _getPhoneBindVerificationCodeParamMap = new HashMap<String, String>();
 
-			// get phone bind verification code
-			// ??
+				// set some params
+				_getPhoneBindVerificationCodeParamMap.put(getResources()
+						.getString(R.string.bg_server_phoneBind_phoneNumber),
+						_willBeBindedPhone);
+
+				// post the http request
+				HttpUtils.postRequest(
+						getResources().getString(R.string.server_url)
+								+ getResources().getString(
+										R.string.retrieve_auth_code_url),
+						PostRequestFormat.URLENCODED,
+						_getPhoneBindVerificationCodeParamMap, null,
+						HttpRequestType.ASYNCHRONOUS,
+						new GetPhoneBindVerificationCodeHttpRequestListener());
+			}
 		}
+	}
+
+	// get phone bind verification code http request listener
+	class GetPhoneBindVerificationCodeHttpRequestListener extends
+			OnHttpRequestListener {
+
+		@Override
+		public void onFinished(HttpResponseResult responseResult) {
+			// get http response entity string json data
+			JSONObject _respJsonData = JSONUtils.toJSONObject(responseResult
+					.getResponseText());
+
+			Log.d(LOG_TAG,
+					"Send get phone bind verification code post http request successful, response json data = "
+							+ _respJsonData);
+
+			// get the result from http response json data
+			String _result = JSONUtils.getStringFromJSONObject(_respJsonData,
+					getResources()
+							.getString(R.string.bg_server_req_resp_result));
+
+			// check result
+			if (null != _result && 0 == Integer.parseInt(_result)) {
+				Log.d(LOG_TAG, "Get phone bind verification code successful!");
+			} else {
+				processGetPhoneBindVerificationCodeException(responseResult);
+			}
+		}
+
+		@Override
+		public void onFailed(HttpResponseResult responseResult) {
+			Log.e(LOG_TAG,
+					"Send get phone bind verification code post http request failed!");
+
+			processGetPhoneBindVerificationCodeException(responseResult);
+		}
+
+		// process get phone bind verification code exception
+		private void processGetPhoneBindVerificationCodeException(
+				HttpResponseResult responseResult) {
+			// make get phone bind verification code failed toast
+			Toast _getPhoneBindVerificationCodeFailedToast = Toast.makeText(
+					SettingActivity.this, R.string.toast_request_exception,
+					Toast.LENGTH_LONG);
+
+			// get and check response result
+			switch (responseResult.getStatusCode()) {
+			case HttpStatus.SC_ACCEPTED:
+			case HttpStatus.SC_CREATED:
+			case HttpStatus.SC_OK:
+				// get the result from http response json data
+				String _result = JSONUtils
+						.getStringFromJSONObject(
+								JSONUtils.toJSONObject(responseResult
+										.getResponseText()),
+								getResources().getString(
+										R.string.bg_server_req_resp_result));
+
+				// check the result
+				if (null != _result) {
+					switch (Integer.parseInt(_result)) {
+					case 0:
+						break;
+
+					case 1:
+						Log.e(LOG_TAG,
+								"Get phone bined verification code failed, the being binded phone number is empty");
+
+						// show get phone bind verification code phone empty
+						// toast
+						Toast.makeText(SettingActivity.this,
+								R.string.toast_phoneBind_phoneNumber_null,
+								Toast.LENGTH_LONG).show();
+						break;
+
+					case 2:
+						Log.d(LOG_TAG,
+								"Get phone bined verification code failed, the being binded phone number is invalid");
+
+						// show get phone bind verification code phone invalid
+						// toast
+						Toast.makeText(SettingActivity.this,
+								R.string.toast_phoneBind_phoneNumber_invalid,
+								Toast.LENGTH_LONG).show();
+						break;
+
+					case 3:
+						Log.d(LOG_TAG,
+								"Get phone bind verification code failed, the being bined phone number had been binded with other device");
+
+						// show get phone bind verification code phone had been
+						// binded toast
+						Toast.makeText(SettingActivity.this,
+								R.string.toast_phoneBind_phoneNumber_binded,
+								Toast.LENGTH_LONG).show();
+						break;
+
+					default:
+						Log.e(LOG_TAG,
+								"Get phone bind verification code failed, bg_server return result is unrecognized");
+
+						// show get phone bind verification code failed toast
+						_getPhoneBindVerificationCodeFailedToast.show();
+						break;
+					}
+				} else {
+					Log.e(LOG_TAG,
+							"Get phone bind verification code failed, bg_server return result is null");
+
+					// show get phone bind verification code failed toast
+					_getPhoneBindVerificationCodeFailedToast.show();
+				}
+				break;
+
+			default:
+				// show get phone bind verification code failed toast
+				_getPhoneBindVerificationCodeFailedToast.show();
+				break;
+			}
+
+			// cancel the get phone bind verification code again timer task
+			cancelGetPhoneBindVerificationCodeAgainTimerTask();
+		}
+
 	}
 
 	// phone bind alertDialog on cancel listener
@@ -247,22 +441,8 @@ public class SettingActivity extends SimpleIMeetingNavigationActivity {
 					.findViewById(R.id.pbd_bindingAccount_loginConfirmPwd_editText))
 					.setText("");
 
-			// check and cancel the get phone bind verification code again timer
-			// task
-			if (null != _mGetPhoneBindVerificationCodeAgainTimerTask) {
-				_mGetPhoneBindVerificationCodeAgainTimerTask.cancel();
-
-				// get get phone bind verification code button
-				Button _getPhoneBindVerificationCodeBtn = (Button) _mPhoneBindAlertDialog
-						.findViewById(R.id.pbd_phoneBind_getVerificationCodeBtn);
-
-				// enable get phone bind verification code button
-				_getPhoneBindVerificationCodeBtn.setEnabled(true);
-
-				// update get phone bind verification code button title
-				_getPhoneBindVerificationCodeBtn
-						.setText(R.string.phoneBind_alertDialog_getVerificationCodeBtn_normalTitle);
-			}
+			// cancel the get phone bind verification code again timer task
+			cancelGetPhoneBindVerificationCodeAgainTimerTask();
 		}
 
 	}
@@ -285,13 +465,290 @@ public class SettingActivity extends SimpleIMeetingNavigationActivity {
 
 		@Override
 		public void onClick(View v) {
-			// cancel phone bind alertDialog
-			_mPhoneBindAlertDialog.cancel();
+			// get and check phone bind will be binded phone number
+			String _willBeBindedPhone = ((EditText) _mPhoneBindAlertDialog
+					.findViewById(R.id.pbd_phoneBind_phoneEditText)).getText()
+					.toString();
+			if (null == _willBeBindedPhone
+					|| "".equalsIgnoreCase(_willBeBindedPhone)) {
+				Log.w(LOG_TAG, "There is no phone to being binded");
 
-			Log.d(LOG_TAG, "Phone bind");
+				Toast.makeText(SettingActivity.this,
+						R.string.toast_phoneBind_phoneNumber_null,
+						Toast.LENGTH_SHORT).show();
 
-			// bind phone
-			// ??
+				return;
+			}
+
+			// get and check verification code
+			String _verificationCode = ((EditText) _mPhoneBindAlertDialog
+					.findViewById(R.id.pbd_phoneBind_verificationCodeEditText))
+					.getText().toString();
+			if (null == _verificationCode
+					|| "".equalsIgnoreCase(_verificationCode)) {
+				Log.w(LOG_TAG,
+						"There is no verification code for binding phone");
+
+				Toast.makeText(SettingActivity.this,
+						R.string.toast_phoneBind_verificationCode_null,
+						Toast.LENGTH_SHORT).show();
+
+				return;
+			}
+
+			// get and check login password
+			String _loginPwd = ((EditText) _mPhoneBindAlertDialog
+					.findViewById(R.id.pbd_bindingAccount_loginPwd_editText))
+					.getText().toString();
+			if (null == _loginPwd || "".equalsIgnoreCase(_loginPwd)) {
+				Log.w(LOG_TAG, "There is no login password for binding phone");
+
+				Toast.makeText(SettingActivity.this,
+						R.string.toast_phoneBind_loginPassword_null,
+						Toast.LENGTH_SHORT).show();
+
+				return;
+			}
+
+			// get and check login confirmation password
+			String _loginConfirmationPwd = ((EditText) _mPhoneBindAlertDialog
+					.findViewById(R.id.pbd_bindingAccount_loginConfirmPwd_editText))
+					.getText().toString();
+			if (null == _loginConfirmationPwd
+					|| "".equalsIgnoreCase(_loginConfirmationPwd)) {
+				Log.w(LOG_TAG,
+						"There is no login confirmation password for binding phone");
+
+				Toast.makeText(SettingActivity.this,
+						R.string.toast_phoneBind_loginConfirmationPwd_null,
+						Toast.LENGTH_SHORT).show();
+
+				return;
+			}
+
+			// check two login password
+			if (!_loginPwd.equalsIgnoreCase(_loginConfirmationPwd)) {
+				Log.w(LOG_TAG,
+						"The login password not matched with the confirmation one");
+
+				Toast.makeText(SettingActivity.this,
+						R.string.toast_phoneBind_loginTwoPwd_notMatched,
+						Toast.LENGTH_LONG).show();
+
+				return;
+			}
+
+			// phone bind confirm
+			// generate confirm bind phone param map
+			Map<String, String> _confirmBindPhoneParamMap = new HashMap<String, String>();
+
+			// set some params
+			_confirmBindPhoneParamMap.put(
+					getResources().getString(
+							R.string.bg_server_phoneBind_phoneNumber),
+					_willBeBindedPhone);
+			_confirmBindPhoneParamMap.put(
+					getResources().getString(
+							R.string.bg_server_phoneBind_verificationCode),
+					_verificationCode);
+			_confirmBindPhoneParamMap.put(
+					getResources().getString(
+							R.string.bg_server_phoneBind_loginPassword),
+					_loginPwd);
+			_confirmBindPhoneParamMap.put(
+					getResources().getString(
+							R.string.bg_server_phoneBind_loginConfirmationPwd),
+					_loginConfirmationPwd);
+			_confirmBindPhoneParamMap.put(
+					getResources().getString(
+							R.string.bg_server_reg7LoginWithDeviceId_deviceId),
+					DeviceUtils.combinedUniqueId());
+
+			// post the http request
+			HttpUtils.postRequest(getResources().getString(R.string.server_url)
+					+ getResources().getString(R.string.user_register_url),
+					PostRequestFormat.URLENCODED, _confirmBindPhoneParamMap,
+					null, HttpRequestType.ASYNCHRONOUS,
+					new PhoneBindConfirmHttpRequestListener());
+		}
+
+	}
+
+	// phone bind confirm http request listener
+	class PhoneBindConfirmHttpRequestListener extends OnHttpRequestListener {
+
+		@Override
+		public void onFinished(HttpResponseResult responseResult) {
+			// get http response entity string json data
+			JSONObject _respJsonData = JSONUtils.toJSONObject(responseResult
+					.getResponseText());
+
+			Log.d(LOG_TAG,
+					"Send phone bind confirm post http request successful, response json data = "
+							+ _respJsonData);
+
+			// get the result from http response json data
+			String _result = JSONUtils.getStringFromJSONObject(_respJsonData,
+					getResources()
+							.getString(R.string.bg_server_req_resp_result));
+
+			// check result
+			if (null != _result && 0 == Integer.parseInt(_result)) {
+				// cancel phone bind alertDialog
+				_mPhoneBindAlertDialog.cancel();
+
+				// get binded phone number, password and add them to local data
+				// storage
+				String _bindedPhone = ((EditText) _mPhoneBindAlertDialog
+						.findViewById(R.id.pbd_phoneBind_phoneEditText))
+						.getText().toString();
+				DataStorageUtils.putObject(
+						SIMUserExtAttributes.BindContactInfo.name(),
+						_bindedPhone);
+
+				String _loginPwd = StringUtils
+						.md5(((EditText) _mPhoneBindAlertDialog
+								.findViewById(R.id.pbd_bindingAccount_loginPwd_editText))
+								.getText().toString());
+				DataStorageUtils.putObject(User.password.name(), _loginPwd);
+
+				// get confirm bind phone response userId and userKey
+				String _confirmBindPhoneRespUserId = JSONUtils
+						.getStringFromJSONObject(
+								_respJsonData,
+								getResources()
+										.getString(
+												R.string.bg_server_login6ContactInfoBindReq_resp_userId));
+				String _confirmBindPhoneRespUserKey = JSONUtils
+						.getStringFromJSONObject(
+								_respJsonData,
+								getResources()
+										.getString(
+												R.string.bg_server_login6ContactInfoBindReq_resp_userKey));
+
+				Log.d(LOG_TAG, "Bind phone successful, response user id = "
+						+ _confirmBindPhoneRespUserId + " and user key = "
+						+ _confirmBindPhoneRespUserKey);
+
+				// generate new binded generate user bean and set other
+				// attributes
+				UserBean _newBindedGenerateUser = new UserBean(
+						_confirmBindPhoneRespUserId, _loginPwd,
+						_confirmBindPhoneRespUserKey);
+				SIMUserExtension.setUserBindContactInfo(_newBindedGenerateUser,
+						_bindedPhone);
+
+				// add it to user manager
+				UserManager.getInstance().setUser(_newBindedGenerateUser);
+			} else {
+				processConfirmBindPhoneException(responseResult);
+			}
+		}
+
+		@Override
+		public void onFailed(HttpResponseResult responseResult) {
+			Log.e(LOG_TAG, "Send phone bind confirm post http request failed!");
+
+			processConfirmBindPhoneException(responseResult);
+		}
+
+		// process confirm bind phone exception
+		private void processConfirmBindPhoneException(
+				HttpResponseResult responseResult) {
+			// make confirm bind phone failed toast
+			Toast _confirmBindPhoneFailedToast = Toast.makeText(
+					SettingActivity.this, R.string.toast_request_exception,
+					Toast.LENGTH_LONG);
+
+			// get and check response result
+			switch (responseResult.getStatusCode()) {
+			case HttpStatus.SC_ACCEPTED:
+			case HttpStatus.SC_CREATED:
+			case HttpStatus.SC_OK:
+				// get the result from http response json data
+				String _result = JSONUtils
+						.getStringFromJSONObject(
+								JSONUtils.toJSONObject(responseResult
+										.getResponseText()),
+								getResources().getString(
+										R.string.bg_server_req_resp_result));
+
+				// check the result
+				if (null != _result) {
+					switch (Integer.parseInt(_result)) {
+					case 0:
+						break;
+
+					case 1:
+						Log.e(LOG_TAG,
+								"Confirm bind phone failed, the verification code is empty");
+
+						// show confirm bind phone verification code phone empty
+						// toast
+						Toast.makeText(SettingActivity.this,
+								R.string.toast_phoneBind_verificationCode_null,
+								Toast.LENGTH_LONG).show();
+						break;
+
+					case 2:
+						Log.e(LOG_TAG,
+								"Confirm bind phone failed, the verification code is wrong");
+
+						// show confirm bind phone verification code phone wrong
+						// toast
+						Toast.makeText(
+								SettingActivity.this,
+								R.string.toast_phoneBind_verificationCode_wrong,
+								Toast.LENGTH_LONG).show();
+						break;
+
+					case 5:
+						Log.e(LOG_TAG,
+								"Confirm bind phone failed, the login password not matched with the confirmation one");
+
+						// show confirm bind phone verification code phone wrong
+						// toast
+						Toast.makeText(
+								SettingActivity.this,
+								R.string.toast_phoneBind_loginTwoPwd_notMatched,
+								Toast.LENGTH_LONG).show();
+						break;
+
+					case 6:
+					case 7:
+						Log.e(LOG_TAG,
+								"Confirm bind phone failed, the verification code is timeout");
+
+						// show confirm bind phone verification code phone wrong
+						// toast
+						Toast.makeText(
+								SettingActivity.this,
+								R.string.toast_phoneBind_verificationCode_timeout,
+								Toast.LENGTH_LONG).show();
+						break;
+
+					default:
+						Log.e(LOG_TAG,
+								"Confirm bind phone failed, bg_server return result is unrecognized");
+
+						// show confirm bind phone failed toast
+						_confirmBindPhoneFailedToast.show();
+						break;
+					}
+				} else {
+					Log.e(LOG_TAG,
+							"Confirm bind phone failed, bg_server return result is null");
+
+					// show confirm bind phone failed toast
+					_confirmBindPhoneFailedToast.show();
+				}
+				break;
+
+			default:
+				// show confirm bind phone failed toast
+				_confirmBindPhoneFailedToast.show();
+				break;
+			}
 		}
 
 	}
