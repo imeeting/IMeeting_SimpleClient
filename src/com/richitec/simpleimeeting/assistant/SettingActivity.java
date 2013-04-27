@@ -554,15 +554,16 @@ public class SettingActivity extends SimpleIMeetingNavigationActivity {
 			_confirmBindPhoneParamMap.put(
 					getResources().getString(
 							R.string.bg_server_phoneBind_loginPassword),
-					_loginPwd);
+					StringUtils.md5(_loginPwd));
 			_confirmBindPhoneParamMap.put(
 					getResources().getString(
 							R.string.bg_server_phoneBind_loginConfirmationPwd),
-					_loginConfirmationPwd);
-			_confirmBindPhoneParamMap.put(
-					getResources().getString(
-							R.string.bg_server_reg7LoginWithDeviceId_deviceId),
-					DeviceUtils.combinedUniqueId());
+					StringUtils.md5(_loginConfirmationPwd));
+			_confirmBindPhoneParamMap
+					.put(getResources()
+							.getString(
+									R.string.bg_server_reg7LoginWithDeviceId6ContactInfoBind_deviceId),
+							DeviceUtils.combinedUniqueId());
 
 			// post the http request
 			HttpUtils.postRequest(getResources().getString(R.string.server_url)

@@ -105,10 +105,11 @@ public class SimpleIMeetingAppLaunchActivity extends AppLaunchActivity {
 		Map<String, String> _reg7LoginWithDeviceIdParamMap = new HashMap<String, String>();
 
 		// set some params
-		_reg7LoginWithDeviceIdParamMap.put(
-				getResources().getString(
-						R.string.bg_server_reg7LoginWithDeviceId_deviceId),
-				DeviceUtils.combinedUniqueId());
+		_reg7LoginWithDeviceIdParamMap
+				.put(getResources()
+						.getString(
+								R.string.bg_server_reg7LoginWithDeviceId6ContactInfoBind_deviceId),
+						DeviceUtils.combinedUniqueId());
 
 		// post the http request
 		HttpUtils.postRequest(getResources().getString(R.string.server_url)
