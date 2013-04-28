@@ -26,7 +26,7 @@
     <string name="emailBind_imageBtn_contentDescription">bind contact email image button</string>
     <string name="bindContactInfo_accountLoginBtn_title">绑定过联系方式的用户登录</string>
     <string name="bindedAccountLogin_alertDialog_title">用户登录</string>
-    <string name="bindedAccountLogin_alertDialog_loginNameTextView_text">用户名：</string>
+    <string name="bindedAccountLogin_alertDialog_loginUserNameTextView_text">用户名：</string>
     <string name="bindedAccountLogin_alertDialog_loginPwdTextView_text">密码：</string>
     <string name="bindedAccountLogin_alertDialog_loginCancelBtn_title">取消</string>
     <string name="bindedAccountLogin_alertDialog_loginConfirmBtn_title">登录</string>

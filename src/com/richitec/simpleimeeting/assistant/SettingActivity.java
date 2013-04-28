@@ -36,6 +36,7 @@ import com.richitec.commontoolkit.utils.HttpUtils.PostRequestFormat;
 import com.richitec.commontoolkit.utils.JSONUtils;
 import com.richitec.commontoolkit.utils.StringUtils;
 import com.richitec.simpleimeeting.R;
+import com.richitec.simpleimeeting.assistant.BindedAccountLoginHttpRequestListener.BindedAccountLoginType;
 import com.richitec.simpleimeeting.customcomponent.SimpleIMeetingNavigationActivity;
 import com.richitec.simpleimeeting.user.SIMUserExtension;
 import com.richitec.simpleimeeting.user.SIMUserExtension.SIMUserExtAttributes;
@@ -129,6 +130,17 @@ public class SettingActivity extends SimpleIMeetingNavigationActivity {
 				.setText(DeviceUtils.combinedUniqueId());
 	}
 
+	public AlertDialog getBindedAccountManualLoginAlertDialog() {
+		return _mBindedAccountLoginAlertDialog;
+	}
+
+	// update my account group UI
+	public void updateMyAccountGroupUI(DataOwnershipMode dataOwnershipMode) {
+		// update account or device id textView text and its label textView text
+
+		// show or hide binded account logout button
+	}
+
 	// check and cancel the get phone bind verification code again timer task
 	private void cancelGetPhoneBindVerificationCodeAgainTimerTask() {
 		// check and cancel the get phone bind verification code again timer
@@ -150,15 +162,36 @@ public class SettingActivity extends SimpleIMeetingNavigationActivity {
 	}
 
 	// inner class
+	// data ownership mode
+	public enum DataOwnershipMode {
+		DEVICE, BINDED_ACCOUNT
+	}
+
 	// binded account logout button on click listener
 	class BindedAccountLogoutButtonOnClickListener implements OnClickListener {
 
 		@Override
 		public void onClick(View v) {
-			Log.d(LOG_TAG, "Binded account logout");
+			// revert to register and login with device combined unique id
+			// generate register and login with device combined unique id param
+			// map
+			Map<String, String> _reg7LoginWithDeviceIdParamMap = new HashMap<String, String>();
 
-			// binded account logout
-			// ??
+			// set some params
+			_reg7LoginWithDeviceIdParamMap
+					.put(getResources()
+							.getString(
+									R.string.bg_server_reg7LoginWithDeviceId6ContactInfoBind_deviceId),
+							DeviceUtils.combinedUniqueId());
+
+			// post the http request
+			HttpUtils.postRequest(
+					getResources().getString(R.string.server_url)
+							+ getResources().getString(
+									R.string.reg7LoginWithDeviceId_url),
+					PostRequestFormat.URLENCODED,
+					_reg7LoginWithDeviceIdParamMap, null,
+					HttpRequestType.SYNCHRONOUS, null);
 		}
 
 	}
@@ -554,11 +587,11 @@ public class SettingActivity extends SimpleIMeetingNavigationActivity {
 			_confirmBindPhoneParamMap.put(
 					getResources().getString(
 							R.string.bg_server_phoneBind_loginPassword),
-					StringUtils.md5(_loginPwd));
+					_loginPwd);
 			_confirmBindPhoneParamMap.put(
 					getResources().getString(
 							R.string.bg_server_phoneBind_loginConfirmationPwd),
-					StringUtils.md5(_loginConfirmationPwd));
+					_loginConfirmationPwd);
 			_confirmBindPhoneParamMap
 					.put(getResources()
 							.getString(
@@ -641,6 +674,9 @@ public class SettingActivity extends SimpleIMeetingNavigationActivity {
 
 				// add it to user manager
 				UserManager.getInstance().setUser(_newBindedGenerateUser);
+
+				// update my account group UI
+				updateMyAccountGroupUI(DataOwnershipMode.BINDED_ACCOUNT);
 			} else {
 				processConfirmBindPhoneException(responseResult);
 			}
@@ -803,13 +839,66 @@ public class SettingActivity extends SimpleIMeetingNavigationActivity {
 
 		@Override
 		public void onClick(View v) {
-			// cancel binded account login alertDialog
-			_mBindedAccountLoginAlertDialog.cancel();
+			// get and check binded account login user name
+			String _loginUserName = ((EditText) _mBindedAccountLoginAlertDialog
+					.findViewById(R.id.bald_bindedAccount_loginUserName_editText))
+					.getText().toString();
+			if (null == _loginUserName || "".equalsIgnoreCase(_loginUserName)) {
+				Log.w(LOG_TAG, "There is no user name for binded account login");
 
-			Log.d(LOG_TAG, "Binded account login");
+				Toast.makeText(SettingActivity.this,
+						R.string.toast_bindedAccount_login_userName_null,
+						Toast.LENGTH_SHORT).show();
 
-			// binded account login
-			// ??
+				return;
+			}
+
+			// get and check binded account login password
+			String _loginPassword = ((EditText) _mBindedAccountLoginAlertDialog
+					.findViewById(R.id.bald_bindedAccount_loginPwd_editText))
+					.getText().toString();
+			if (null == _loginPassword || "".equalsIgnoreCase(_loginPassword)) {
+				Log.w(LOG_TAG, "There is no password for binded account login");
+
+				Toast.makeText(SettingActivity.this,
+						R.string.toast_bindedAccount_login_password_null,
+						Toast.LENGTH_SHORT).show();
+
+				return;
+			}
+
+			// binded account user login
+			// generate binded account login param map
+			Map<String, String> _bindedAccountLoginParamMap = new HashMap<String, String>();
+
+			// set some params
+			_bindedAccountLoginParamMap.put(
+					getResources().getString(R.string.bg_server_userLoginName),
+					_loginUserName);
+			_bindedAccountLoginParamMap.put(
+					getResources().getString(R.string.bg_server_userLoginPwd),
+					StringUtils.md5(_loginPassword));
+
+			// post the http request
+			try {
+				HttpUtils.postRequest(
+						getResources().getString(R.string.server_url)
+								+ getResources().getString(R.string.login_url),
+						PostRequestFormat.URLENCODED,
+						_bindedAccountLoginParamMap, null,
+						HttpRequestType.ASYNCHRONOUS,
+						new BindedAccountLoginHttpRequestListener(
+								SettingActivity.this,
+								BindedAccountLoginType.MANUAL)
+								.setManualLoginUserName7Pwd(_loginUserName,
+										_loginPassword));
+			} catch (Exception e) {
+				Log.e(LOG_TAG,
+						"Send binded account login post http request error, exception message = "
+								+ e.getMessage());
+
+				e.printStackTrace();
+			}
 		}
 
 	}
