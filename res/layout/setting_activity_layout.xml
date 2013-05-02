@@ -106,6 +106,7 @@
                     android:textColor="@color/golden_yellow" />
 
                 <LinearLayout
+                    android:id="@+id/set_contactsInfoBind_linearLayout"
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
                     android:layout_marginTop="6dp"

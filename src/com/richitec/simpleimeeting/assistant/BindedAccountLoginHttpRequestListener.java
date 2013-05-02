@@ -18,7 +18,6 @@ import com.richitec.commontoolkit.utils.JSONUtils;
 import com.richitec.commontoolkit.utils.StringUtils;
 import com.richitec.simpleimeeting.R;
 import com.richitec.simpleimeeting.SimpleIMeetingAppLaunchActivity;
-import com.richitec.simpleimeeting.assistant.SettingActivity.DataOwnershipMode;
 import com.richitec.simpleimeeting.user.SIMUserExtension;
 import com.richitec.simpleimeeting.user.SIMUserExtension.SIMUserExtAttributes;
 
@@ -96,8 +95,8 @@ public class BindedAccountLoginHttpRequestListener extends
 
 		// check result
 		if (null != _result && 0 == Integer.parseInt(_result)) {
-			// get binded account login response userId, userKey and
-			// nickname
+			// get binded account login response userId, userKey, nickname and
+			// bindStatus
 			String _bindedAccountLoginRespUserId = JSONUtils
 					.getStringFromJSONObject(
 							_respJsonData,
@@ -119,13 +118,21 @@ public class BindedAccountLoginHttpRequestListener extends
 									.getResources()
 									.getString(
 											R.string.bg_server_login6ContactInfoBindReq_resp_nickname));
+			String _bindedAccountLoginRespBindStatus = JSONUtils
+					.getStringFromJSONObject(
+							_respJsonData,
+							_mContext
+									.getResources()
+									.getString(
+											R.string.bg_server_login6reg7LoginWithDeviceIdReq_resp_bindStatus));
 
 			Log.d(LOG_TAG,
 					"Binded account login successful, response user id = "
 							+ _bindedAccountLoginRespUserId + ", user key = "
-							+ _bindedAccountLoginRespUserKey
-							+ " and nickname = "
-							+ _bindedAccountLoginRespNickname);
+							+ _bindedAccountLoginRespUserKey + ", nickname = "
+							+ _bindedAccountLoginRespNickname
+							+ " and bind status = "
+							+ _bindedAccountLoginRespBindStatus);
 
 			// check binded account login type
 			if (null != _mLoginType
@@ -136,7 +143,7 @@ public class BindedAccountLoginHttpRequestListener extends
 
 				// save manual login user name and password to local storage
 				DataStorageUtils.putObject(
-						SIMUserExtAttributes.BindContactInfo.name(),
+						SIMUserExtAttributes.BIND_CONTACTINFO.name(),
 						_mManualLoginUserName);
 				DataStorageUtils.putObject(User.password.name(),
 						StringUtils.md5(_mManualLoginPwd));
@@ -161,13 +168,16 @@ public class BindedAccountLoginHttpRequestListener extends
 					.setUserKey(_bindedAccountLoginRespUserKey);
 			SIMUserExtension.setUserNickname(_bindedAccountLoginRetUser,
 					_bindedAccountLoginRespNickname);
+			SIMUserExtension.setUserContactsInfoBeBinded(
+					_bindedAccountLoginRetUser,
+					_bindedAccountLoginRespBindStatus);
 
 			// check binded account login type
 			if (null != _mLoginType
 					&& BindedAccountLoginType.MANUAL.equals(_mLoginType)) {
-				// update my account group UI
+				// update my account and contacts info bind group UI
 				((SettingActivity) _mContext)
-						.updateMyAccountGroupUI(DataOwnershipMode.BINDED_ACCOUNT);
+						.updateMyAccount7ContactsInfoBindGroupUI();
 			}
 		} else {
 			processBindedAccountLoginException(responseResult);
@@ -275,7 +285,7 @@ public class BindedAccountLoginHttpRequestListener extends
 	}
 
 	// context not activity exception
-	public class ContextNotActivityException extends Exception {
+	class ContextNotActivityException extends Exception {
 
 		/**
 		 * 

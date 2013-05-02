@@ -19,6 +19,8 @@
     <string name="bg_server_login6ContactInfoBindReq_resp_userName">username</string>
     <string name="bg_server_login6ContactInfoBindReq_resp_userKey">userkey</string>
     <string name="bg_server_login6ContactInfoBindReq_resp_nickname">nickname</string>
+    <string name="bg_server_login6reg7LoginWithDeviceIdReq_resp_bindStatus">bind_status</string>
+    <string name="bg_server_login6reg7LoginWithDeviceIdReq_resp_bindPhoneStatus">bind_phone</string>
     <string name="bg_server_reg7LoginWithDeviceId6ContactInfoBind_deviceId">deviceId</string>
     <string name="bg_server_phoneBind_phoneNumber">phone</string>
     <string name="bg_server_phoneBind_verificationCode">phonecode</string>

@@ -12,24 +12,37 @@ public class SIMUserExtension {
 	// set simple iMetting user bind contact info
 	public static void setUserBindContactInfo(UserBean user,
 			String bindContactInfo) {
-		setUserExtAttribute(user, SIMUserExtAttributes.BindContactInfo,
+		setUserExtAttribute(user, SIMUserExtAttributes.BIND_CONTACTINFO,
 				bindContactInfo);
 	}
 
 	// get simple iMetting user bind contact info
 	public static String getUserBindContactInfo(UserBean user) {
-		return getUserExtAttribute(user, SIMUserExtAttributes.BindContactInfo);
+		return getUserExtAttribute(user, SIMUserExtAttributes.BIND_CONTACTINFO);
 	}
 
 	// set simple iMetting user nickname
 	public static void setUserNickname(UserBean user, String bindContactInfo) {
-		setUserExtAttribute(user, SIMUserExtAttributes.Nickname,
+		setUserExtAttribute(user, SIMUserExtAttributes.NICKNAME,
 				bindContactInfo);
 	}
 
 	// get simple iMetting user nickname
 	public static String getUserNickname(UserBean user) {
-		return getUserExtAttribute(user, SIMUserExtAttributes.Nickname);
+		return getUserExtAttribute(user, SIMUserExtAttributes.NICKNAME);
+	}
+
+	// set simple iMetting user contacts info be binded
+	public static void setUserContactsInfoBeBinded(UserBean user,
+			String contactsInfoBeBinded) {
+		setUserExtAttribute(user, SIMUserExtAttributes.CONTACTSINFO_BEBINDED,
+				contactsInfoBeBinded);
+	}
+
+	// get simple iMetting user contacts info be binded
+	public static String getUserContactsInfoBeBinded(UserBean user) {
+		return getUserExtAttribute(user,
+				SIMUserExtAttributes.CONTACTSINFO_BEBINDED);
 	}
 
 	// set user extension attribute with key and value
@@ -66,7 +79,7 @@ public class SIMUserExtension {
 	// inner class
 	// simple iMeeting user extension attributes
 	public static enum SIMUserExtAttributes {
-		BindContactInfo, Nickname
+		BIND_CONTACTINFO, NICKNAME, CONTACTSINFO_BEBINDED
 	}
 
 }

@@ -3,8 +3,6 @@ package com.richitec.simpleimeeting;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.json.JSONObject;
-
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -18,11 +16,9 @@ import com.richitec.commontoolkit.user.UserManager;
 import com.richitec.commontoolkit.utils.DeviceUtils;
 import com.richitec.commontoolkit.utils.HttpUtils;
 import com.richitec.commontoolkit.utils.HttpUtils.HttpRequestType;
-import com.richitec.commontoolkit.utils.HttpUtils.HttpResponseResult;
-import com.richitec.commontoolkit.utils.HttpUtils.OnHttpRequestListener;
 import com.richitec.commontoolkit.utils.HttpUtils.PostRequestFormat;
-import com.richitec.commontoolkit.utils.JSONUtils;
 import com.richitec.simpleimeeting.assistant.BindedAccountLoginHttpRequestListener;
+import com.richitec.simpleimeeting.assistant.RegAndLoginWithDeviceIdHttpRequestListener;
 import com.richitec.simpleimeeting.talkinggroup.ContactsSelectView;
 import com.richitec.simpleimeeting.talkinggroup.SimpleIMeetingMainActivity;
 import com.richitec.simpleimeeting.user.SIMUserExtension;
@@ -135,94 +131,23 @@ public class SimpleIMeetingAppLaunchActivity extends AppLaunchActivity {
 						DeviceUtils.combinedUniqueId());
 
 		// post the http request
-		HttpUtils.postRequest(getResources().getString(R.string.server_url)
-				+ getResources().getString(R.string.reg7LoginWithDeviceId_url),
-				PostRequestFormat.URLENCODED, _reg7LoginWithDeviceIdParamMap,
-				null, HttpRequestType.SYNCHRONOUS,
-				new RegisterAndLoginWithDeviceIdHttpRequestListener());
-	}
-
-	// inner class
-	// register and login with device combined unique id http request listener
-	class RegisterAndLoginWithDeviceIdHttpRequestListener extends
-			OnHttpRequestListener {
-
-		@Override
-		public void onFinished(HttpResponseResult responseResult) {
-			// get http response entity string json data
-			JSONObject _respJsonData = JSONUtils.toJSONObject(responseResult
-					.getResponseText());
-
-			Log.d(LOG_TAG,
-					"Send register and login with device combined unique id post http request successful, response json data = "
-							+ _respJsonData);
-
-			// get the result from http response json data
-			String _result = JSONUtils.getStringFromJSONObject(_respJsonData,
-					getResources()
-							.getString(R.string.bg_server_req_resp_result));
-
-			// check result
-			if (null != _result) {
-				switch (Integer.parseInt(_result)) {
-				case 0:
-					// get register and login with device id response userId and
-					// userKey
-					String _reg7LoginWithDeviceIdRespUserId = JSONUtils
-							.getStringFromJSONObject(
-									_respJsonData,
-									getResources()
-											.getString(
-													R.string.bg_server_login6ContactInfoBindReq_resp_userId));
-					String _reg7LoginWithDeviceIdRespUserKey = JSONUtils
-							.getStringFromJSONObject(
-									_respJsonData,
-									getResources()
-											.getString(
-													R.string.bg_server_login6ContactInfoBindReq_resp_userKey));
-
-					Log.d(LOG_TAG,
-							"Register and login with device combined unique id successful, response user id = "
-									+ _reg7LoginWithDeviceIdRespUserId
-									+ " and user key = "
-									+ _reg7LoginWithDeviceIdRespUserKey);
-
-					// generate new user bean and add to user manager
-					UserManager.getInstance().setUser(
-							new UserBean(_reg7LoginWithDeviceIdRespUserId,
-									null, _reg7LoginWithDeviceIdRespUserKey));
-					break;
-
-				default:
-					Log.e(LOG_TAG,
-							"Register and login with device combined unique id failed, bg_server return result is unrecognized");
-
-					processReg7LoginWithDeviceIdException();
-					break;
-				}
-			} else {
-				Log.e(LOG_TAG,
-						"Register and login with device combined unique id failed, bg_server return result is null");
-
-				processReg7LoginWithDeviceIdException();
-			}
-		}
-
-		@Override
-		public void onFailed(HttpResponseResult responseResult) {
+		try {
+			HttpUtils.postRequest(
+					getResources().getString(R.string.server_url)
+							+ getResources().getString(
+									R.string.reg7login_withDeviceId_url),
+					PostRequestFormat.URLENCODED,
+					_reg7LoginWithDeviceIdParamMap, null,
+					HttpRequestType.SYNCHRONOUS,
+					new RegAndLoginWithDeviceIdHttpRequestListener(
+							SimpleIMeetingAppLaunchActivity.this));
+		} catch (Exception e) {
 			Log.e(LOG_TAG,
-					"Send register and login with device combined unique id post http request failed!");
+					"Send register and login with device combined id post http request error, exception message = "
+							+ e.getMessage());
 
-			processReg7LoginWithDeviceIdException();
+			e.printStackTrace();
 		}
-
-		// process register and login with device combined unique id exception
-		private void processReg7LoginWithDeviceIdException() {
-			// go to network unavailable or remote bgServer internal error
-			// activity
-			// ??
-		}
-
 	}
 
 }

@@ -37,6 +37,7 @@ import com.richitec.commontoolkit.utils.JSONUtils;
 import com.richitec.commontoolkit.utils.StringUtils;
 import com.richitec.simpleimeeting.R;
 import com.richitec.simpleimeeting.assistant.BindedAccountLoginHttpRequestListener.BindedAccountLoginType;
+import com.richitec.simpleimeeting.assistant.RegAndLoginWithDeviceIdHttpRequestListener.Reg7LoginWithDeviceIdType;
 import com.richitec.simpleimeeting.customcomponent.SimpleIMeetingNavigationActivity;
 import com.richitec.simpleimeeting.user.SIMUserExtension;
 import com.richitec.simpleimeeting.user.SIMUserExtension.SIMUserExtAttributes;
@@ -72,6 +73,9 @@ public class SettingActivity extends SimpleIMeetingNavigationActivity {
 
 		// set title text
 		setTitle(R.string.setting_nav_title_text);
+
+		// update my account and contacts info bind group UI
+		updateMyAccount7ContactsInfoBindGroupUI();
 
 		// define a alertDialog builder
 		final Builder ALERTDIALOG_BUILDER = new AlertDialog.Builder(this);
@@ -123,22 +127,46 @@ public class SettingActivity extends SimpleIMeetingNavigationActivity {
 				R.layout.bindedaccount_login_dialog_layout, null));
 		_mBindedAccountLoginAlertDialog = ALERTDIALOG_BUILDER.create();
 
-		// test by ares
-		((TextView) findViewById(R.id.set_account6deviceIdLabel_textView))
-				.setText(R.string.deviceId_labelTextView_text);
-		((TextView) findViewById(R.id.set_account6deviceId_textView))
-				.setText(DeviceUtils.combinedUniqueId());
+		// bind binded account login alertDialog on cancel listener
+		_mBindedAccountLoginAlertDialog
+				.setOnCancelListener(new BindedAccountLoginAlertDialogOnCancelListener());
 	}
 
 	public AlertDialog getBindedAccountManualLoginAlertDialog() {
 		return _mBindedAccountLoginAlertDialog;
 	}
 
-	// update my account group UI
-	public void updateMyAccountGroupUI(DataOwnershipMode dataOwnershipMode) {
-		// update account or device id textView text and its label textView text
+	// update my account and contacts info bind group UI
+	public void updateMyAccount7ContactsInfoBindGroupUI() {
+		// get login user
+		UserBean _loginUser = UserManager.getInstance().getUser();
+
+		// get and check login user bind contact info
+		String _bindContactInfo = SIMUserExtension
+				.getUserBindContactInfo(_loginUser);
+
+		// set account or device id textView text and its label textView text
+		((TextView) findViewById(R.id.set_account6deviceId_textView))
+				.setText(null != _bindContactInfo ? _bindContactInfo
+						: DeviceUtils.combinedUniqueId());
+		((TextView) findViewById(R.id.set_account6deviceIdLabel_textView))
+				.setText(null != _bindContactInfo ? R.string.myAccount_labelTextView_text
+						: R.string.deviceId_labelTextView_text);
 
 		// show or hide binded account logout button
+		((Button) findViewById(R.id.set_accountLogout_button))
+				.setVisibility(null != _bindContactInfo ? View.VISIBLE
+						: View.GONE);
+
+		// get and check contacts info binded type
+		String _contactsInfoBeBinded = SIMUserExtension
+				.getUserContactsInfoBeBinded(_loginUser);
+		((ImageButton) findViewById(R.id.set_phoneBind_imageButton))
+				.setEnabled(null != _contactsInfoBeBinded ? getResources()
+						.getString(
+								R.string.bg_server_login6reg7LoginWithDeviceIdReq_resp_bindPhoneStatus)
+						.equalsIgnoreCase(_contactsInfoBeBinded) ? false : true
+						: true);
 	}
 
 	// check and cancel the get phone bind verification code again timer task
@@ -162,10 +190,10 @@ public class SettingActivity extends SimpleIMeetingNavigationActivity {
 	}
 
 	// inner class
-	// data ownership mode
-	public enum DataOwnershipMode {
-		DEVICE, BINDED_ACCOUNT
-	}
+	// // data ownership mode
+	// public enum DataOwnershipMode {
+	// DEVICE, BINDED_ACCOUNT
+	// }
 
 	// binded account logout button on click listener
 	class BindedAccountLogoutButtonOnClickListener implements OnClickListener {
@@ -185,13 +213,27 @@ public class SettingActivity extends SimpleIMeetingNavigationActivity {
 							DeviceUtils.combinedUniqueId());
 
 			// post the http request
-			HttpUtils.postRequest(
-					getResources().getString(R.string.server_url)
-							+ getResources().getString(
-									R.string.reg7LoginWithDeviceId_url),
-					PostRequestFormat.URLENCODED,
-					_reg7LoginWithDeviceIdParamMap, null,
-					HttpRequestType.SYNCHRONOUS, null);
+			try {
+				HttpUtils
+						.postRequest(
+								getResources().getString(R.string.server_url)
+										+ getResources()
+												.getString(
+														R.string.reg7login_withDeviceId_url),
+								PostRequestFormat.URLENCODED,
+								_reg7LoginWithDeviceIdParamMap,
+								null,
+								HttpRequestType.ASYNCHRONOUS,
+								new RegAndLoginWithDeviceIdHttpRequestListener(
+										SettingActivity.this,
+										Reg7LoginWithDeviceIdType.BINDEDACCOUNT_LOGOUT));
+			} catch (Exception e) {
+				Log.e(LOG_TAG,
+						"Send register and login with device combined id post http request error, exception message = "
+								+ e.getMessage());
+
+				e.printStackTrace();
+			}
 		}
 
 	}
@@ -314,14 +356,17 @@ public class SettingActivity extends SimpleIMeetingNavigationActivity {
 						_willBeBindedPhone);
 
 				// post the http request
-				HttpUtils.postRequest(
-						getResources().getString(R.string.server_url)
-								+ getResources().getString(
-										R.string.retrieve_auth_code_url),
-						PostRequestFormat.URLENCODED,
-						_getPhoneBindVerificationCodeParamMap, null,
-						HttpRequestType.ASYNCHRONOUS,
-						new GetPhoneBindVerificationCodeHttpRequestListener());
+				HttpUtils
+						.postRequest(
+								getResources().getString(R.string.server_url)
+										+ getResources()
+												.getString(
+														R.string.retrieve_phoneBind_authCode_url),
+								PostRequestFormat.URLENCODED,
+								_getPhoneBindVerificationCodeParamMap,
+								null,
+								HttpRequestType.ASYNCHRONOUS,
+								new GetPhoneBindVerificationCodeHttpRequestListener());
 			}
 		}
 	}
@@ -637,7 +682,7 @@ public class SettingActivity extends SimpleIMeetingNavigationActivity {
 						.findViewById(R.id.pbd_phoneBind_phoneEditText))
 						.getText().toString();
 				DataStorageUtils.putObject(
-						SIMUserExtAttributes.BindContactInfo.name(),
+						SIMUserExtAttributes.BIND_CONTACTINFO.name(),
 						_bindedPhone);
 
 				String _loginPwd = StringUtils
@@ -675,8 +720,8 @@ public class SettingActivity extends SimpleIMeetingNavigationActivity {
 				// add it to user manager
 				UserManager.getInstance().setUser(_newBindedGenerateUser);
 
-				// update my account group UI
-				updateMyAccountGroupUI(DataOwnershipMode.BINDED_ACCOUNT);
+				// update my account and contacts info bind group UI
+				updateMyAccount7ContactsInfoBindGroupUI();
 			} else {
 				processConfirmBindPhoneException(responseResult);
 			}
@@ -817,6 +862,18 @@ public class SettingActivity extends SimpleIMeetingNavigationActivity {
 			((Button) _mBindedAccountLoginAlertDialog
 					.findViewById(R.id.bald_bindedAccount_loginConfirmBtn))
 					.setOnClickListener(new BindedAccountLoginAlertDialogLoginConfirmButtonOnClickListener());
+		}
+
+	}
+
+	// binded account login alertDialog on cancel listener
+	class BindedAccountLoginAlertDialogOnCancelListener implements
+			OnCancelListener {
+
+		@Override
+		public void onCancel(DialogInterface dialog) {
+			// TODO Auto-generated method stub
+
 		}
 
 	}

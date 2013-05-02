@@ -47,9 +47,12 @@ public class AppDataSaveRestoreUtils {
 		// set bind contact info and password
 		_localStorageUser.setPassword(DataStorageUtils.getString(User.password
 				.name()));
-		SIMUserExtension.setUserBindContactInfo(_localStorageUser,
-				DataStorageUtils.getString(SIMUserExtAttributes.BindContactInfo
-						.name()));
+		SIMUserExtension
+				.setUserBindContactInfo(
+						_localStorageUser,
+						DataStorageUtils
+								.getString(SIMUserExtAttributes.BIND_CONTACTINFO
+										.name()));
 
 		// save user bean and add to user manager
 		UserManager.getInstance().setUser(_localStorageUser);
