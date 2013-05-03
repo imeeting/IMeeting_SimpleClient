@@ -176,6 +176,9 @@ public class RegAndLoginWithDeviceIdHttpRequestListener extends
 
 		case APP_LAUNCH:
 		default:
+			Log.d(LOG_TAG,
+					"Set simple iMetting application launch intent activity");
+
 			// go to network unavailable or remote bgServer internal error
 			// activity
 			((SimpleIMeetingAppLaunchActivity) _mContext)

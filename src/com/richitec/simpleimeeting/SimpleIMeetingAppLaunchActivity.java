@@ -51,15 +51,14 @@ public class SimpleIMeetingAppLaunchActivity extends AppLaunchActivity {
 
 	@Override
 	public Intent intentActivity() {
-		Intent _ret = getIntentActivity();
-
 		// check the got intent activity and set target intent
-		if (null == _ret) {
+		if (null == _mIntentActivity) {
 			// target intent activity, simple iMeeting main activity
-			_ret = new Intent(this, SimpleIMeetingMainActivity.class);
+			_mIntentActivity = new Intent(this,
+					SimpleIMeetingMainActivity.class);
 		}
 
-		return _ret;
+		return _mIntentActivity;
 	}
 
 	@Override
@@ -119,10 +118,6 @@ public class SimpleIMeetingAppLaunchActivity extends AppLaunchActivity {
 			// register and login using device combined unique id
 			sendReg7LoginWithDeviceCombinedUniqueIdHttpRequest();
 		}
-	}
-
-	public Intent getIntentActivity() {
-		return _mIntentActivity;
 	}
 
 	public void setIntentActivity(Intent intentActivity) {
