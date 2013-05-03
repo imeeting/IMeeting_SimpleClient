@@ -32,6 +32,9 @@ public class SimpleIMeetingAppLaunchActivity extends AppLaunchActivity {
 	// simple iMeeting application launch toast
 	private Toast _mSimpleIMeetingAppLaunchToast;
 
+	// intent activity for simple iMeeting application
+	private Intent _mIntentActivity;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -48,11 +51,15 @@ public class SimpleIMeetingAppLaunchActivity extends AppLaunchActivity {
 
 	@Override
 	public Intent intentActivity() {
-		// define target intent activity, simple iMeeting main activity
-		Intent _targetIntent = new Intent(this,
-				SimpleIMeetingMainActivity.class);
+		Intent _ret = getIntentActivity();
 
-		return _targetIntent;
+		// check the got intent activity and set target intent
+		if (null == _ret) {
+			// target intent activity, simple iMeeting main activity
+			_ret = new Intent(this, SimpleIMeetingMainActivity.class);
+		}
+
+		return _ret;
 	}
 
 	@Override
@@ -112,6 +119,14 @@ public class SimpleIMeetingAppLaunchActivity extends AppLaunchActivity {
 			// register and login using device combined unique id
 			sendReg7LoginWithDeviceCombinedUniqueIdHttpRequest();
 		}
+	}
+
+	public Intent getIntentActivity() {
+		return _mIntentActivity;
+	}
+
+	public void setIntentActivity(Intent intentActivity) {
+		_mIntentActivity = intentActivity;
 	}
 
 	public Toast getSimpleIMeetingAppLaunchToast() {

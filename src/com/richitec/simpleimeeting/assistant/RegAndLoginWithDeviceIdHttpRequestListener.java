@@ -15,6 +15,7 @@ import com.richitec.commontoolkit.utils.HttpUtils.HttpResponseResult;
 import com.richitec.commontoolkit.utils.HttpUtils.OnHttpRequestListener;
 import com.richitec.commontoolkit.utils.JSONUtils;
 import com.richitec.simpleimeeting.R;
+import com.richitec.simpleimeeting.SimpleIMeetingAppLaunchActivity;
 import com.richitec.simpleimeeting.user.SIMUserExtension;
 import com.richitec.simpleimeeting.user.SIMUserExtension.SIMUserExtAttributes;
 
@@ -175,7 +176,8 @@ public class RegAndLoginWithDeviceIdHttpRequestListener extends
 		default:
 			// go to network unavailable or remote bgServer internal error
 			// activity
-			// ??
+			((SimpleIMeetingAppLaunchActivity) _mContext)
+					.setIntentActivity(null);
 			break;
 		}
 	}

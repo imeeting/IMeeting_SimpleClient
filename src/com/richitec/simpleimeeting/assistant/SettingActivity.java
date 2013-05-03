@@ -872,8 +872,18 @@ public class SettingActivity extends SimpleIMeetingNavigationActivity {
 
 		@Override
 		public void onCancel(DialogInterface dialog) {
-			// TODO Auto-generated method stub
+			// get binded account login alertDialog login user name editText
+			EditText _bindedAccountAlertDialogLoginUserNameEditText = (EditText) _mBindedAccountLoginAlertDialog
+					.findViewById(R.id.bald_bindedAccount_loginUserName_editText);
 
+			// set login user name editText on focus
+			_bindedAccountAlertDialogLoginUserNameEditText.setFocusable(true);
+
+			// clear all editText text
+			_bindedAccountAlertDialogLoginUserNameEditText.setText("");
+			((EditText) _mBindedAccountLoginAlertDialog
+					.findViewById(R.id.bald_bindedAccount_loginPwd_editText))
+					.setText("");
 		}
 
 	}
