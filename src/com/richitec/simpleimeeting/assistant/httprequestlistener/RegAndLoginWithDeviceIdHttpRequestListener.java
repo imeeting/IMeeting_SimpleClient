@@ -193,7 +193,7 @@ public class RegAndLoginWithDeviceIdHttpRequestListener extends
 
 	// register and login with device combined unique id http request listener
 	// context not activity exception
-	public class DRLContextNotActivityException extends Exception {
+	class DRLContextNotActivityException extends Exception {
 
 		/**
 		 * 

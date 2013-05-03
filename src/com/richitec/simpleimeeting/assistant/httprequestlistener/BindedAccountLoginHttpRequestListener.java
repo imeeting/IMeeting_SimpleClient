@@ -286,7 +286,7 @@ public class BindedAccountLoginHttpRequestListener extends
 	}
 
 	// binded account login http request listener context not activity exception
-	public class BALContextNotActivityException extends Exception {
+	class BALContextNotActivityException extends Exception {
 
 		/**
 		 * 
