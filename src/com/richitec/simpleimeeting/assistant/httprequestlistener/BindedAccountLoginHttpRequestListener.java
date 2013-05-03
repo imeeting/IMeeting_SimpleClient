@@ -40,7 +40,7 @@ public class BindedAccountLoginHttpRequestListener extends
 
 	public BindedAccountLoginHttpRequestListener(Context context,
 			BindedAccountLoginType loginType)
-			throws ContextNotActivityException {
+			throws BALContextNotActivityException {
 		super();
 
 		// set activity context and login type
@@ -50,22 +50,22 @@ public class BindedAccountLoginHttpRequestListener extends
 		// check the context if it is null or not activity
 		if (null == context || !(context instanceof Activity)) {
 			// activity context is null or the context not activity
-			throw new ContextNotActivityException("the context = " + context);
+			throw new BALContextNotActivityException("the context = " + context);
 		}
 	}
 
 	public BindedAccountLoginHttpRequestListener(Context context)
-			throws ContextNotActivityException {
+			throws BALContextNotActivityException {
 		this(context, BindedAccountLoginType.AUTO);
 	}
 
 	@Deprecated
 	public BindedAccountLoginHttpRequestListener()
-			throws ContextNotActivityException {
+			throws BALContextNotActivityException {
 		super();
 
 		// activity context is null
-		throw new ContextNotActivityException("the context is null");
+		throw new BALContextNotActivityException("the context is null");
 	}
 
 	// set binded account manual login user name and password
@@ -285,17 +285,17 @@ public class BindedAccountLoginHttpRequestListener extends
 		AUTO, MANUAL
 	}
 
-	// context not activity exception
-	class ContextNotActivityException extends Exception {
+	// binded account login http request listener context not activity exception
+	public class BALContextNotActivityException extends Exception {
 
 		/**
 		 * 
 		 */
 		private static final long serialVersionUID = -916775482996632193L;
 
-		public ContextNotActivityException(String detailMessage) {
+		public BALContextNotActivityException(String detailMessage) {
 			super(
-					"Context not activity, the reason is "
+					"Binded account login http request listener context not activity, the reason is "
 							+ detailMessage
 							+ ". Please use BindedAccountLoginHttpRequestListener constructor with activity context param instead");
 		}

@@ -18,7 +18,9 @@ import com.richitec.commontoolkit.utils.HttpUtils;
 import com.richitec.commontoolkit.utils.HttpUtils.HttpRequestType;
 import com.richitec.commontoolkit.utils.HttpUtils.PostRequestFormat;
 import com.richitec.simpleimeeting.assistant.httprequestlistener.BindedAccountLoginHttpRequestListener;
+import com.richitec.simpleimeeting.assistant.httprequestlistener.BindedAccountLoginHttpRequestListener.BALContextNotActivityException;
 import com.richitec.simpleimeeting.assistant.httprequestlistener.RegAndLoginWithDeviceIdHttpRequestListener;
+import com.richitec.simpleimeeting.assistant.httprequestlistener.RegAndLoginWithDeviceIdHttpRequestListener.DRLContextNotActivityException;
 import com.richitec.simpleimeeting.talkinggroup.ContactsSelectView;
 import com.richitec.simpleimeeting.talkinggroup.SimpleIMeetingMainActivity;
 import com.richitec.simpleimeeting.user.SIMUserExtension;
@@ -108,7 +110,7 @@ public class SimpleIMeetingAppLaunchActivity extends AppLaunchActivity {
 						HttpRequestType.SYNCHRONOUS,
 						new BindedAccountLoginHttpRequestListener(
 								SimpleIMeetingAppLaunchActivity.this));
-			} catch (Exception e) {
+			} catch (BALContextNotActivityException e) {
 				Log.e(LOG_TAG,
 						"Send binded account login post http request error, exception message = "
 								+ e.getMessage());
@@ -156,7 +158,7 @@ public class SimpleIMeetingAppLaunchActivity extends AppLaunchActivity {
 					HttpRequestType.SYNCHRONOUS,
 					new RegAndLoginWithDeviceIdHttpRequestListener(
 							SimpleIMeetingAppLaunchActivity.this));
-		} catch (Exception e) {
+		} catch (DRLContextNotActivityException e) {
 			Log.e(LOG_TAG,
 					"Send register and login with device combined id post http request error, exception message = "
 							+ e.getMessage());

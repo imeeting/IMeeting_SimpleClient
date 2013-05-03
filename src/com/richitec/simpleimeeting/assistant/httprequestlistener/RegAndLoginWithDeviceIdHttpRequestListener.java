@@ -36,7 +36,7 @@ public class RegAndLoginWithDeviceIdHttpRequestListener extends
 
 	public RegAndLoginWithDeviceIdHttpRequestListener(Context context,
 			Reg7LoginWithDeviceIdType reg7loginWithDeviceIdType)
-			throws ContextNotActivityException {
+			throws DRLContextNotActivityException {
 		super();
 
 		// set activity context and register, login with device combined id type
@@ -46,22 +46,22 @@ public class RegAndLoginWithDeviceIdHttpRequestListener extends
 		// check the context if it is null or not activity
 		if (null == context || !(context instanceof Activity)) {
 			// activity context is null or the context not activity
-			throw new ContextNotActivityException("the context = " + context);
+			throw new DRLContextNotActivityException("the context = " + context);
 		}
 	}
 
 	public RegAndLoginWithDeviceIdHttpRequestListener(Context context)
-			throws ContextNotActivityException {
+			throws DRLContextNotActivityException {
 		this(context, Reg7LoginWithDeviceIdType.APP_LAUNCH);
 	}
 
 	@Deprecated
 	public RegAndLoginWithDeviceIdHttpRequestListener()
-			throws ContextNotActivityException {
+			throws DRLContextNotActivityException {
 		super();
 
 		// activity context is null
-		throw new ContextNotActivityException("the context is null");
+		throw new DRLContextNotActivityException("the context is null");
 	}
 
 	@Override
@@ -144,14 +144,14 @@ public class RegAndLoginWithDeviceIdHttpRequestListener extends
 				Log.e(LOG_TAG,
 						"Register and login with device combined unique id failed, bg_server return result is unrecognized");
 
-				processReg7LoginWithDeviceIdException(responseResult);
+				processReg7LoginWithDeviceIdException();
 				break;
 			}
 		} else {
 			Log.e(LOG_TAG,
 					"Register and login with device combined unique id failed, bg_server return result is null");
 
-			processReg7LoginWithDeviceIdException(responseResult);
+			processReg7LoginWithDeviceIdException();
 		}
 
 	}
@@ -161,12 +161,11 @@ public class RegAndLoginWithDeviceIdHttpRequestListener extends
 		Log.e(LOG_TAG,
 				"Send register and login with device combined unique id post http request failed!");
 
-		processReg7LoginWithDeviceIdException(responseResult);
+		processReg7LoginWithDeviceIdException();
 	}
 
 	// process register and login with device combined unique id exception
-	private void processReg7LoginWithDeviceIdException(
-			HttpResponseResult responseResult) {
+	private void processReg7LoginWithDeviceIdException() {
 		// check register and login with device combined id type
 		switch (_mReg7LoginWithDeviceIdType) {
 		case BINDEDACCOUNT_LOGOUT:
@@ -192,17 +191,18 @@ public class RegAndLoginWithDeviceIdHttpRequestListener extends
 		APP_LAUNCH, BINDEDACCOUNT_LOGOUT
 	}
 
+	// register and login with device combined unique id http request listener
 	// context not activity exception
-	class ContextNotActivityException extends Exception {
+	public class DRLContextNotActivityException extends Exception {
 
 		/**
 		 * 
 		 */
 		private static final long serialVersionUID = -7371400270301940336L;
 
-		public ContextNotActivityException(String detailMessage) {
+		public DRLContextNotActivityException(String detailMessage) {
 			super(
-					"Context not activity, the reason is "
+					"Register and login with device combined unique id http request listener context not activity, the reason is "
 							+ detailMessage
 							+ ". Please use RegAndLoginWithDeviceIdHttpRequestListener constructor with activity context param instead");
 		}

@@ -37,8 +37,10 @@ import com.richitec.commontoolkit.utils.JSONUtils;
 import com.richitec.commontoolkit.utils.StringUtils;
 import com.richitec.simpleimeeting.R;
 import com.richitec.simpleimeeting.assistant.httprequestlistener.BindedAccountLoginHttpRequestListener;
+import com.richitec.simpleimeeting.assistant.httprequestlistener.BindedAccountLoginHttpRequestListener.BALContextNotActivityException;
 import com.richitec.simpleimeeting.assistant.httprequestlistener.BindedAccountLoginHttpRequestListener.BindedAccountLoginType;
 import com.richitec.simpleimeeting.assistant.httprequestlistener.RegAndLoginWithDeviceIdHttpRequestListener;
+import com.richitec.simpleimeeting.assistant.httprequestlistener.RegAndLoginWithDeviceIdHttpRequestListener.DRLContextNotActivityException;
 import com.richitec.simpleimeeting.assistant.httprequestlistener.RegAndLoginWithDeviceIdHttpRequestListener.Reg7LoginWithDeviceIdType;
 import com.richitec.simpleimeeting.customcomponent.SimpleIMeetingNavigationActivity;
 import com.richitec.simpleimeeting.user.SIMUserExtension;
@@ -229,7 +231,7 @@ public class SettingActivity extends SimpleIMeetingNavigationActivity {
 								new RegAndLoginWithDeviceIdHttpRequestListener(
 										SettingActivity.this,
 										Reg7LoginWithDeviceIdType.BINDEDACCOUNT_LOGOUT));
-			} catch (Exception e) {
+			} catch (DRLContextNotActivityException e) {
 				Log.e(LOG_TAG,
 						"Send register and login with device combined id post http request error, exception message = "
 								+ e.getMessage());
@@ -961,7 +963,7 @@ public class SettingActivity extends SimpleIMeetingNavigationActivity {
 								BindedAccountLoginType.MANUAL)
 								.setManualLoginUserName7Pwd(_loginUserName,
 										_loginPassword));
-			} catch (Exception e) {
+			} catch (BALContextNotActivityException e) {
 				Log.e(LOG_TAG,
 						"Send binded account login post http request error, exception message = "
 								+ e.getMessage());
