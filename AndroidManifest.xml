@@ -48,6 +48,11 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
+            android:name=".assistant.NetworkUnavailabelActivity"
+            android:label="@string/title_activity_network_unavailabel"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
             android:name=".talkinggroup.SimpleIMeetingMainActivity"
             android:label="@string/title_activity_simple_imeeting_main"
             android:screenOrientation="portrait" >

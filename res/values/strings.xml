@@ -104,4 +104,7 @@
     <string name="myTalkingGroup_detailInfo_imageView_contentDescription">indicate it is my talking group detail info image view</string>
     <string name="myTalkingGroup_talkingGroupAttendeeStatus_imageView_content_description">talking group attendee status image view</string>
 
+    <!-- network unavailabel activity -->
+    <string name="title_activity_network_unavailabel">NetworkUnavailabelActivity</string>
+
 </resources>

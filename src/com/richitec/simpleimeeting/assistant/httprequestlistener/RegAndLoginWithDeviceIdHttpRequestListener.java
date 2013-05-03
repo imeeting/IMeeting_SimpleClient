@@ -4,6 +4,7 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -16,6 +17,7 @@ import com.richitec.commontoolkit.utils.HttpUtils.OnHttpRequestListener;
 import com.richitec.commontoolkit.utils.JSONUtils;
 import com.richitec.simpleimeeting.R;
 import com.richitec.simpleimeeting.SimpleIMeetingAppLaunchActivity;
+import com.richitec.simpleimeeting.assistant.NetworkUnavailabelActivity;
 import com.richitec.simpleimeeting.assistant.SettingActivity;
 import com.richitec.simpleimeeting.user.SIMUserExtension;
 import com.richitec.simpleimeeting.user.SIMUserExtension.SIMUserExtAttributes;
@@ -178,7 +180,8 @@ public class RegAndLoginWithDeviceIdHttpRequestListener extends
 			// go to network unavailable or remote bgServer internal error
 			// activity
 			((SimpleIMeetingAppLaunchActivity) _mContext)
-					.setIntentActivity(null);
+					.setIntentActivity(new Intent(_mContext,
+							NetworkUnavailabelActivity.class));
 			break;
 		}
 	}
