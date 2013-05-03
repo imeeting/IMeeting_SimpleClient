@@ -20,6 +20,7 @@ import com.richitec.simpleimeeting.assistant.SupportActivity;
 import com.richitec.simpleimeeting.customcomponent.SimpleIMeetingBarButtonItem;
 import com.richitec.simpleimeeting.customcomponent.SimpleIMeetingImageBarButtonItem;
 import com.richitec.simpleimeeting.customcomponent.SimpleIMeetingNavigationActivity;
+import com.richitec.simpleimeeting.view.SIMBaseView;
 import com.richitec.simpleimeeting.view.SIMViewFactory;
 
 public class SimpleIMeetingMainActivity extends
@@ -37,8 +38,11 @@ public class SimpleIMeetingMainActivity extends
 	private SimpleIMeetingMainViewType _mMainViewType = SimpleIMeetingMainViewType.ADDRESSBOOK_CONTACTS;
 
 	// contacts select and my talking group list subViews
-	private View _mContactsSelectView;
-	private View _mMyTalkingGroupsView;
+	private SIMBaseView _mContactsSelectView;
+	private SIMBaseView _mMyTalkingGroupsView;
+
+	// simple imeeting main activity content view(simple imeeting view)
+	private SIMBaseView _mContentView;
 
 	// tap to generate new talking group title textView
 	private TextView _mTap2GenNewTalkingGroupTitleTextView;
@@ -79,11 +83,27 @@ public class SimpleIMeetingMainActivity extends
 				new MoreMenuImageBarButtonItemOnClickListener()));
 	}
 
+	@Override
+	protected void onResume() {
+		super.onResume();
+
+		Log.d(LOG_TAG,
+				"Simple iMeeting main activity content view(simple imeeting view) = "
+						+ _mContentView + ", Contacts select view = "
+						+ _mContactsSelectView
+						+ " and my talking groups view = "
+						+ _mMyTalkingGroupsView);
+
+		// get simple imeeting main activity content view(simple imeeting view)
+		// and call its onResume method
+		_mContentView.onResume();
+	}
+
 	// set main activity content view
 	private void setMainActivityContentView(
 			SimpleIMeetingMainViewType mainViewType) {
-		// main activity content view
-		View _contentView;
+		// main activity content view(simple imeeting view)
+		SIMBaseView _contentView;
 
 		// save main view type
 		_mMainViewType = mainViewType;
@@ -94,8 +114,8 @@ public class SimpleIMeetingMainActivity extends
 			// check my talking group list content view
 			if (null == _mMyTalkingGroupsView) {
 				// init my talking group list content view and save
-				_mMyTalkingGroupsView = SIMViewFactory.createSIMView4Present(
-						this, MyTalkingGroupsView.class);
+				_mMyTalkingGroupsView = SIMViewFactory.createSIMView(this,
+						MyTalkingGroupsView.class);
 			}
 
 			_contentView = _mMyTalkingGroupsView;
@@ -107,8 +127,8 @@ public class SimpleIMeetingMainActivity extends
 			// check contacts select content view
 			if (null == _mContactsSelectView) {
 				// init contacts select content view and save
-				_mContactsSelectView = SIMViewFactory.createSIMView4Present(
-						this, ContactsSelectView.class);
+				_mContactsSelectView = SIMViewFactory.createSIMView(this,
+						ContactsSelectView.class);
 			}
 
 			_contentView = _mContactsSelectView;
@@ -118,7 +138,10 @@ public class SimpleIMeetingMainActivity extends
 
 		// check content view and set it
 		if (null != _contentView) {
-			setContentView(_contentView);
+			// save simple imeeting main activity content view
+			_mContentView = _contentView;
+
+			setContentView(_contentView.getPresentView());
 		} else {
 			Log.e(LOG_TAG,
 					"No, no no ...! There is no main activity content view.");
@@ -161,9 +184,10 @@ public class SimpleIMeetingMainActivity extends
 			if (null == _mSwitch2ContactsSelectLeftBarButtonItem) {
 				// init switch to contacts select left bar button item and save
 				_mSwitch2ContactsSelectLeftBarButtonItem = new SimpleIMeetingBarButtonItem(
-						this, BarButtonItemStyle.RIGHT_GO,
+						this,
+						BarButtonItemStyle.RIGHT_GO,
 						R.string.myTalkingGroup_leftBarButtonItem_navTitle,
-						new AddressBookContactsBarButtonItemOnClickListener());
+						new Switch2MyTalkingGroup6AddressBookContactsBarButtonItemOnClickListener());
 			}
 
 			_titleTag = getResources().getString(
@@ -180,9 +204,10 @@ public class SimpleIMeetingMainActivity extends
 				// init switch to my talking group list left bar button item and
 				// save
 				_mSwitch2MyTalkingGroupsLeftBarButtonItem = new SimpleIMeetingBarButtonItem(
-						this, BarButtonItemStyle.RIGHT_GO,
+						this,
+						BarButtonItemStyle.RIGHT_GO,
 						R.string.contactsSelect_leftBarButtonItem_navTitle,
-						new MyTalkingGroupBarButtonItemOnClickListener());
+						new Switch2MyTalkingGroup6AddressBookContactsBarButtonItemOnClickListener());
 			}
 
 			_titleTag = getResources().getString(
@@ -227,32 +252,39 @@ public class SimpleIMeetingMainActivity extends
 
 	}
 
-	// my talking group bar button item on click listener
-	class MyTalkingGroupBarButtonItemOnClickListener implements OnClickListener {
+	// switch to my talking group or addressbook contacts bar button item on
+	// click listener
+	class Switch2MyTalkingGroup6AddressBookContactsBarButtonItemOnClickListener
+			implements OnClickListener {
 
 		@Override
 		public void onClick(View v) {
-			// switch to my talking group view
-			Log.d(LOG_TAG, "Switch to my talking group view");
+			// set current content view onPause
+			_mContentView.onPause();
 
-			//
-			setMainActivityContentView(SimpleIMeetingMainViewType.MY_TALKINGGROUP_LIST);
-			setMainActivityNavigationTitle7LeftBarButtonItem();
-		}
+			// check simple iMeeting main view type and set main activity
+			// content view
+			switch (_mMainViewType) {
+			case MY_TALKINGGROUP_LIST:
+				// switch to addressbook contacts view
+				Log.d(LOG_TAG, "Switch to addressbook contacts view");
 
-	}
+				setMainActivityContentView(SimpleIMeetingMainViewType.ADDRESSBOOK_CONTACTS);
+				break;
 
-	// addressbook contacts bar button item on click listener
-	class AddressBookContactsBarButtonItemOnClickListener implements
-			OnClickListener {
+			case ADDRESSBOOK_CONTACTS:
+			default:
+				// switch to my talking group view
+				Log.d(LOG_TAG, "Switch to my talking group view");
 
-		@Override
-		public void onClick(View v) {
-			// switch to addressbook contacts view
-			Log.d(LOG_TAG, "Switch to addressbook contacts view");
+				setMainActivityContentView(SimpleIMeetingMainViewType.MY_TALKINGGROUP_LIST);
+				break;
+			}
 
-			//
-			setMainActivityContentView(SimpleIMeetingMainViewType.ADDRESSBOOK_CONTACTS);
+			// set present content view onResult
+			_mContentView.onResume();
+
+			// set main activity navigation title and left bar button item
 			setMainActivityNavigationTitle7LeftBarButtonItem();
 		}
 

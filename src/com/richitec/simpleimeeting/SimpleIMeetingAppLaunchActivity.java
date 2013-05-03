@@ -51,6 +51,11 @@ public class SimpleIMeetingAppLaunchActivity extends AppLaunchActivity {
 
 	@Override
 	public Intent intentActivity() {
+		// test by ares
+		// set intent activity
+		// setIntentActivity(new Intent(this,
+		// NetworkUnavailabelActivity.class));
+
 		// check the got intent activity and set target intent
 		if (null == _mIntentActivity) {
 			// target intent activity, simple iMeeting main activity

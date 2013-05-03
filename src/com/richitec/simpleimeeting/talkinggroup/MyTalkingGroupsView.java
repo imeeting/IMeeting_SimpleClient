@@ -32,6 +32,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.richitec.commontoolkit.customadapter.CTListAdapter;
+import com.richitec.commontoolkit.user.UserManager;
+import com.richitec.commontoolkit.utils.HttpUtils;
+import com.richitec.commontoolkit.utils.HttpUtils.HttpRequestType;
+import com.richitec.commontoolkit.utils.HttpUtils.HttpResponseResult;
+import com.richitec.commontoolkit.utils.HttpUtils.OnHttpRequestListener;
+import com.richitec.commontoolkit.utils.HttpUtils.PostRequestFormat;
 import com.richitec.commontoolkit.utils.JSONUtils;
 import com.richitec.simpleimeeting.R;
 import com.richitec.simpleimeeting.view.SIMBaseView;
@@ -47,6 +53,9 @@ public class MyTalkingGroupsView extends SIMBaseView {
 	private final String GROUP_STATUS = "group_status";
 	private final String GROUP_SELECTED4ITEM = "group_selected_for_item";
 	private final String GROUP_SELECTED4DETAIL = "group_selected_for_detail";
+
+	// my talking group list needed to refresh
+	private boolean _mMyTalkingGroupsNeeded2Refresh = true;
 
 	// my talking groups info array
 	private JSONArray _mMyTalkingGroupsInfoArray = new JSONArray();
@@ -67,7 +76,7 @@ public class MyTalkingGroupsView extends SIMBaseView {
 	}
 
 	@Override
-	public void initSubComponents() {
+	public void onCreate() {
 		// test by ares
 		try {
 			// set my talking groups info array
@@ -125,6 +134,39 @@ public class MyTalkingGroupsView extends SIMBaseView {
 		// bind add contacts to talking group button on click listener
 		((Button) findViewById(R.id.mtg_addContacts2talkingGroup_button))
 				.setOnClickListener(new AddContacts2talkingGroupButtonOnClickListener());
+	}
+
+	@Override
+	public void onResume() {
+		// check my talking group list needed to refresh flag
+		if (true == _mMyTalkingGroupsNeeded2Refresh) {
+			Log.d(LOG_TAG, "Refresh my talking group list");
+
+			// reset my talking group list needed to refresh flag
+			_mMyTalkingGroupsNeeded2Refresh = false;
+
+			// get my talking group list
+			// generate get my talking group list param map
+			Map<String, String> _getMyTalkingGroupsParamMap = new HashMap<String, String>();
+
+			// set some params
+			_getMyTalkingGroupsParamMap.put(getContext().getResources()
+					.getString(R.string.bg_server_getMyTalkingGroups_userName),
+					UserManager.getInstance().getUser().getName());
+
+			// post the http request
+			HttpUtils.postSignatureRequest(
+					getContext().getResources().getString(R.string.server_url)
+							+ getContext().getResources().getString(
+									R.string.myTalkingGroup_list_url),
+					PostRequestFormat.URLENCODED, _getMyTalkingGroupsParamMap,
+					null, HttpRequestType.ASYNCHRONOUS,
+					new GetMyTalkingGroupListHttpRequestListener());
+		}
+	}
+
+	public void setMyTalkingGroupsNeeded2Refresh() {
+		_mMyTalkingGroupsNeeded2Refresh = true;
 	}
 
 	// generate my talking group listView adapter data list
@@ -396,6 +438,41 @@ public class MyTalkingGroupsView extends SIMBaseView {
 	}
 
 	// inner class
+	// get my talking group list http request listener
+	class GetMyTalkingGroupListHttpRequestListener extends
+			OnHttpRequestListener {
+
+		@Override
+		public void onFinished(HttpResponseResult responseResult) {
+			// get http response entity string json data
+			JSONObject _respJsonData = JSONUtils.toJSONObject(responseResult
+					.getResponseText());
+
+			Log.d(LOG_TAG,
+					"Get my talking group list post http request successful, response json data = "
+							+ _respJsonData);
+
+			// get the pager and list from http response json data
+			JSONObject _pager = JSONUtils.getJSONObjectFromJSONObject(
+					_respJsonData,
+					getContext().getResources().getString(
+							R.string.bg_server_myTalkingGroups_pager));
+			JSONArray _list = JSONUtils.getJSONArrayFromJSONObject(
+					_respJsonData,
+					getContext().getResources().getString(
+							R.string.bg_server_myTalkingGroups_list));
+
+			//
+		}
+
+		@Override
+		public void onFailed(HttpResponseResult responseResult) {
+			// TODO Auto-generated method stub
+
+		}
+
+	}
+
 	// my talking group and my talking group attendee adapter
 	class MyTalkingGroup7MyTalkingGroupAttendeeAdapter extends CTListAdapter {
 

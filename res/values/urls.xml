@@ -17,7 +17,6 @@
     <string name="get_newTalkingGroupId_url">/conference/generateConfId</string>
     <string name="invite_newMember_url">/conference/invite</string>
     <string name="schedule_talkinggroup_url">/conference/schedule</string>
-    <string name="create_talkinggroup_url">/conference/scheduleNow</string>
 
     <!-- unused -->
     <string name="user_get_pwd_url">/user/getUserPwd</string>

@@ -124,7 +124,7 @@ public class ContactsSelectView extends SIMBaseView {
 	}
 
 	@Override
-	public void initSubComponents() {
+	public void onCreate() {
 		// test by ares
 		// _mTalkingGroupContactsPhoneArray.add("13770662051");
 		// _mTalkingGroupContactsPhoneArray.add("14756498708");

@@ -28,6 +28,9 @@
     <string name="bg_server_phoneBind_loginConfirmationPwd">password1</string>
 
     <!-- my talking group view -->
+    <string name="bg_server_getMyTalkingGroups_userName">username</string>
+    <string name="bg_server_myTalkingGroups_pager">pager</string>
+    <string name="bg_server_myTalkingGroups_list">list</string>
     <string name="bg_server_myTalkingGroup_startedTimestamp">startedtimestamp</string>
     <string name="bg_server_myTalkingGroup_id">id</string>
     <string name="bg_server_myTalkingGroup_status">status</string>
