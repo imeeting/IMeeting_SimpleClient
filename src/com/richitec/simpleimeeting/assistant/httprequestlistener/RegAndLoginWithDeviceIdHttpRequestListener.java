@@ -1,4 +1,4 @@
-package com.richitec.simpleimeeting.assistant;
+package com.richitec.simpleimeeting.assistant.httprequestlistener;
 
 import org.json.JSONObject;
 
@@ -16,6 +16,7 @@ import com.richitec.commontoolkit.utils.HttpUtils.OnHttpRequestListener;
 import com.richitec.commontoolkit.utils.JSONUtils;
 import com.richitec.simpleimeeting.R;
 import com.richitec.simpleimeeting.SimpleIMeetingAppLaunchActivity;
+import com.richitec.simpleimeeting.assistant.SettingActivity;
 import com.richitec.simpleimeeting.user.SIMUserExtension;
 import com.richitec.simpleimeeting.user.SIMUserExtension.SIMUserExtAttributes;
 
@@ -184,7 +185,7 @@ public class RegAndLoginWithDeviceIdHttpRequestListener extends
 
 	// inner class
 	// register and login with device combined id type
-	enum Reg7LoginWithDeviceIdType {
+	public enum Reg7LoginWithDeviceIdType {
 		APP_LAUNCH, BINDEDACCOUNT_LOGOUT
 	}
 

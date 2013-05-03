@@ -1,4 +1,4 @@
-package com.richitec.simpleimeeting.assistant;
+package com.richitec.simpleimeeting.assistant.httprequestlistener;
 
 import org.apache.http.HttpStatus;
 import org.json.JSONObject;
@@ -18,6 +18,7 @@ import com.richitec.commontoolkit.utils.JSONUtils;
 import com.richitec.commontoolkit.utils.StringUtils;
 import com.richitec.simpleimeeting.R;
 import com.richitec.simpleimeeting.SimpleIMeetingAppLaunchActivity;
+import com.richitec.simpleimeeting.assistant.SettingActivity;
 import com.richitec.simpleimeeting.user.SIMUserExtension;
 import com.richitec.simpleimeeting.user.SIMUserExtension.SIMUserExtAttributes;
 
@@ -280,7 +281,7 @@ public class BindedAccountLoginHttpRequestListener extends
 
 	// inner class
 	// binded account login type
-	enum BindedAccountLoginType {
+	public enum BindedAccountLoginType {
 		AUTO, MANUAL
 	}
 
