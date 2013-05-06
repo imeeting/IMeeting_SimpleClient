@@ -91,6 +91,7 @@
     <string name="myTalkingGroup_leftBarButtonItem_navTitle">通讯录</string>
     <string name="myTalkingGroup_talkingGroupList_headTip_textViewText">会议列表</string>
     <string name="myTalkingGroup_talkingGroupAttendeeList_headTip_textViewText">与会者</string>
+    <string name="myTalkingGroup_loadMyTalkingGroup_textViewText">正在加载&#8230;</string>
     <string name="no_myTalkingGroup_tip_textViewText">当前没有待参与的会议，你可以点击来开启一个新的会议</string>
     <string name="myTalkingGroup_startedTime_hint">开始时间：</string>
     <string name="myTalkingGroup_groupId_hint">会议号码：</string>

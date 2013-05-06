@@ -99,6 +99,15 @@ public class SimpleIMeetingMainActivity extends
 		_mContentView.onResume();
 	}
 
+	@Override
+	protected void onStop() {
+		super.onStop();
+
+		// get simple imeeting main activity content view(simple imeeting view)
+		// and call its onStop method
+		_mContentView.onStop();
+	}
+
 	// set main activity content view
 	private void setMainActivityContentView(
 			SimpleIMeetingMainViewType mainViewType) {

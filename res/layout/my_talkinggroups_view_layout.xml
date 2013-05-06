@@ -5,6 +5,29 @@
     android:layout_height="match_parent"
     tools:context=".talkinggroup.SimpleIMeetingMainActivity" >
 
+    <RelativeLayout
+        android:id="@+id/mtg_loadingMyTalkingGroup_relativeLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal" >
+
+        <ProgressBar
+            android:id="@+id/mtg_loadingMyTalkingGroup_progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/mtg_loadingMyTalkingGroup_progressBar"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:text="@string/myTalkingGroup_loadMyTalkingGroup_textViewText"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/light_dim_gray" />
+    </RelativeLayout>
+
     <TextView
         android:id="@+id/mtg_noTalkingGroup_tip_textView"
         android:layout_width="fill_parent"
@@ -12,7 +35,8 @@
         android:layout_gravity="center_horizontal"
         android:layout_margin="40dp"
         android:text="@string/no_myTalkingGroup_tip_textViewText"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:visibility="gone" />
 
     <LinearLayout
         android:id="@+id/mtg_myTalkingGroup7attendees_linearLayout"
