@@ -28,9 +28,9 @@
     <string name="bg_server_phoneBind_loginConfirmationPwd">password1</string>
 
     <!-- contacts select view -->
-    <string name="bg_server_scheduleNewTalkingGroup_attendees">attendees</string>
-    <string name="bg_server_newTalkingGroupAttendee_nickname">nickname</string>
-    <string name="bg_server_newTalkingGroupAttendee_phone">phone</string>
+    <string name="bg_server_scheduleNewTalkingGroup6inviteNewAddedContacts2TalkingGroup_attendees">attendees</string>
+    <string name="bg_server_newTalkingGroup6inviteNewAddedAttendee_nickname">nickname</string>
+    <string name="bg_server_newTalkingGroup6inviteNewAddedAttendee_phone">phone</string>
     <string name="bg_server_scheduleNewTalkingGroup_scheduleTime">scheduleTime</string>
 
     <!-- my talking group view -->
@@ -42,7 +42,9 @@
     <string name="bg_server_getMyTalkingGroupsReq_resp_status">status</string>
     <string name="bg_server_myTalkingGroup_talkingGroupOpened">OPEN</string>
     <string name="bg_server_myTalkingGroup_talkingGroupSchedule">SCHEDULE</string>
-    <string name="bg_server_getTalkingGroupAttendees6scheduleNewTalkingGroup_confId">conferenceId</string>
+    <string name="bg_server_getMyTalkingGroupsReq_resp_attendees">attendees</string>
+    <string name="bg_server_myTalkingGroupAttendee_phone">phone</string>
+    <string name="bg_server_getTalkingGroupAttendees6scheduleNewTalkingGroup6inviteNewAddedContacts2TalkingGroup_confId">conferenceId</string>
     <string name="bg_server_getTalkingGroupAttendeesReq_resp_nickname">nickname</string>
     <string name="bg_server_getTalkingGroupAttendeesReq_resp_phone">phone</string>
     <string name="bg_server_getTalkingGroupAttendeesReq_resp_status">telephone_status</string>

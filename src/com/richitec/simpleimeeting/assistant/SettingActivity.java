@@ -778,8 +778,7 @@ public class SettingActivity extends SimpleIMeetingNavigationActivity {
 						Log.e(LOG_TAG,
 								"Confirm bind phone failed, the verification code is wrong");
 
-						// show confirm bind phone verification code phone wrong
-						// toast
+						// show confirm bind phone verification code wrong toast
 						Toast.makeText(
 								SettingActivity.this,
 								R.string.toast_phoneBind_verificationCode_wrong,
@@ -790,8 +789,8 @@ public class SettingActivity extends SimpleIMeetingNavigationActivity {
 						Log.e(LOG_TAG,
 								"Confirm bind phone failed, the login password not matched with the confirmation one");
 
-						// show confirm bind phone verification code phone wrong
-						// toast
+						// show confirm bind phone verification code two
+						// password not matched toast
 						Toast.makeText(
 								SettingActivity.this,
 								R.string.toast_phoneBind_loginTwoPwd_notMatched,
@@ -803,7 +802,7 @@ public class SettingActivity extends SimpleIMeetingNavigationActivity {
 						Log.e(LOG_TAG,
 								"Confirm bind phone failed, the verification code is timeout");
 
-						// show confirm bind phone verification code phone wrong
+						// show confirm bind phone verification code timeout
 						// toast
 						Toast.makeText(
 								SettingActivity.this,

@@ -75,14 +75,14 @@
     <string name="contactsSelect_selectedContacts_headTip_textViewText">预邀参与者</string>
     <string name="contactsSelect_contactHasNoPhone_alertDialog_title">此人没有号码</string>
     <string name="contactsSelect_contactHasNoPhone_alertDialog_reselectBtn_title">重新选择</string>
-    <string name="contactPhonesSelect_selectPopupWindow_titleTextView_text">选择 *** 加入群聊的号码</string>
+    <string name="contactPhonesSelect_selectPopupWindow_titleTextView_text">选择 *** 加入会议的号码</string>
     <string name="contactPhonesSelect_selectPopupWindow_cancelBtn_title">取消</string>
     <string name="contactsSelect_preinTalkingGroupContact_imageView_content_description">prein talking group contact image view</string>
     <string name="contactsSelect_inviteSelectedContacts2talkgingGroup_buttonText">邀请</string>
     <string name="talkingGroupStartedTimeSelect_cancelBtn_title">取消</string>
     <string name="talkingGroupStartedTimeSelect_titleTextView_text">请选择会议开始时间</string>
     <string name="talkingGroupStartedTimeSelect_confirmBtn_title">确定</string>
-    <string name="talkingGroupStartedTimeSelect_inviteNoteTextView_hint">请于 *** 拨打0551&#8211;62379997参加电话会议(会议号: ***)</string>
+    <string name="talkingGroupAttendee_inviteNoteText">请于 *** 拨打0551&#8211;62379997参加电话会议(会议号: ***)</string>
     <string name="datePicker_yearSuffix">年</string>
     <string name="datePicker_monthSuffix">月</string>
     <string name="datePicker_daySuffix">日</string>

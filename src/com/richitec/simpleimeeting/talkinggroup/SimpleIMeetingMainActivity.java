@@ -1,5 +1,7 @@
 package com.richitec.simpleimeeting.talkinggroup;
 
+import java.util.List;
+
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -106,6 +108,17 @@ public class SimpleIMeetingMainActivity extends
 		// get simple imeeting main activity content view(simple imeeting view)
 		// and call its onStop method
 		_mContentView.onStop();
+	}
+
+	// switch to my talking group list view
+	public void switch2myTalkingGroupsView(boolean needed2refresh) {
+		switchContentView(needed2refresh, null);
+	}
+
+	// switch to contacts select view
+	public void switch2contactsSelectView(
+			List<String> confId7inviteNote7talkingGroupContactsPhone) {
+		switchContentView(false, confId7inviteNote7talkingGroupContactsPhone);
 	}
 
 	// set main activity content view
@@ -240,6 +253,52 @@ public class SimpleIMeetingMainActivity extends
 		}
 	}
 
+	// switch simple imeeting main activity view
+	private void switchContentView(
+			boolean myTalkingGroupNeeded2Resresh,
+			List<String> contactsSelectConfId7InviteNote7TalkingGroupContactsPhoneArray) {
+		// set current content view onPause
+		_mContentView.onPause();
+
+		// check simple iMeeting main view type and set main activity
+		// content view
+		switch (_mMainViewType) {
+		case MY_TALKINGGROUP_LIST:
+			// switch to addressbook contacts view
+			Log.d(LOG_TAG, "Switch to addressbook contacts view");
+
+			setMainActivityContentView(SimpleIMeetingMainViewType.ADDRESSBOOK_CONTACTS);
+
+			// check and set conference id, invite note, talking group contacts
+			// phone array
+			if (null != contactsSelectConfId7InviteNote7TalkingGroupContactsPhoneArray) {
+				((ContactsSelectView) _mContentView)
+						.setConfId7InviteNote7TalkingGroupContactsPhoneArray(contactsSelectConfId7InviteNote7TalkingGroupContactsPhoneArray);
+			}
+			break;
+
+		case ADDRESSBOOK_CONTACTS:
+		default:
+			// switch to my talking group view
+			Log.d(LOG_TAG, "Switch to my talking group view");
+
+			setMainActivityContentView(SimpleIMeetingMainViewType.MY_TALKINGGROUP_LIST);
+
+			// check and set my talking group list needed to refresh
+			if (myTalkingGroupNeeded2Resresh) {
+				((MyTalkingGroupsView) _mContentView)
+						.setMyTalkingGroupsNeeded2Refresh();
+			}
+			break;
+		}
+
+		// set present content view onResult
+		_mContentView.onResume();
+
+		// set main activity navigation title and left bar button item
+		setMainActivityNavigationTitle7LeftBarButtonItem();
+	}
+
 	// inner class
 	// simple imeeting main view type
 	enum SimpleIMeetingMainViewType {
@@ -268,33 +327,8 @@ public class SimpleIMeetingMainActivity extends
 
 		@Override
 		public void onClick(View v) {
-			// set current content view onPause
-			_mContentView.onPause();
-
-			// check simple iMeeting main view type and set main activity
-			// content view
-			switch (_mMainViewType) {
-			case MY_TALKINGGROUP_LIST:
-				// switch to addressbook contacts view
-				Log.d(LOG_TAG, "Switch to addressbook contacts view");
-
-				setMainActivityContentView(SimpleIMeetingMainViewType.ADDRESSBOOK_CONTACTS);
-				break;
-
-			case ADDRESSBOOK_CONTACTS:
-			default:
-				// switch to my talking group view
-				Log.d(LOG_TAG, "Switch to my talking group view");
-
-				setMainActivityContentView(SimpleIMeetingMainViewType.MY_TALKINGGROUP_LIST);
-				break;
-			}
-
-			// set present content view onResult
-			_mContentView.onResume();
-
-			// set main activity navigation title and left bar button item
-			setMainActivityNavigationTitle7LeftBarButtonItem();
+			// switch content view
+			switchContentView(false, null);
 		}
 
 	}

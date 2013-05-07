@@ -54,6 +54,10 @@ public class MyTalkingGroupsView extends SIMBaseView {
 	private final String GROUP_SELECTED4ITEM = "group_selected_for_item";
 	private final String GROUP_SELECTED4DETAIL = "group_selected_for_detail";
 
+	// my talking group started time date format, format unix timeStamp
+	private final DateFormat MYTALKINGGROUP_STARTEDTIMEDATEFORMAT = new SimpleDateFormat(
+			"yyyy-MM-dd HH:mm", Locale.getDefault());
+
 	// my talking group list needed to refresh
 	private boolean _mMyTalkingGroupsNeeded2Refresh = true;
 
@@ -68,6 +72,9 @@ public class MyTalkingGroupsView extends SIMBaseView {
 
 	// selected talking group index
 	private Integer _mSelectedTalkingGroupIndex = null;
+
+	// selected talking group attendees phone array
+	private List<String> _mSelectedTalkingGroupAttendeesPhoneArray = new ArrayList<String>();
 
 	// my talking group attendee list view
 	private ListView _mMyTalkingGroupAttendeeListView;
@@ -127,6 +134,7 @@ public class MyTalkingGroupsView extends SIMBaseView {
 		}
 	}
 
+	// set my talking group list needed to refresh
 	public void setMyTalkingGroupsNeeded2Refresh() {
 		_mMyTalkingGroupsNeeded2Refresh = true;
 	}
@@ -134,10 +142,6 @@ public class MyTalkingGroupsView extends SIMBaseView {
 	// generate my talking group listView adapter data list
 	private List<Map<String, ?>> generateMyTalkingGroupListDataList(
 			JSONArray myTalkingGroupsInfoArray) {
-		// my talking group started time date format, format unix timeStamp
-		final DateFormat _myTalkingGroupStartedTimeDateFormat = new SimpleDateFormat(
-				"yyyy-MM-dd HH:mm", Locale.getDefault());
-
 		// my talking group list data list
 		List<Map<String, ?>> _dataList = new ArrayList<Map<String, ?>>();
 
@@ -159,7 +163,7 @@ public class MyTalkingGroupsView extends SIMBaseView {
 											R.string.bg_server_getMyTalkingGroupsReq_resp_startedTimestamp));
 			Object _groupStartedTime = getContext().getResources().getString(
 					R.string.myTalkingGroup_startedTime_hint)
-					+ _myTalkingGroupStartedTimeDateFormat
+					+ MYTALKINGGROUP_STARTEDTIMEDATEFORMAT
 							.format(_groupStartedTimestamp);
 			Object _groupId = getContext().getResources().getString(
 					R.string.myTalkingGroup_groupId_hint)
@@ -308,6 +312,9 @@ public class MyTalkingGroupsView extends SIMBaseView {
 		final String ATTENDEE_DISPLAYNAME = "attendee_displayName";
 		final String ATTENDEE_STATUS = "attendee_status";
 
+		// clear selected talking group attendees phone array
+		_mSelectedTalkingGroupAttendeesPhoneArray.clear();
+
 		// my talking group attendee list data list
 		List<Map<String, ?>> _myTalkingGroupAttendeesDataList = new ArrayList<Map<String, ?>>();
 
@@ -345,6 +352,10 @@ public class MyTalkingGroupsView extends SIMBaseView {
 									.getResources()
 									.getString(
 											R.string.bg_server_getTalkingGroupAttendeesReq_resp_phone));
+
+			// add the attendee phone to selected talking group attendees phone
+			// array
+			_mSelectedTalkingGroupAttendeesPhoneArray.add(_attendeePhone);
 
 			// check attendee nickname and phone to set attendee display name
 			if (null != _attebdeeNickname
@@ -489,7 +500,7 @@ public class MyTalkingGroupsView extends SIMBaseView {
 
 		@Override
 		public void onFailed(HttpResponseResult responseResult) {
-			Log.d(LOG_TAG,
+			Log.e(LOG_TAG,
 					"Send get my talking group list post http request failed!");
 
 			// show get my talking group list failed toast
@@ -641,7 +652,7 @@ public class MyTalkingGroupsView extends SIMBaseView {
 					.put(getContext()
 							.getResources()
 							.getString(
-									R.string.bg_server_getTalkingGroupAttendees6scheduleNewTalkingGroup_confId),
+									R.string.bg_server_getTalkingGroupAttendees6scheduleNewTalkingGroup6inviteNewAddedContacts2TalkingGroup_confId),
 							JSONUtils
 									.getStringFromJSONObject(
 											_selectedTalkingGroupInfo,
@@ -708,7 +719,7 @@ public class MyTalkingGroupsView extends SIMBaseView {
 
 		@Override
 		public void onFailed(HttpResponseResult responseResult) {
-			Log.d(LOG_TAG,
+			Log.e(LOG_TAG,
 					"Send get talking group attendee list post http request failed");
 
 			// show get selected talking group attendee list failed toast
@@ -735,10 +746,59 @@ public class MyTalkingGroupsView extends SIMBaseView {
 
 		@Override
 		public void onClick(View v) {
-			Log.d(LOG_TAG, "Add contacts to talking group");
+			// define invite new contact to talking group note and conference
+			// id, invite note, new added contacts phone array
+			String _confId;
+			String _inviteNewContact2TalkingGroupNote;
+			List<String> _confId7inviteNote7newAddedContactsPhoneList = new ArrayList<String>();
+
+			// get selected talking group info
+			JSONObject _selectedTalkingGroupInfo = JSONUtils
+					.getJSONObjectFromJSONArray(_mMyTalkingGroupsInfoArray,
+							_mSelectedTalkingGroupIndex);
+
+			// init conference id and add to conference id, invite note, new
+			// added contacts phone array as param
+			_confId = JSONUtils
+					.getStringFromJSONObject(
+							_selectedTalkingGroupInfo,
+							getContext()
+									.getResources()
+									.getString(
+											R.string.bg_server_getMyTalkingGroups6newTalkingGroupIdReq_resp_id));
+			_confId7inviteNote7newAddedContactsPhoneList.add(_confId);
+
+			// init invite new contact to talking group note and add to
+			// conference id, invite note, new added contacts phone array as
+			// param
+			_inviteNewContact2TalkingGroupNote = getContext()
+					.getResources()
+					.getString(R.string.talkingGroupAttendee_inviteNoteText)
+					.replaceFirst(
+							"\\*\\*\\*",
+							MYTALKINGGROUP_STARTEDTIMEDATEFORMAT.format(/*
+																		 * 1000
+																		 * *
+																		 */JSONUtils
+									.getLongFromJSONObject(
+											_selectedTalkingGroupInfo,
+											getContext()
+													.getResources()
+													.getString(
+															R.string.bg_server_getMyTalkingGroupsReq_resp_startedTimestamp))))
+					.replace("***", _confId);
+			_confId7inviteNote7newAddedContactsPhoneList
+					.add(_inviteNewContact2TalkingGroupNote);
+
+			// add the selected talking group attendees phone array to
+			// conference id, invite note, new added contacts phone array as
+			// param
+			_confId7inviteNote7newAddedContactsPhoneList
+					.addAll(_mSelectedTalkingGroupAttendeesPhoneArray);
 
 			// switch to contacts select view
-			//
+			((SimpleIMeetingMainActivity) getContext())
+					.switch2contactsSelectView(_confId7inviteNote7newAddedContactsPhoneList);
 		}
 
 	}
