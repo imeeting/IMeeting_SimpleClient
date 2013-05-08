@@ -59,10 +59,13 @@
 
     <!-- simple imeeting main activity -->
     <string name="title_activity_simple_imeeting_main">SimpleIMeetingMainActivity</string>
-    <string name="tap2generateNewTalkingGroup_title">点击安排新会议</string>
+    <string name="tap2generateNewTalkingGroup_title">点击安排会议</string>
     <string name="moreMenu_settingMenuItem">设置</string>
     <string name="moreMenu_supportMenuItem">帮助</string>
     <string name="moreMenu_aboutMenuItem">关于</string>
+    <string name="contactsSelecting_backBarButtonItem_navTitle">返回</string>
+    <string name="contactsSelecting_tipTitle">添加联系人</string>
+    <string name="contactsSelecting_tipTitle_tag">通讯录</string>
     <!-- contacts select view -->
     <string name="contactsSelect_leftBarButtonItem_navTitle">我的会议</string>
     <string name="contactsSelect_contactsList_headTip_textViewText">通讯录</string>

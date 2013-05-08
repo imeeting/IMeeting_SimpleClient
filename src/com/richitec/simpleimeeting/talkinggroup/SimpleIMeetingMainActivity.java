@@ -22,6 +22,7 @@ import com.richitec.simpleimeeting.assistant.SupportActivity;
 import com.richitec.simpleimeeting.customcomponent.SimpleIMeetingBarButtonItem;
 import com.richitec.simpleimeeting.customcomponent.SimpleIMeetingImageBarButtonItem;
 import com.richitec.simpleimeeting.customcomponent.SimpleIMeetingNavigationActivity;
+import com.richitec.simpleimeeting.talkinggroup.MyTalkingGroupsView.MyTalkingGroupsViewRefreshType;
 import com.richitec.simpleimeeting.view.SIMBaseView;
 import com.richitec.simpleimeeting.view.SIMViewFactory;
 
@@ -46,8 +47,9 @@ public class SimpleIMeetingMainActivity extends
 	// simple imeeting main activity content view(simple imeeting view)
 	private SIMBaseView _mContentView;
 
-	// tap to generate new talking group title textView
+	// tap to generate new talking group and contacts selecting title textView
 	private TextView _mTap2GenNewTalkingGroupTitleTextView;
+	private TextView _mContactsSelectingTitleTextView;
 
 	// left bar button item, switch to my talking group list and switch to
 	// contacts select bar button item
@@ -111,14 +113,46 @@ public class SimpleIMeetingMainActivity extends
 	}
 
 	// switch to my talking group list view
-	public void switch2myTalkingGroupsView(boolean needed2refresh) {
-		switchContentView(needed2refresh, null);
+	public void switch2myTalkingGroupsView(
+			MyTalkingGroupsViewRefreshType refreshType) {
+		switchContentView(refreshType, null);
 	}
 
 	// switch to contacts select view
 	public void switch2contactsSelectView(
 			List<String> confId7inviteNote7talkingGroupContactsPhone) {
-		switchContentView(false, confId7inviteNote7talkingGroupContactsPhone);
+		switchContentView(null, confId7inviteNote7talkingGroupContactsPhone);
+	}
+
+	// set contacts select navigation title and back bar button item as left
+	// navigation bar button item
+	public void setContactsSelectNavigationTitle7BackBarButtonItem(
+			SimpleIMeetingMainViewType contentViewType) {
+		// check contacts selecting title textView
+		if (null == _mContactsSelectingTitleTextView) {
+			// init contacts selecting title textView
+			_mContactsSelectingTitleTextView = new TextView(this);
+
+			// set title textView text, font size and color
+			_mContactsSelectingTitleTextView
+					.setText(R.string.contactsSelecting_tipTitle);
+			_mContactsSelectingTitleTextView.setTextSize(DisplayScreenUtils
+					.sp2pix(14));
+			_mContactsSelectingTitleTextView.setTextColor(Color.WHITE);
+		}
+
+		// set title with tag
+		setTitle(
+				_mContactsSelectingTitleTextView,
+				getResources().getString(
+						R.string.contactsSelecting_tipTitle_tag));
+
+		// set left bar button item
+		setLeftBarButtonItem(new SimpleIMeetingBarButtonItem(this,
+				BarButtonItemStyle.LEFT_BACK,
+				R.string.contactsSelecting_backBarButtonItem_navTitle,
+				new ContactsSelectingBackBarButtonItemOnClickListener(
+						contentViewType)));
 	}
 
 	// set main activity content view
@@ -255,7 +289,7 @@ public class SimpleIMeetingMainActivity extends
 
 	// switch simple imeeting main activity view
 	private void switchContentView(
-			boolean myTalkingGroupNeeded2Resresh,
+			MyTalkingGroupsViewRefreshType myTalkingGroupsViewResreshType,
 			List<String> contactsSelectConfId7InviteNote7TalkingGroupContactsPhoneArray) {
 		// set current content view onPause
 		_mContentView.onPause();
@@ -285,9 +319,9 @@ public class SimpleIMeetingMainActivity extends
 			setMainActivityContentView(SimpleIMeetingMainViewType.MY_TALKINGGROUP_LIST);
 
 			// check and set my talking group list needed to refresh
-			if (myTalkingGroupNeeded2Resresh) {
+			if (null != myTalkingGroupsViewResreshType) {
 				((MyTalkingGroupsView) _mContentView)
-						.setMyTalkingGroupsNeeded2Refresh();
+						.setMyTalkingGroupsNeeded2Refresh(myTalkingGroupsViewResreshType);
 			}
 			break;
 		}
@@ -312,7 +346,10 @@ public class SimpleIMeetingMainActivity extends
 		public boolean onTouch(View v, MotionEvent event) {
 			// check motion event
 			if (MotionEvent.ACTION_DOWN == event.getAction()) {
-				Log.d(LOG_TAG, "Generate new talking group");
+				// generate new talking group with new talking group listener
+				// implementation
+				((NewTalkingGroupListener) _mContentView)
+						.generateNewTalkingGroup();
 			}
 
 			return false;
@@ -328,7 +365,7 @@ public class SimpleIMeetingMainActivity extends
 		@Override
 		public void onClick(View v) {
 			// switch content view
-			switchContentView(false, null);
+			switchContentView(null, null);
 		}
 
 	}
@@ -378,6 +415,37 @@ public class SimpleIMeetingMainActivity extends
 			return false;
 		}
 
+	}
+
+	// contacts selecting back bar button item on click listener
+	class ContactsSelectingBackBarButtonItemOnClickListener implements
+			OnClickListener {
+
+		// contacts selecting sponsor type
+		private SimpleIMeetingMainViewType _mContactsSelectingSponsorType;
+
+		@Deprecated
+		public ContactsSelectingBackBarButtonItemOnClickListener() {
+			super();
+		}
+
+		public ContactsSelectingBackBarButtonItemOnClickListener(
+				SimpleIMeetingMainViewType sponsorType) {
+			super();
+
+			// save sponsor type
+			_mContactsSelectingSponsorType = sponsorType;
+		}
+
+		@Override
+		public void onClick(View v) {
+			// cancel selecting contacts for adding to talking group
+			((ContactsSelectView) _mContentView)
+					.cancelSelectingContacts4Adding2TalkingGroup(_mContactsSelectingSponsorType);
+
+			// set main activity navigation title and left bar button item
+			setMainActivityNavigationTitle7LeftBarButtonItem();
+		}
 	}
 
 }
