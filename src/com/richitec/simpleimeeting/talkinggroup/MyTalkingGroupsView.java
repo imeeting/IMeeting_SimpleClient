@@ -627,6 +627,9 @@ public class MyTalkingGroupsView extends SIMBaseView implements
 			Log.e(LOG_TAG,
 					"Send get my talking group list post http request failed!");
 
+			// set my talking group needed to refresh
+			_mMyTalkingGroupsNeeded2Refresh = true;
+
 			// show get my talking group list failed toast
 			Toast.makeText(getContext(), R.string.toast_request_exception,
 					Toast.LENGTH_LONG).show();

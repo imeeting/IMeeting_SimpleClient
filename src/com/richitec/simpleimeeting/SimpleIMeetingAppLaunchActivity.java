@@ -32,7 +32,7 @@ public class SimpleIMeetingAppLaunchActivity extends AppLaunchActivity {
 	// simple iMeeting application launch toast
 	private Toast _mSimpleIMeetingAppLaunchToast;
 
-	// intent activity for simple iMeeting application
+	// target intent activity for simple iMeeting application
 	private Intent _mIntentActivity;
 
 	@Override
@@ -51,11 +51,6 @@ public class SimpleIMeetingAppLaunchActivity extends AppLaunchActivity {
 
 	@Override
 	public Intent intentActivity() {
-		// test by ares
-		// set intent activity
-		// setIntentActivity(new Intent(this,
-		// NetworkUnavailabelActivity.class));
-
 		// check the got intent activity and set target intent
 		if (null == _mIntentActivity) {
 			// target intent activity, simple iMeeting main activity
@@ -66,7 +61,7 @@ public class SimpleIMeetingAppLaunchActivity extends AppLaunchActivity {
 	}
 
 	@Override
-	public void didFinishLaunching() {
+	public boolean didFinishLaunching() {
 		// traversal address book
 		AddressBookManager
 				.setFilterMode(AddressBookManager.FILTER_IP_AND_CODE_PREFIX);
@@ -122,9 +117,12 @@ public class SimpleIMeetingAppLaunchActivity extends AppLaunchActivity {
 			// register and login using device combined unique id
 			sendReg7LoginWithDeviceCombinedUniqueIdHttpRequest();
 		}
+
+		return true;
 	}
 
-	public void setIntentActivity(Intent intentActivity) {
+	// update target intent activity
+	public void updateIntentActivity(Intent intentActivity) {
 		_mIntentActivity = intentActivity;
 	}
 
