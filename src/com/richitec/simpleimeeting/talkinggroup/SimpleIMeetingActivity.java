@@ -26,10 +26,9 @@ import com.richitec.simpleimeeting.talkinggroup.MyTalkingGroupsView.MyTalkingGro
 import com.richitec.simpleimeeting.view.SIMBaseView;
 import com.richitec.simpleimeeting.view.SIMViewFactory;
 
-public class SimpleIMeetingMainActivity extends
-		SimpleIMeetingNavigationActivity {
+public class SimpleIMeetingActivity extends SimpleIMeetingNavigationActivity {
 
-	private static final String LOG_TAG = SimpleIMeetingMainActivity.class
+	private static final String LOG_TAG = SimpleIMeetingActivity.class
 			.getCanonicalName();
 
 	// more menu ids
@@ -37,8 +36,8 @@ public class SimpleIMeetingMainActivity extends
 	private static final int SUPPORT_MENU = 11;
 	private static final int ABOUT_MENU = 12;
 
-	// simple imeeting main view type
-	private SimpleIMeetingMainViewType _mMainViewType = SimpleIMeetingMainViewType.ADDRESSBOOK_CONTACTS;
+	// simple imeeting activity content view type
+	private SimpleIMeetingActivityContentViewType _mMainViewType = SimpleIMeetingActivityContentViewType.ADDRESSBOOK_CONTACTS;
 
 	// contacts select and my talking group list subViews
 	private SIMBaseView _mContactsSelectView;
@@ -127,7 +126,7 @@ public class SimpleIMeetingMainActivity extends
 	// set contacts select navigation title and back bar button item as left
 	// navigation bar button item
 	public void setContactsSelectNavigationTitle7BackBarButtonItem(
-			SimpleIMeetingMainViewType contentViewType) {
+			SimpleIMeetingActivityContentViewType contentViewType) {
 		// check contacts selecting title textView
 		if (null == _mContactsSelectingTitleTextView) {
 			// init contacts selecting title textView
@@ -157,7 +156,7 @@ public class SimpleIMeetingMainActivity extends
 
 	// set main activity content view
 	private void setMainActivityContentView(
-			SimpleIMeetingMainViewType mainViewType) {
+			SimpleIMeetingActivityContentViewType mainViewType) {
 		// main activity content view(simple imeeting view)
 		SIMBaseView _contentView;
 
@@ -301,7 +300,7 @@ public class SimpleIMeetingMainActivity extends
 			// switch to addressbook contacts view
 			Log.d(LOG_TAG, "Switch to addressbook contacts view");
 
-			setMainActivityContentView(SimpleIMeetingMainViewType.ADDRESSBOOK_CONTACTS);
+			setMainActivityContentView(SimpleIMeetingActivityContentViewType.ADDRESSBOOK_CONTACTS);
 
 			// check and set conference id, invite note, talking group contacts
 			// phone array
@@ -316,7 +315,7 @@ public class SimpleIMeetingMainActivity extends
 			// switch to my talking group view
 			Log.d(LOG_TAG, "Switch to my talking group view");
 
-			setMainActivityContentView(SimpleIMeetingMainViewType.MY_TALKINGGROUP_LIST);
+			setMainActivityContentView(SimpleIMeetingActivityContentViewType.MY_TALKINGGROUP_LIST);
 
 			// check and set my talking group list needed to refresh
 			if (null != myTalkingGroupsViewResreshType) {
@@ -334,8 +333,8 @@ public class SimpleIMeetingMainActivity extends
 	}
 
 	// inner class
-	// simple imeeting main view type
-	enum SimpleIMeetingMainViewType {
+	// simple imeeting activity content view type
+	enum SimpleIMeetingActivityContentViewType {
 		ADDRESSBOOK_CONTACTS, MY_TALKINGGROUP_LIST
 	}
 
@@ -422,7 +421,7 @@ public class SimpleIMeetingMainActivity extends
 			OnClickListener {
 
 		// contacts selecting sponsor type
-		private SimpleIMeetingMainViewType _mContactsSelectingSponsorType;
+		private SimpleIMeetingActivityContentViewType _mContactsSelectingSponsorType;
 
 		@Deprecated
 		public ContactsSelectingBackBarButtonItemOnClickListener() {
@@ -430,7 +429,7 @@ public class SimpleIMeetingMainActivity extends
 		}
 
 		public ContactsSelectingBackBarButtonItemOnClickListener(
-				SimpleIMeetingMainViewType sponsorType) {
+				SimpleIMeetingActivityContentViewType sponsorType) {
 			super();
 
 			// save sponsor type

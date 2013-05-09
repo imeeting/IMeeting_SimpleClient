@@ -40,7 +40,7 @@ import com.richitec.commontoolkit.utils.HttpUtils.OnHttpRequestListener;
 import com.richitec.commontoolkit.utils.HttpUtils.PostRequestFormat;
 import com.richitec.commontoolkit.utils.JSONUtils;
 import com.richitec.simpleimeeting.R;
-import com.richitec.simpleimeeting.talkinggroup.SimpleIMeetingMainActivity.SimpleIMeetingMainViewType;
+import com.richitec.simpleimeeting.talkinggroup.SimpleIMeetingActivity.SimpleIMeetingActivityContentViewType;
 import com.richitec.simpleimeeting.view.SIMBaseView;
 
 public class MyTalkingGroupsView extends SIMBaseView implements
@@ -152,13 +152,13 @@ public class MyTalkingGroupsView extends SIMBaseView implements
 	@Override
 	public void generateNewTalkingGroup() {
 		// switch to contacts select view
-		((SimpleIMeetingMainActivity) getContext())
+		((SimpleIMeetingActivity) getContext())
 				.switch2contactsSelectView(new ArrayList<String>());
 
 		// set contacts select navigation title and back bar button item as left
 		// navigation bar button item
-		((SimpleIMeetingMainActivity) getContext())
-				.setContactsSelectNavigationTitle7BackBarButtonItem(SimpleIMeetingMainViewType.MY_TALKINGGROUP_LIST);
+		((SimpleIMeetingActivity) getContext())
+				.setContactsSelectNavigationTitle7BackBarButtonItem(SimpleIMeetingActivityContentViewType.MY_TALKINGGROUP_LIST);
 	}
 
 	// set my talking group list needed to refresh
@@ -882,13 +882,13 @@ public class MyTalkingGroupsView extends SIMBaseView implements
 					.addAll(_mSelectedTalkingGroupAttendeesPhoneArray);
 
 			// switch to contacts select view
-			((SimpleIMeetingMainActivity) getContext())
+			((SimpleIMeetingActivity) getContext())
 					.switch2contactsSelectView(_confId7inviteNote7newAddedContactsPhoneList);
 
 			// set contacts select navigation title and back bar button item as
 			// left navigation bar button item
-			((SimpleIMeetingMainActivity) getContext())
-					.setContactsSelectNavigationTitle7BackBarButtonItem(SimpleIMeetingMainViewType.MY_TALKINGGROUP_LIST);
+			((SimpleIMeetingActivity) getContext())
+					.setContactsSelectNavigationTitle7BackBarButtonItem(SimpleIMeetingActivityContentViewType.MY_TALKINGGROUP_LIST);
 		}
 
 	}

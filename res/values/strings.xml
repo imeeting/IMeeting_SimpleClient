@@ -57,8 +57,8 @@
     <string name="acknowledgement">鸣谢</string>
     <string name="acknowledgement_organizations">南京富拓网络科技有限公司</string>
 
-    <!-- simple imeeting main activity -->
-    <string name="title_activity_simple_imeeting_main">SimpleIMeetingMainActivity</string>
+    <!-- simple imeeting activity -->
+    <string name="title_activity_simple_imeeting">SimpleIMeetingActivity</string>
     <string name="tap2generateNewTalkingGroup_title">点击安排会议</string>
     <string name="moreMenu_settingMenuItem">设置</string>
     <string name="moreMenu_supportMenuItem">帮助</string>

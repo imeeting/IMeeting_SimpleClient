@@ -53,8 +53,8 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".talkinggroup.SimpleIMeetingMainActivity"
-            android:label="@string/title_activity_simple_imeeting_main"
+            android:name=".talkinggroup.SimpleIMeetingActivity"
+            android:label="@string/title_activity_simple_imeeting"
             android:screenOrientation="portrait" >
         </activity>
     </application>

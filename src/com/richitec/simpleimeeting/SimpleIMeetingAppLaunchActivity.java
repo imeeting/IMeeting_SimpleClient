@@ -20,7 +20,7 @@ import com.richitec.commontoolkit.utils.HttpUtils.PostRequestFormat;
 import com.richitec.simpleimeeting.assistant.httprequestlistener.BindedAccountLoginHttpRequestListener;
 import com.richitec.simpleimeeting.assistant.httprequestlistener.RegAndLoginWithDeviceIdHttpRequestListener;
 import com.richitec.simpleimeeting.talkinggroup.ContactsSelectView;
-import com.richitec.simpleimeeting.talkinggroup.SimpleIMeetingMainActivity;
+import com.richitec.simpleimeeting.talkinggroup.SimpleIMeetingActivity;
 import com.richitec.simpleimeeting.user.SIMUserExtension;
 import com.richitec.simpleimeeting.utils.AppDataSaveRestoreUtils;
 
@@ -59,8 +59,7 @@ public class SimpleIMeetingAppLaunchActivity extends AppLaunchActivity {
 		// check the got intent activity and set target intent
 		if (null == _mIntentActivity) {
 			// target intent activity, simple iMeeting main activity
-			_mIntentActivity = new Intent(this,
-					SimpleIMeetingMainActivity.class);
+			_mIntentActivity = new Intent(this, SimpleIMeetingActivity.class);
 		}
 
 		return _mIntentActivity;

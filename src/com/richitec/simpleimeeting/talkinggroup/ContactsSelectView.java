@@ -67,7 +67,7 @@ import com.richitec.commontoolkit.utils.JSONUtils;
 import com.richitec.commontoolkit.utils.StringUtils;
 import com.richitec.simpleimeeting.R;
 import com.richitec.simpleimeeting.talkinggroup.MyTalkingGroupsView.MyTalkingGroupsViewRefreshType;
-import com.richitec.simpleimeeting.talkinggroup.SimpleIMeetingMainActivity.SimpleIMeetingMainViewType;
+import com.richitec.simpleimeeting.talkinggroup.SimpleIMeetingActivity.SimpleIMeetingActivityContentViewType;
 import com.richitec.simpleimeeting.view.SIMBaseView;
 
 public class ContactsSelectView extends SIMBaseView implements
@@ -252,8 +252,8 @@ public class ContactsSelectView extends SIMBaseView implements
 
 		// set contacts select navigation title and back bar button item as left
 		// navigation bar button item
-		((SimpleIMeetingMainActivity) getContext())
-				.setContactsSelectNavigationTitle7BackBarButtonItem(SimpleIMeetingMainViewType.ADDRESSBOOK_CONTACTS);
+		((SimpleIMeetingActivity) getContext())
+				.setContactsSelectNavigationTitle7BackBarButtonItem(SimpleIMeetingActivityContentViewType.ADDRESSBOOK_CONTACTS);
 	}
 
 	// set talking group conference id, invite note and contacts phone array,
@@ -287,15 +287,15 @@ public class ContactsSelectView extends SIMBaseView implements
 
 	// cancel selecting contacts for adding to talking group
 	public void cancelSelectingContacts4Adding2TalkingGroup(
-			SimpleIMeetingMainViewType sponsorType) {
+			SimpleIMeetingActivityContentViewType sponsorType) {
 		// hide selected contacts relativeLayout
 		setSelectedContactsRelativeLayoutVisibility(View.GONE);
 
 		// check the sponsor type and switch to my talking group view
 		if (null != sponsorType
-				&& SimpleIMeetingMainViewType.MY_TALKINGGROUP_LIST == sponsorType) {
+				&& SimpleIMeetingActivityContentViewType.MY_TALKINGGROUP_LIST == sponsorType) {
 			// switch to my talking groups view
-			((SimpleIMeetingMainActivity) getContext())
+			((SimpleIMeetingActivity) getContext())
 					.switch2myTalkingGroupsView(null);
 		}
 
@@ -495,8 +495,8 @@ public class ContactsSelectView extends SIMBaseView implements
 		// bar button item
 		if (View.VISIBLE != ((RelativeLayout) findViewById(R.id.cs_selectedContacts_relativeLayout))
 				.getVisibility()) {
-			((SimpleIMeetingMainActivity) getContext())
-					.setContactsSelectNavigationTitle7BackBarButtonItem(SimpleIMeetingMainViewType.ADDRESSBOOK_CONTACTS);
+			((SimpleIMeetingActivity) getContext())
+					.setContactsSelectNavigationTitle7BackBarButtonItem(SimpleIMeetingActivityContentViewType.ADDRESSBOOK_CONTACTS);
 		}
 
 		// show selected contacts relativeLayout
@@ -1960,7 +1960,7 @@ public class ContactsSelectView extends SIMBaseView implements
 
 					// switch to my talking groups view and update my talking
 					// group list
-					((SimpleIMeetingMainActivity) getContext())
+					((SimpleIMeetingActivity) getContext())
 							.switch2myTalkingGroupsView(MyTalkingGroupsViewRefreshType.TALKINGGROUPS);
 
 					// set contacts select view stopped
@@ -2010,7 +2010,7 @@ public class ContactsSelectView extends SIMBaseView implements
 
 			// switch to my talking groups view and update my talking
 			// group attendee list
-			((SimpleIMeetingMainActivity) getContext())
+			((SimpleIMeetingActivity) getContext())
 					.switch2myTalkingGroupsView(MyTalkingGroupsViewRefreshType.TALKINGGROUP_ATTENDEES);
 
 			// set contacts select view stopped
