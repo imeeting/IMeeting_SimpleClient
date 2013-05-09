@@ -42,13 +42,14 @@ public class SimpleIMeetingAppLaunchActivity extends AppLaunchActivity {
 	}
 
 	@Override
-	public void didFinishLaunching() {
+	public boolean didFinishLaunching() {
 		// traversal address book
 		AddressBookManager.setFilterMode(AddressBookManager.FILTER_IP_AND_CODE_PREFIX);
 		AddressBookManager.getInstance().traversalAddressBook();
 
 		// init all name phonetic sorted contacts info array
 		ContactsSelectView.initNamePhoneticSortedContactsInfoArray();
+		return false;
 	}
 
 }
