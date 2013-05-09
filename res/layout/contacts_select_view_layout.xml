@@ -10,7 +10,7 @@
         android:id="@+id/cs_contactsList_relativeLayout"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_weight="5"
+        android:layout_weight="1"
         android:background="@drawable/img_contactslist_relativelayout_bg" >
 
         <TextView
@@ -28,20 +28,25 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/cs_cl_headTip_textView" >
 
-            <ImageButton
-                android:id="@+id/cs_cl_contactSearchImgBtn"
+            <Button
+                android:id="@+id/cs_cl_add_manualInputContactBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:contentDescription="@string/contactsSelect_contactsList_contactSearchImgBtn_contentDescription"
-                android:src="@android:drawable/ic_input_add" />
+                android:layout_centerInParent="true"
+                android:layout_marginLeft="6dp"
+                android:layout_marginRight="4dp"
+                android:background="@drawable/add_manualinputcontact_btn_bg" />
 
             <EditText
                 android:id="@+id/cs_cl_contactSearchEditText"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_toLeftOf="@id/cs_cl_contactSearchImgBtn"
-                android:hint="@string/contactsSelect_contactsList_contactSearchEditText_hint" >
+                android:layout_toLeftOf="@id/cs_cl_add_manualInputContactBtn"
+                android:drawableLeft="@drawable/ic_action_search"
+                android:ellipsize="end"
+                android:hint="@string/contactsSelect_contactsList_contactSearchEditText_hint"
+                android:inputType="text" >
 
                 <requestFocus />
             </EditText>
@@ -71,7 +76,7 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_marginLeft="-7dp"
-        android:layout_weight="12"
+        android:layout_weight="2"
         android:visibility="gone" >
 
         <TextView
@@ -96,7 +101,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_margin="1dp"
-                android:text="@string/contactsSelect_inviteSelectedContacts2talkgingGroup_buttonText" />
+                android:text="@string/contactsSelect_inviteSelectedContacts2talkgingGroup_buttonTitle" />
 
             <ListView
                 android:id="@+id/cs_selectedContactsListView"

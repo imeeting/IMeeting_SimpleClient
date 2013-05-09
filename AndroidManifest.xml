@@ -13,6 +13,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:name="com.richitec.commontoolkit.CTApplication"
@@ -31,13 +33,28 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".assistant.SettingActivity"
+            android:label="@string/title_activity_setting"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".assistant.SupportActivity"
+            android:label="@string/title_activity_support"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
             android:name=".assistant.AboutActivity"
             android:label="@string/title_activity_about"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".talkinggroup.SimpleIMeetingMainActivity"
-            android:label="@string/title_activity_simple_imeeting_main"
+            android:name=".assistant.NetworkUnavailabelActivity"
+            android:label="@string/title_activity_network_unavailabel"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".talkinggroup.SimpleIMeetingActivity"
+            android:label="@string/title_activity_simple_imeeting"
             android:screenOrientation="portrait" >
         </activity>
     </application>

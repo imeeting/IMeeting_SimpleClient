@@ -4,12 +4,45 @@
     <!-- iMeeting simple project -->
     <string name="app_name">智会预约版</string>
 
+    <!-- setting activity -->
+    <string name="title_activity_setting">SettingActivity</string>
+    <string name="setting_nav_title_text">设置</string>
+    <string name="myAccountGroup_tipTextView_text">我的账户</string>
+    <string name="myAccount_labelTextView_text">用户名：</string>
+    <string name="deviceId_labelTextView_text">设备号：</string>
+    <string name="bindedContactInfo_accountLogoutBtn_title">注销</string>
+    <string name="bindContactInfoGroup_tipTextView_text">绑定联系方式</string>
+    <string name="bindContactInfo_tipTextView_text">绑定以下联系方式，可让您在任何设备上同步，查看和安排您的会议，以便更好的使用智会。</string>
+    <string name="phoneBind_imageBtn_contentDescription">bind contact phone image button</string>
+    <string name="phoneBind_alertDialog_title">手机号码绑定</string>
+    <string name="phoneBind_alertDialog_bindingPhoneTextView_text">手机号码：</string>
+    <string name="phoneBind_alertDialog_verificationCodeTextView_text">验证码：</string>
+    <string name="phoneBind_alertDialog_getVerificationCodeBtn_normalTitle">获取验证码</string>
+    <string name="phoneBind_alertDialog_getVerificationCodeBtn_disableTitle">***秒后再获取</string>
+    <string name="phoneBind_alertDialog_bindingAccount_loginPwdTextView_text">密码：</string>
+    <string name="phoneBind_alertDialog_bindingAccount_loginPwdConfirmTextView_text">确认密码：</string>
+    <string name="phoneBind_alertDialog_phonebind_cancelBindBtn_title">取消</string>
+    <string name="phoneBind_alertDialog_phonebind_confirmBindBtn_title">绑定</string>
+    <string name="emailBind_imageBtn_contentDescription">bind contact email image button</string>
+    <string name="bindContactInfo_accountLoginBtn_title">绑定过联系方式的用户登录</string>
+    <string name="bindedAccountLogin_alertDialog_title">用户登录</string>
+    <string name="bindedAccountLogin_alertDialog_loginUserNameTextView_text">用户名：</string>
+    <string name="bindedAccountLogin_alertDialog_loginPwdTextView_text">密码：</string>
+    <string name="bindedAccountLogin_alertDialog_loginCancelBtn_title">取消</string>
+    <string name="bindedAccountLogin_alertDialog_loginConfirmBtn_title">登录</string>
+
+    <!-- support activity -->
+    <string name="title_activity_support">SupportActivity</string>
+    <string name="support_nav_title_text">帮助</string>
+    <string name="supportLoading_textView_textHeader">正在加载&#8230;，</string>
+    <string name="supportLoading_progressBar_max">100</string>
+
     <!-- about activity -->
     <string name="title_activity_about">AboutActivity</string>
     <string name="about_nav_title_text">关于</string>
     <!-- product -->
     <string name="product_small_icon_imageView_contentDescription">it is product icon image</string>
-    <string name="product_name">智会免费版</string>
+    <string name="product_name">智会</string>
     <string name="product_description">高效能人士的智慧选择</string>
     <string name="product_version">版本号:</string>
     <!-- design -->
@@ -24,34 +57,62 @@
     <string name="acknowledgement">鸣谢</string>
     <string name="acknowledgement_organizations">南京富拓网络科技有限公司</string>
 
-    <!-- simple imeeting main activity -->
-    <string name="title_activity_simple_imeeting_main">SimpleIMeetingMainActivity</string>
-    <string name="tap2generateNewTalkingGroup_title">点击安排新会议</string>
+    <!-- simple imeeting activity -->
+    <string name="title_activity_simple_imeeting">SimpleIMeetingActivity</string>
+    <string name="tap2generateNewTalkingGroup_title">点击安排会议</string>
+    <string name="moreMenu_settingMenuItem">设置</string>
+    <string name="moreMenu_supportMenuItem">帮助</string>
+    <string name="moreMenu_aboutMenuItem">关于</string>
+    <string name="contactsSelecting_backBarButtonItem_navTitle">返回</string>
+    <string name="contactsSelecting_tipTitle">添加联系人</string>
+    <string name="contactsSelecting_tipTitle_tag">通讯录</string>
     <!-- contacts select view -->
     <string name="contactsSelect_leftBarButtonItem_navTitle">我的会议</string>
     <string name="contactsSelect_contactsList_headTip_textViewText">通讯录</string>
-    <string name="contactsSelect_contactsList_contactSearchImgBtn_contentDescription">contact search image button</string>
     <string name="contactsSelect_contactsList_contactSearchEditText_hint">搜索联系人</string>
+    <string name="addManualInputContact_popupWindowDismissBtn_title">×</string>
+    <string name="addManualInputContact_editText_hint">请输入手机号码</string>
+    <string name="addManualInputContact_confirmBtn_title">添加</string>
     <string name="contactsSelect_addressbookContact_unselected_imageView_content_description">address book contact unselected image view</string>
     <string name="contactsSelect_addressbookContact_selected_imageView_content_description">address book contact selected image view</string>
     <string name="contactsSelect_selectedContacts_headTip_textViewText">预邀参与者</string>
     <string name="contactsSelect_contactHasNoPhone_alertDialog_title">此人没有号码</string>
     <string name="contactsSelect_contactHasNoPhone_alertDialog_reselectBtn_title">重新选择</string>
-    <string name="contactPhonesSelect_selectPopupWindow_titleTextView_text">选择 *** 加入群聊的号码</string>
+    <string name="contactPhonesSelect_selectPopupWindow_titleTextView_text">选择 *** 加入会议的号码</string>
     <string name="contactPhonesSelect_selectPopupWindow_cancelBtn_title">取消</string>
     <string name="contactsSelect_preinTalkingGroupContact_imageView_content_description">prein talking group contact image view</string>
-    <string name="contactsSelect_inviteSelectedContacts2talkgingGroup_buttonText">邀请</string>
+    <string name="contactsSelect_inviteSelectedContacts2talkgingGroup_buttonTitle">邀请</string>
+    <string name="talkingGroupStartedTimeSelect_cancelBtn_title">取消</string>
+    <string name="talkingGroupStartedTimeSelect_titleTextView_text">请选择会议开始时间</string>
+    <string name="talkingGroupStartedTimeSelect_confirmBtn_title">确定</string>
+    <string name="talkingGroupAttendee_inviteNoteText">请于 *** 拨打0551&#8211;62379997参加电话会议(会议号: ***)</string>
+    <string name="datePicker_yearSuffix">年</string>
+    <string name="datePicker_monthSuffix">月</string>
+    <string name="datePicker_daySuffix">日</string>
+    <string name="talkingGroupStartedTimeSelect_inviteNoteCpoyBtn_title">点击拷贝</string>
     <!-- my talking group view -->
     <string name="myTalkingGroup_leftBarButtonItem_navTitle">通讯录</string>
     <string name="myTalkingGroup_talkingGroupList_headTip_textViewText">会议列表</string>
     <string name="myTalkingGroup_talkingGroupAttendeeList_headTip_textViewText">与会者</string>
+    <string name="myTalkingGroup_loadMyTalkingGroup_textViewText">正在加载&#8230;</string>
     <string name="no_myTalkingGroup_tip_textViewText">当前没有待参与的会议，你可以点击来开启一个新的会议</string>
     <string name="myTalkingGroup_startedTime_hint">开始时间：</string>
     <string name="myTalkingGroup_groupId_hint">会议号码：</string>
     <string name="myTalkingGroup_groupStatus_hint">会议状态：</string>
-    <string name="myTalkingGroup_groupStatus_opened">进行中</string>
-    <string name="myTalkingGroup_groupStatus_unopened">尚未开始</string>
+    <string name="myTalkingGroup_groupStatus_opened">进行中&#8230;</string>
+    <string name="myTalkingGroup_groupStatus_broken">会议已坏</string>
+    <string name="myTalkingGroup_groupStatus_unopened">***后开始</string>
+    <string name="remainderTime_daySuffix">天</string>
+    <string name="remainderTime_hourSuffix">小时</string>
+    <string name="remainderTime_minuteSuffix">分钟</string>
     <string name="myTalkingGroup_detailInfo_imageView_contentDescription">indicate it is my talking group detail info image view</string>
+    <string name="loadingMore_talkingGroups_textViewText">正在加载&#8230;</string>
+    <string name="noMore_talkingGroups_textViewText">没有更多会议</string>
     <string name="myTalkingGroup_talkingGroupAttendeeStatus_imageView_content_description">talking group attendee status image view</string>
+    <string name="addNewContacts2MyTalkingGroup_buttonTitle">添加</string>
+
+    <!-- network unavailabel activity -->
+    <string name="title_activity_network_unavailabel">NetworkUnavailabelActivity</string>
+    <string name="network_unavailabel_tipTextView_text">当前网络不可用，请退出后稍后重试！</string>
 
 </resources>

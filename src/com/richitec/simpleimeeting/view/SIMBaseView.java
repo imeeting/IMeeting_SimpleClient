@@ -27,7 +27,44 @@ public abstract class SIMBaseView {
 	public abstract int presentViewLayout();
 
 	// initialize present view's components and set its attributes
-	public abstract void initSubComponents();
+	public abstract void onCreate();
+
+	// not needed to call simple imeeting base view onStart method
+	public void onStart() {
+		Log.w(LOG_TAG, "Simple iMeeting base view = " + this
+				+ " onStart method not implement");
+	}
+
+	// refresh present view's data again, not needed to call simple imeeting
+	// base view onResume method
+	public void onResume() {
+		Log.w(LOG_TAG, "Simple iMeeting base view = " + this
+				+ " onResume method not implement");
+	}
+
+	// not needed to call simple imeeting base view onRestart method
+	public void onRestart() {
+		Log.w(LOG_TAG, "Simple iMeeting base view = " + this
+				+ " onRestart method not implement");
+	}
+
+	// not needed to call simple imeeting base view onPause method
+	public void onPause() {
+		Log.w(LOG_TAG, "Simple iMeeting base view = " + this
+				+ " onPause method not implement");
+	}
+
+	// not needed to call simple imeeting base view onStop method
+	public void onStop() {
+		Log.w(LOG_TAG, "Simple iMeeting base view = " + this
+				+ " onStop method not implement");
+	}
+
+	// not needed to call simple imeeting base view onDestroy method
+	public void onDestroy() {
+		Log.w(LOG_TAG, "Simple iMeeting base view = " + this
+				+ " onDestroy method not implement");
+	}
 
 	// get simple imeeting base view present view
 	public View getPresentView() {

@@ -1,16 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- common -->
+    <string name="bg_server_req_resp_result">result</string>
+
+    <!-- android device common info -->
+    <string name="bg_server_deviceBrand">brand</string>
+    <string name="bg_server_deviceModel">model</string>
+    <string name="bg_server_deviceOS_version">release</string>
+    <string name="bg_server_deviceOS_APILevel">sdk</string>
+    <string name="bg_server_deviceDisplayScreen_width">width</string>
+    <string name="bg_server_deviceDisplayScreen_height">height</string>
+
+    <!-- binded account login, register&login with device combined unique id, phone and email bind -->
+    <string name="bg_server_userLoginName">loginName</string>
+    <string name="bg_server_userLoginPwd">loginPwd</string>
+    <string name="bg_server_login6ContactInfoBindReq_resp_userId">userId</string>
+    <string name="bg_server_login6ContactInfoBindReq_resp_userName">username</string>
+    <string name="bg_server_login6ContactInfoBindReq_resp_userKey">userkey</string>
+    <string name="bg_server_login6ContactInfoBindReq_resp_nickname">nickname</string>
+    <string name="bg_server_login6reg7LoginWithDeviceIdReq_resp_bindStatus">bind_status</string>
+    <string name="bg_server_login6reg7LoginWithDeviceIdReq_resp_bindPhoneStatus">bind_phone</string>
+    <string name="bg_server_reg7LoginWithDeviceId6ContactInfoBind_deviceId">deviceId</string>
+    <string name="bg_server_phoneBind_phoneNumber">phone</string>
+    <string name="bg_server_phoneBind_verificationCode">phonecode</string>
+    <string name="bg_server_phoneBind_loginPassword">password</string>
+    <string name="bg_server_phoneBind_loginConfirmationPwd">password1</string>
+
+    <!-- contacts select view -->
+    <string name="bg_server_scheduleNewTalkingGroup6inviteNewAddedContacts2TalkingGroup_attendees">attendees</string>
+    <string name="bg_server_newTalkingGroup6inviteNewAddedAttendee_nickname">nickname</string>
+    <string name="bg_server_newTalkingGroup6inviteNewAddedAttendee_phone">phone</string>
+    <string name="bg_server_scheduleNewTalkingGroup_scheduleTime">scheduleTime</string>
+
     <!-- my talking group view -->
-    <string name="bg_server_myTalkingGroup_startedTimestamp">startedtimestamp</string>
-    <string name="bg_server_myTalkingGroup_id">id</string>
-    <string name="bg_server_myTalkingGroup_status">status</string>
-    <string name="bg_server_myTalkingGroup_talkingGroupOpened">opened</string>
-    <string name="bg_server_myTalkingGroup_talkingGroupUnopened">unopened</string>
-    <string name="bg_server_talkingGroupAttendee_nickname">nickname</string>
-    <string name="bg_server_talkingGroupAttendee_phone">phone</string>
-    <string name="bg_server_talkingGroupAttendee_status">status</string>
-    <string name="bg_server_talkingGroupAttendee_attendeeIn">in</string>
-    <string name="bg_server_talkingGroupAttendee_attendeeOut">out</string>
+    <string name="bg_server_getMyTalkingGroups_offset">offset</string>
+    <string name="bg_server_getMyTalkingGroupsReq_resp_pager">pager</string>
+    <string name="bg_server_getMyTalkingGroupsReq_resp_pagerOffset">offset</string>
+    <string name="bg_server_getMyTalkingGroupsReq_resp_pagerHasNext">hasNext</string>
+    <string name="bg_server_getMyTalkingGroupsReq_resp_list">list</string>
+    <string name="bg_server_getMyTalkingGroupsReq_resp_startedTimestamp">scheduled_time</string>
+    <string name="bg_server_getMyTalkingGroups6newTalkingGroupIdReq_resp_id">conferenceId</string>
+    <string name="bg_server_getMyTalkingGroupsReq_resp_status">status</string>
+    <string name="bg_server_myTalkingGroup_talkingGroupOpened">OPEN</string>
+    <string name="bg_server_myTalkingGroup_talkingGroupSchedule">SCHEDULE</string>
+    <string name="bg_server_getMyTalkingGroupsReq_resp_attendees">attendees</string>
+    <string name="bg_server_myTalkingGroupAttendee_phone">phone</string>
+    <string name="bg_server_getTalkingGroupAttendees6scheduleNewTalkingGroup6inviteNewAddedContacts2TalkingGroup_confId">conferenceId</string>
+    <string name="bg_server_getTalkingGroupAttendeesReq_resp_nickname">nickname</string>
+    <string name="bg_server_getTalkingGroupAttendeesReq_resp_phone">phone</string>
+    <string name="bg_server_getTalkingGroupAttendeesReq_resp_status">telephone_status</string>
+    <string name="bg_server_talkingGroupAttendee_attendeeIn">Established</string>
+    <string name="bg_server_talkingGroupAttendee_attendeeOut">Terminated</string>
 
 </resources>

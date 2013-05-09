@@ -10,10 +10,10 @@ public class SIMViewFactory {
 	private static final String LOG_TAG = SIMViewFactory.class
 			.getCanonicalName();
 
-	// create simple imeeting view for present
-	public static View createSIMView4Present(Context context,
+	// create simple imeeting view
+	public static SIMBaseView createSIMView(Context context,
 			Class<? extends SIMBaseView> simViewClass) {
-		View _presentView = null;
+		SIMBaseView _simBaseView = null;
 
 		try {
 			// check context if it is or not activity context
@@ -22,19 +22,19 @@ public class SIMViewFactory {
 			}
 
 			// instantiate simple imeeting view instance
-			SIMBaseView _simBaseView = simViewClass.newInstance();
+			_simBaseView = simViewClass.newInstance();
 
 			// set content context
 			_simBaseView.setContext(context);
 
-			// get the present view as the return result
-			_presentView = _simBaseView.getPresentView();
+			// init the present view
+			_simBaseView.getPresentView();
 
 			// init the present view's sub components
-			_simBaseView.initSubComponents();
+			_simBaseView.onCreate();
 		} catch (NotActivityContextException e) {
 			Log.e(LOG_TAG,
-					"Create simple imeeting view for present error, exception message = "
+					"Create simple imeeting view error, exception message = "
 							+ e.getMessage());
 
 			e.printStackTrace();
@@ -54,7 +54,13 @@ public class SIMViewFactory {
 			e.printStackTrace();
 		}
 
-		return _presentView;
+		return _simBaseView;
+	}
+
+	// create simple imeeting view for present
+	public static View createSIMView4Present(Context context,
+			Class<? extends SIMBaseView> simViewClass) {
+		return createSIMView(context, simViewClass).getPresentView();
 	}
 
 	// inner class

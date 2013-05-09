@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/half_transparent" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="@color/threequarters_transparent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingBottom="4dp"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
+        android:paddingTop="4dp" >
+
+        <RelativeLayout
+            android:id="@+id/tgsts_header_relativeLayout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" >
+
+            <Button
+                android:id="@+id/tgsts_talkingGroupStartedTimeSelect_cancelBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:text="@string/talkingGroupStartedTimeSelect_cancelBtn_title" />
+
+            <Button
+                android:id="@+id/tgsts_talkingGroupStartedTimeSelect_confirmBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:text="@string/talkingGroupStartedTimeSelect_confirmBtn_title" />
+
+            <TextView
+                android:id="@+id/tgsts_talkingGroupStartedTimeSelect_titleTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:layout_toLeftOf="@id/tgsts_talkingGroupStartedTimeSelect_confirmBtn"
+                android:layout_toRightOf="@id/tgsts_talkingGroupStartedTimeSelect_cancelBtn"
+                android:gravity="center"
+                android:text="@string/talkingGroupStartedTimeSelect_titleTextView_text"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@android:color/white" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/tgsts_inviteNote_linearLayout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/tgsts_talkingGroupStartedTimeSelect_inviteNoteTextView"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:textColor="@android:color/white" />
+
+            <Button
+                android:id="@+id/tgsts_talkingGroupStartedTimeSelect_copyInviteNoteBtn"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="2dp"
+                android:layout_weight="4"
+                android:text="@string/talkingGroupStartedTimeSelect_inviteNoteCpoyBtn_title" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/tgsts_date7timePicker_linearLayout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <DatePicker
+                android:id="@+id/tgsts_talkingGroupStartedTimeSelect_datePicker"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <TimePicker
+                android:id="@+id/tgsts_talkingGroupStartedTimeSelect_timePicker"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+        </LinearLayout>
+    </LinearLayout>
+
+</FrameLayout>

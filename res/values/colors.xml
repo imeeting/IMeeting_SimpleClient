@@ -5,7 +5,7 @@
     <color name="quarter_transparent">#30000000</color>
     <color name="half_transparent">#70000000</color>
     <color name="threequarters_transparent">#b0000000</color>
-	
+
     <!-- pure color -->
     <color name="dodger_blue">#1e90ff</color>
     <color name="dark_dim_gray">#424242</color>
@@ -18,5 +18,6 @@
     <color name="dark_goldenrod">#bfad89</color>
     <color name="goldenrod">#cfc1b3</color>
     <color name="dark_wheat">#d0c1b3</color>
+    <color name="golden_yellow">#dfa75e</color>
 
 </resources>
