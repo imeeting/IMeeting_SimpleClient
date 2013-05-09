@@ -3,6 +3,7 @@
 
     <!-- iMeeting simple project -->
     <string name="app_name">智会预约版</string>
+    <string name="alert_title">智会提醒</string>
 
     <!-- setting activity -->
     <string name="title_activity_setting">SettingActivity</string>
@@ -114,5 +115,10 @@
     <!-- network unavailabel activity -->
     <string name="title_activity_network_unavailabel">NetworkUnavailabelActivity</string>
     <string name="network_unavailabel_tipTextView_text">当前网络不可用，请退出后稍后重试！</string>
+    <!-- version upgrade -->
+    <string name="detect_new_version" formatted="false">发现新版本%s，\n是否升级？\n本次更新说明：\n%s</string>
+    <string name="upgrade">升级</string>
+    <string name="ok">确定</string>
+    <string name="cancel">取消</string>
 
 </resources>
