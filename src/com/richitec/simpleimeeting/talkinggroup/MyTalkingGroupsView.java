@@ -58,7 +58,7 @@ public class MyTalkingGroupsView extends SIMBaseView implements
 
 	// my talking group started time date format, format unix timeStamp
 	private final DateFormat MYTALKINGGROUP_STARTEDTIMEDATEFORMAT = new SimpleDateFormat(
-			"yyyy-MM-dd HH:mm", Locale.getDefault());
+			"yy-MM-dd HH:mm", Locale.getDefault());
 
 	// my talking group list and my talking group attendees needed to refresh
 	private boolean _mMyTalkingGroupsNeeded2Refresh = true;

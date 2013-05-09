@@ -24,7 +24,7 @@
     <string name="toast_selectedContact_atLeastSelectOneContact">请添加一个联系人到会议</string>
     <string name="toast_selectedContact_useTheSelectedPhone_existedInPreinTalkingGroup_contacts">已使用此号码准备加入会议</string>
     <string name="toast_selectedContact_useAnotherPhone_existedInPreinTalkingGroup_contacts">已使用其他号码准备加入会议</string>
-    <string name="toast_selectedStartedtime4newTalkingGroup_tooEarly">会议开始时间已为过去时</string>
+    <string name="toast_selectedStartedtime4newTalkingGroup_tooEarly">时间无法倒流，会议开始时间已为过去时</string>
     <string name="toast_acheduleNewTalkingGroup_notAccept">远程服务器拒绝安排一个新的会议</string>
 
 </resources>

@@ -81,7 +81,7 @@
     <string name="contactPhonesSelect_selectPopupWindow_titleTextView_text">选择 *** 加入会议的号码</string>
     <string name="contactPhonesSelect_selectPopupWindow_cancelBtn_title">取消</string>
     <string name="contactsSelect_preinTalkingGroupContact_imageView_content_description">prein talking group contact image view</string>
-    <string name="contactsSelect_inviteSelectedContacts2talkgingGroup_buttonText">邀请</string>
+    <string name="contactsSelect_inviteSelectedContacts2talkgingGroup_buttonTitle">邀请</string>
     <string name="talkingGroupStartedTimeSelect_cancelBtn_title">取消</string>
     <string name="talkingGroupStartedTimeSelect_titleTextView_text">请选择会议开始时间</string>
     <string name="talkingGroupStartedTimeSelect_confirmBtn_title">确定</string>
@@ -107,6 +107,7 @@
     <string name="remainderTime_minuteSuffix">分钟</string>
     <string name="myTalkingGroup_detailInfo_imageView_contentDescription">indicate it is my talking group detail info image view</string>
     <string name="myTalkingGroup_talkingGroupAttendeeStatus_imageView_content_description">talking group attendee status image view</string>
+    <string name="addNewContacts2MyTalkingGroup_buttonTitle">添加</string>
 
     <!-- network unavailabel activity -->
     <string name="title_activity_network_unavailabel">NetworkUnavailabelActivity</string>
