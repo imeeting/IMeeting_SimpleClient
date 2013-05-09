@@ -42,7 +42,7 @@
     <string name="about_nav_title_text">关于</string>
     <!-- product -->
     <string name="product_small_icon_imageView_contentDescription">it is product icon image</string>
-    <string name="product_name">智会免费版</string>
+    <string name="product_name">智会</string>
     <string name="product_description">高效能人士的智慧选择</string>
     <string name="product_version">版本号:</string>
     <!-- design -->
