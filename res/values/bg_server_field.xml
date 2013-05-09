@@ -34,8 +34,10 @@
     <string name="bg_server_scheduleNewTalkingGroup_scheduleTime">scheduleTime</string>
 
     <!-- my talking group view -->
-    <string name="bg_server_getMyTalkingGroups6scheduleNewTalkingGroup_userName">username</string>
+    <string name="bg_server_getMyTalkingGroups_offset">offset</string>
     <string name="bg_server_getMyTalkingGroupsReq_resp_pager">pager</string>
+    <string name="bg_server_getMyTalkingGroupsReq_resp_pagerOffset">offset</string>
+    <string name="bg_server_getMyTalkingGroupsReq_resp_pagerHasNext">hasNext</string>
     <string name="bg_server_getMyTalkingGroupsReq_resp_list">list</string>
     <string name="bg_server_getMyTalkingGroupsReq_resp_startedTimestamp">scheduled_time</string>
     <string name="bg_server_getMyTalkingGroups6newTalkingGroupIdReq_resp_id">conferenceId</string>

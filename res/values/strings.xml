@@ -106,10 +106,13 @@
     <string name="remainderTime_hourSuffix">小时</string>
     <string name="remainderTime_minuteSuffix">分钟</string>
     <string name="myTalkingGroup_detailInfo_imageView_contentDescription">indicate it is my talking group detail info image view</string>
+    <string name="loadingMore_talkingGroups_textViewText">正在加载&#8230;</string>
+    <string name="noMore_talkingGroups_textViewText">没有更多会议</string>
     <string name="myTalkingGroup_talkingGroupAttendeeStatus_imageView_content_description">talking group attendee status image view</string>
     <string name="addNewContacts2MyTalkingGroup_buttonTitle">添加</string>
 
     <!-- network unavailabel activity -->
     <string name="title_activity_network_unavailabel">NetworkUnavailabelActivity</string>
+    <string name="network_unavailabel_tipTextView_text">当前网络不可用，请退出后稍后重试！</string>
 
 </resources>

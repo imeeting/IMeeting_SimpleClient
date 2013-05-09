@@ -10,6 +10,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
@@ -18,6 +19,7 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -31,8 +33,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.OnLastItemVisibleListener;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.richitec.commontoolkit.customadapter.CTListAdapter;
-import com.richitec.commontoolkit.user.UserManager;
 import com.richitec.commontoolkit.utils.HttpUtils;
 import com.richitec.commontoolkit.utils.HttpUtils.HttpRequestType;
 import com.richitec.commontoolkit.utils.HttpUtils.HttpResponseResult;
@@ -70,8 +75,18 @@ public class MyTalkingGroupsView extends SIMBaseView implements
 	// my talking groups info array
 	private JSONArray _mMyTalkingGroupsInfoArray = new JSONArray();
 
-	// my talking group list view
+	// my talking group adapter data list
+	private List<Map<String, ?>> _mMyTalkingGroupAdapterDataList = new ArrayList<Map<String, ?>>();
+
+	// my talking group list view and its pull to refresh list view
 	private ListView _mMyTalkingGroupListView;
+	private PullToRefreshListView _mMyTalkingGroupPull2RefreshListView;
+
+	// my talking group adapter
+	private MyTalkingGroup7MyTalkingGroupAttendeeAdapter _mMyTalkingGroupAdapter;
+
+	// my talking group list view's footer view
+	private View _mMyTalkingGroupListViewFooterView;
 
 	// selected talking group index
 	private Integer _mSelectedTalkingGroupIndex = null;
@@ -90,8 +105,19 @@ public class MyTalkingGroupsView extends SIMBaseView implements
 
 	@Override
 	public void onCreate() {
-		// get my talking group list view
-		_mMyTalkingGroupListView = (ListView) findViewById(R.id.mtg_talkingGroupListView);
+		// get my talking group list view and its pull to refresh list view
+		_mMyTalkingGroupPull2RefreshListView = (PullToRefreshListView) findViewById(R.id.mtg_talkingGroupListView);
+		_mMyTalkingGroupListView = _mMyTalkingGroupPull2RefreshListView
+				.getRefreshableView();
+
+		// set my talking group pull to refresh listView on refresh listener
+		_mMyTalkingGroupPull2RefreshListView
+				.setOnRefreshListener(new MyTalkingGroupPull2RefreshListViewOnRefreshListener());
+
+		// set my talking group pull to refresh listView on last item visible
+		// listener
+		_mMyTalkingGroupPull2RefreshListView
+				.setOnLastItemVisibleListener(new MyTalkingGroupPull2RefreshListViewOnLastItemVisibleListener());
 
 		// set my talking group listView on item click listener
 		_mMyTalkingGroupListView
@@ -99,6 +125,11 @@ public class MyTalkingGroupsView extends SIMBaseView implements
 
 		// get my talking group attendee list view
 		_mMyTalkingGroupAttendeeListView = (ListView) findViewById(R.id.mtg_talkingGroupAttendeeListView);
+
+		// inflate my talking group list view footer view
+		_mMyTalkingGroupListViewFooterView = ((LayoutInflater) getContext()
+				.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(
+				R.layout.my_talkinggroup_listview_footerview_layout, null);
 
 		// bind add contacts to talking group button on click listener
 		((Button) findViewById(R.id.mtg_addContacts2talkingGroup_button))
@@ -114,26 +145,11 @@ public class MyTalkingGroupsView extends SIMBaseView implements
 			// reset my talking group list needed to refresh flag
 			_mMyTalkingGroupsNeeded2Refresh = false;
 
-			// get my talking group list
-			// generate get my talking group list param map
-			Map<String, String> _getMyTalkingGroupsParamMap = new HashMap<String, String>();
+			// my talking group pull to refresh listView refreshing
+			_mMyTalkingGroupPull2RefreshListView.setRefreshing();
 
-			// set some params
-			_getMyTalkingGroupsParamMap
-					.put(getContext()
-							.getResources()
-							.getString(
-									R.string.bg_server_getMyTalkingGroups6scheduleNewTalkingGroup_userName),
-							UserManager.getInstance().getUser().getName());
-
-			// post the http request
-			HttpUtils.postSignatureRequest(
-					getContext().getResources().getString(R.string.server_url)
-							+ getContext().getResources().getString(
-									R.string.myTalkingGroup_list_url),
-					PostRequestFormat.URLENCODED, _getMyTalkingGroupsParamMap,
-					null, HttpRequestType.ASYNCHRONOUS,
-					new GetMyTalkingGroupListHttpRequestListener());
+			// send get my talking group list post http request
+			sendGetMyTalkingGroupsHttpRequest();
 		}
 
 		// check my talking group attendee list needed to refresh flag
@@ -178,6 +194,23 @@ public class MyTalkingGroupsView extends SIMBaseView implements
 				break;
 			}
 		}
+	}
+
+	// send get my talking group list post http request
+	private void sendGetMyTalkingGroupsHttpRequest() {
+		// remove my talking group list view footer view first
+		_mMyTalkingGroupListView
+				.removeFooterView(_mMyTalkingGroupListViewFooterView);
+
+		// get my talking group list
+		// post the http request
+		HttpUtils.postSignatureRequest(
+				getContext().getResources().getString(R.string.server_url)
+						+ getContext().getResources().getString(
+								R.string.myTalkingGroup_list_url),
+				PostRequestFormat.URLENCODED, null, null,
+				HttpRequestType.ASYNCHRONOUS,
+				new GetMyTalkingGroupListHttpRequestListener());
 	}
 
 	// generate my talking group listView adapter data list
@@ -343,6 +376,66 @@ public class MyTalkingGroupsView extends SIMBaseView implements
 		}
 
 		return _dataList;
+	}
+
+	// get my talking group list view footer view
+	private View getMyTalkingGroupListViewFooterView(
+			MyTalkingGroupListViewFooterViewType footerViewType) {
+		// get loading more and no more talking group footer view
+		View _loadingMoreTalkingGroupFooterView = _mMyTalkingGroupListViewFooterView
+				.findViewById(R.id.mtgfv_loadingMore_talkingGroup_footerView);
+		View _noMoreTalkingGroupFooterView = _mMyTalkingGroupListViewFooterView
+				.findViewById(R.id.mtgfv_noMore_talkingGroup_footerView);
+
+		// check my talking group list view footer view type
+		switch (footerViewType) {
+		case LOADINGMORE_TALKINGGROUP:
+			// show loading more talking group footer view and hide no more
+			// talking group footer view
+			_loadingMoreTalkingGroupFooterView.setVisibility(View.VISIBLE);
+			_noMoreTalkingGroupFooterView.setVisibility(View.GONE);
+			break;
+
+		case NOMORE_TALKINGGROUP:
+		default:
+			// hide loading more talking group footer view and show no more
+			// talking group footer view
+			_loadingMoreTalkingGroupFooterView.setVisibility(View.GONE);
+			_noMoreTalkingGroupFooterView.setVisibility(View.VISIBLE);
+			break;
+		}
+
+		return _mMyTalkingGroupListViewFooterView;
+	}
+
+	// send get more talking group list post http request
+	private void sendGetMoreTalkingGroupsHttpRequest() {
+		// get more talking group list
+		// generate get more talking group list param map
+		Map<String, String> _getMoreTalkingGroupsParamMap = new HashMap<String, String>();
+
+		// get my talking group pager offset and set some params
+		_getMoreTalkingGroupsParamMap
+				.put(getContext().getResources().getString(
+						R.string.bg_server_getMyTalkingGroups_offset),
+						Integer.valueOf(
+								JSONUtils
+										.getIntegerFromJSONObject(
+												_mMyTalkingGroupsPager,
+												getContext()
+														.getResources()
+														.getString(
+																R.string.bg_server_getMyTalkingGroupsReq_resp_pagerOffset)) + 1)
+								.toString());
+
+		// post the http request
+		HttpUtils.postSignatureRequest(
+				getContext().getResources().getString(R.string.server_url)
+						+ getContext().getResources().getString(
+								R.string.myTalkingGroup_list_url),
+				PostRequestFormat.URLENCODED, _getMoreTalkingGroupsParamMap,
+				null, HttpRequestType.ASYNCHRONOUS,
+				new GetMoreTalkingGroupListHttpRequestListener());
 	}
 
 	// send get the selected my talking group attendee list post http request
@@ -545,12 +638,57 @@ public class MyTalkingGroupsView extends SIMBaseView implements
 		TALKINGGROUPS, TALKINGGROUP_ATTENDEES
 	}
 
+	// my talking group pull to refresh listView on refresh listener
+	class MyTalkingGroupPull2RefreshListViewOnRefreshListener implements
+			OnRefreshListener<ListView> {
+
+		@Override
+		public void onRefresh(PullToRefreshBase<ListView> refreshView) {
+			// send get my talking group list post http request
+			sendGetMyTalkingGroupsHttpRequest();
+		}
+
+	}
+
+	// my talking group pull to refresh listView on last item visible listener
+	class MyTalkingGroupPull2RefreshListViewOnLastItemVisibleListener implements
+			OnLastItemVisibleListener {
+
+		@Override
+		public void onLastItemVisible() {
+			// get and check my talking group list pager hasNext flag
+			if (JSONUtils
+					.getBooleanFromJSONObject(
+							_mMyTalkingGroupsPager,
+							getContext()
+									.getResources()
+									.getString(
+											R.string.bg_server_getMyTalkingGroupsReq_resp_pagerHasNext))) {
+				// set loading more talking groups footer view as my talking
+				// group listView footer view
+				_mMyTalkingGroupListView
+						.addFooterView(getMyTalkingGroupListViewFooterView(MyTalkingGroupListViewFooterViewType.LOADINGMORE_TALKINGGROUP));
+
+				// send get more talking groups post http request
+				sendGetMoreTalkingGroupsHttpRequest();
+			} else {
+				// set no more talking groups footer view as my talking group
+				// listView footer view
+				_mMyTalkingGroupListView
+						.addFooterView(getMyTalkingGroupListViewFooterView(MyTalkingGroupListViewFooterViewType.NOMORE_TALKINGGROUP));
+			}
+		}
+	}
+
 	// get my talking group list http request listener
 	class GetMyTalkingGroupListHttpRequestListener extends
 			OnHttpRequestListener {
 
 		@Override
 		public void onFinished(HttpResponseResult responseResult) {
+			// my talking group pull to refresh listView refresh complete
+			_mMyTalkingGroupPull2RefreshListView.onRefreshComplete();
+
 			// get http response entity string json data
 			JSONObject _respJsonData = JSONUtils.toJSONObject(responseResult
 					.getResponseText());
@@ -575,17 +713,10 @@ public class MyTalkingGroupsView extends SIMBaseView implements
 									.getString(
 											R.string.bg_server_getMyTalkingGroupsReq_resp_list));
 
-			// get loading my talking group relativeLayout, no talking group tip
-			// textView and my talking groups linearLayout
-			RelativeLayout _loadingMyTalkingGroupRelativeLayout = (RelativeLayout) findViewById(R.id.mtg_loadingMyTalkingGroup_relativeLayout);
+			// get no talking group tip textView and my talking groups
+			// linearLayout
 			TextView _noTalkingGroupTipTextView = (TextView) findViewById(R.id.mtg_noTalkingGroup_tip_textView);
 			LinearLayout _myTalkingGroupsLinearLayout = (LinearLayout) findViewById(R.id.mtg_myTalkingGroup7attendees_linearLayout);
-
-			// hide loading my talking group relativeLayout if needed
-			if (View.VISIBLE == _loadingMyTalkingGroupRelativeLayout
-					.getVisibility()) {
-				_loadingMyTalkingGroupRelativeLayout.setVisibility(View.GONE);
-			}
 
 			// check my talking groups info array
 			if (0 != _mMyTalkingGroupsInfoArray.length()) {
@@ -600,9 +731,9 @@ public class MyTalkingGroupsView extends SIMBaseView implements
 
 				// set my talking group listView adapter
 				_mMyTalkingGroupListView
-						.setAdapter(new MyTalkingGroup7MyTalkingGroupAttendeeAdapter(
+						.setAdapter(_mMyTalkingGroupAdapter = new MyTalkingGroup7MyTalkingGroupAttendeeAdapter(
 								getContext(),
-								generateMyTalkingGroupListDataList(_mMyTalkingGroupsInfoArray),
+								_mMyTalkingGroupAdapterDataList = generateMyTalkingGroupListDataList(_mMyTalkingGroupsInfoArray),
 								R.layout.my_talkinggroup_layout,
 								new String[] { GROUP_SELECTED4ITEM,
 										GROUP_STARTEDTIME, GROUP_ID,
@@ -624,6 +755,9 @@ public class MyTalkingGroupsView extends SIMBaseView implements
 
 		@Override
 		public void onFailed(HttpResponseResult responseResult) {
+			// my talking group pull to refresh listView refresh complete
+			_mMyTalkingGroupPull2RefreshListView.onRefreshComplete();
+
 			Log.e(LOG_TAG,
 					"Send get my talking group list post http request failed!");
 
@@ -633,10 +767,6 @@ public class MyTalkingGroupsView extends SIMBaseView implements
 			// show get my talking group list failed toast
 			Toast.makeText(getContext(), R.string.toast_request_exception,
 					Toast.LENGTH_LONG).show();
-
-			// hide loading my talking group relativeLayout
-			((RelativeLayout) findViewById(R.id.mtg_loadingMyTalkingGroup_relativeLayout))
-					.setVisibility(View.GONE);
 
 			// hide no talking group tip textView and show my talking groups
 			((TextView) findViewById(R.id.mtg_noTalkingGroup_tip_textView))
@@ -706,66 +836,162 @@ public class MyTalkingGroupsView extends SIMBaseView implements
 
 	}
 
+	// my talking group list view footer view type
+	enum MyTalkingGroupListViewFooterViewType {
+		LOADINGMORE_TALKINGGROUP, NOMORE_TALKINGGROUP
+	}
+
+	// get more talking group list http request listener
+	class GetMoreTalkingGroupListHttpRequestListener extends
+			OnHttpRequestListener {
+
+		@Override
+		public void onFinished(HttpResponseResult responseResult) {
+			// remove my talking group list view footer view
+			_mMyTalkingGroupListView
+					.removeFooterView(_mMyTalkingGroupListViewFooterView);
+
+			// get http response entity string json data
+			JSONObject _respJsonData = JSONUtils.toJSONObject(responseResult
+					.getResponseText());
+
+			Log.d(LOG_TAG,
+					"Send get more talking group list post http request successful, response json data = "
+							+ _respJsonData);
+
+			// get the pager and list from http response json data
+			_mMyTalkingGroupsPager = JSONUtils
+					.getJSONObjectFromJSONObject(
+							_respJsonData,
+							getContext()
+									.getResources()
+									.getString(
+											R.string.bg_server_getMyTalkingGroupsReq_resp_pager));
+			JSONArray _moreTalkingGroupsInfoArray = JSONUtils
+					.getJSONArrayFromJSONObject(
+							_respJsonData,
+							getContext()
+									.getResources()
+									.getString(
+											R.string.bg_server_getMyTalkingGroupsReq_resp_list));
+
+			// add more talking groups info array to my talking groups info
+			// array
+			try {
+				for (int i = 0; i < _moreTalkingGroupsInfoArray.length(); i++) {
+					_mMyTalkingGroupsInfoArray.put(_moreTalkingGroupsInfoArray
+							.get(i));
+				}
+			} catch (JSONException e) {
+				Log.e(LOG_TAG,
+						"Add more talking groups info array to my talking groups info array error, exception message = "
+								+ e.getMessage());
+
+				e.printStackTrace();
+			}
+
+			// generate more talking groups data list and add it to my talking
+			// group adapter data list
+			for (Map<String, ?> moreTalkingGroupDataMap : generateMyTalkingGroupListDataList(_moreTalkingGroupsInfoArray)) {
+				_mMyTalkingGroupAdapterDataList.add(moreTalkingGroupDataMap);
+			}
+
+			// notify my talking group adapter changed
+			_mMyTalkingGroupAdapter.notifyDataSetChanged();
+		}
+
+		@Override
+		public void onFailed(HttpResponseResult responseResult) {
+			// remove my talking group list view footer view
+			_mMyTalkingGroupListView
+					.removeFooterView(_mMyTalkingGroupListViewFooterView);
+
+			Log.e(LOG_TAG,
+					"Send get more talking group list post http request failed!");
+
+			// show get my talking group list failed toast
+			Toast.makeText(getContext(), R.string.toast_request_exception,
+					Toast.LENGTH_LONG).show();
+		}
+
+	}
+
 	// my talking group listView on item click listener
 	class MyTalkingGroupListViewOnItemClickListener implements
 			OnItemClickListener {
 
+		// my talking group listView header view adapter count
+		private final Integer MYTALKINGGROUPLISTVIEW_HEADERVIEW_ADAPTERCOUNT = 1;
+
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position,
 				long id) {
-			// define and get last pressed talking group index
-			Integer _lastPressedTalkingGroupIndex = _mSelectedTalkingGroupIndex;
+			// check the position
+			if (MYTALKINGGROUPLISTVIEW_HEADERVIEW_ADAPTERCOUNT <= position
+					&& MYTALKINGGROUPLISTVIEW_HEADERVIEW_ADAPTERCOUNT
+							+ _mMyTalkingGroupAdapter.getCount() > position) {
+				// define and get last pressed talking group index
+				Integer _lastPressedTalkingGroupIndex = _mSelectedTalkingGroupIndex;
 
-			// mark selected row
-			_mSelectedTalkingGroupIndex = position;
+				// mark selected row
+				_mSelectedTalkingGroupIndex = position
+						- MYTALKINGGROUPLISTVIEW_HEADERVIEW_ADAPTERCOUNT;
 
-			// update selected talking group item
-			if (_lastPressedTalkingGroupIndex != _mSelectedTalkingGroupIndex) {
-				// get my talking group adapter
-				MyTalkingGroup7MyTalkingGroupAttendeeAdapter _myTalkingGroupAdapter = (MyTalkingGroup7MyTalkingGroupAttendeeAdapter) _mMyTalkingGroupListView
-						.getAdapter();
+				// update selected talking group item
+				if (_lastPressedTalkingGroupIndex != _mSelectedTalkingGroupIndex) {
+					// check last pressed talking group index
+					if (null != _lastPressedTalkingGroupIndex) {
+						// get my talking group adapter data map for last
+						// selected
+						@SuppressWarnings("unchecked")
+						Map<String, Object> _myTalkingGroupAdapterDataMap = (Map<String, Object>) _mMyTalkingGroupAdapter
+								.getItem(_lastPressedTalkingGroupIndex);
 
-				// check last pressed talking group index
-				if (null != _lastPressedTalkingGroupIndex) {
-					// get my talking group adapter data map for last selected
+						// recover last selected talking group item background
+						// and
+						// hide detail info
+						// update adapter data map for last selected
+						_myTalkingGroupAdapterDataMap.put(
+								GROUP_SELECTED4ITEM,
+								getContext().getResources().getDrawable(
+										R.drawable.mytalkinggroup_normal_bg));
+						_myTalkingGroupAdapterDataMap.put(
+								GROUP_SELECTED4DETAIL, null);
+					}
+
+					// get my talking group adapter data map for current
+					// selected
 					@SuppressWarnings("unchecked")
-					Map<String, Object> _myTalkingGroupAdapterDataMap = (Map<String, Object>) _myTalkingGroupAdapter
-							.getItem(_lastPressedTalkingGroupIndex);
+					Map<String, Object> _myTalkingGroupAdapterDataMap = (Map<String, Object>) _mMyTalkingGroupAdapter
+							.getItem((int) id);
 
-					// recover last selected talking group item background and
-					// hide detail info
-					// update adapter data map for last selected
+					// update selected talking group item background and show
+					// detail
+					// info
+					// update adapter data map for current selected
+					_myTalkingGroupAdapterDataMap
+							.put(GROUP_SELECTED4ITEM,
+									getContext()
+											.getResources()
+											.getDrawable(
+													R.drawable.img_mytalkinggroup_touchdown_bg));
 					_myTalkingGroupAdapterDataMap.put(
-							GROUP_SELECTED4ITEM,
+							GROUP_SELECTED4DETAIL,
 							getContext().getResources().getDrawable(
-									R.drawable.mytalkinggroup_normal_bg));
-					_myTalkingGroupAdapterDataMap.put(GROUP_SELECTED4DETAIL,
-							null);
+									R.drawable.img_mytalkinggroup_detailinfo));
+
+					// notify adapter changed
+					_mMyTalkingGroupAdapter.notifyDataSetChanged();
 				}
 
-				// get my talking group adapter data map for current selected
-				@SuppressWarnings("unchecked")
-				Map<String, Object> _myTalkingGroupAdapterDataMap = (Map<String, Object>) _myTalkingGroupAdapter
-						.getItem((int) id);
-
-				// update selected talking group item background and show detail
-				// info
-				// update adapter data map for current selected
-				_myTalkingGroupAdapterDataMap.put(
-						GROUP_SELECTED4ITEM,
-						getContext().getResources().getDrawable(
-								R.drawable.img_mytalkinggroup_touchdown_bg));
-				_myTalkingGroupAdapterDataMap.put(
-						GROUP_SELECTED4DETAIL,
-						getContext().getResources().getDrawable(
-								R.drawable.img_mytalkinggroup_detailinfo));
-
-				// notify adapter changed
-				_myTalkingGroupAdapter.notifyDataSetChanged();
+				// get the selected my talking group attendee list
+				sendGetSelectedTalkingGroupAttendeesHttpRequest((int) id);
+			} else {
+				Log.e(LOG_TAG,
+						"My talking group listView on item clicked, parent = "
+								+ parent + ", view = " + view + ", position = "
+								+ position + " and id = " + id);
 			}
-
-			// get the selected my talking group attendee list
-			sendGetSelectedTalkingGroupAttendeesHttpRequest((int) id);
 		}
 
 	}

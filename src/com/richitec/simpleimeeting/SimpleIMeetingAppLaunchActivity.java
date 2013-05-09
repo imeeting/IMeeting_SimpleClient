@@ -130,7 +130,7 @@ public class SimpleIMeetingAppLaunchActivity extends AppLaunchActivity {
 		return _mSimpleIMeetingAppLaunchToast;
 	}
 
-	// send register and login with device combined unique id httpRequest
+	// send register and login with device combined unique id post http request
 	public void sendReg7LoginWithDeviceCombinedUniqueIdHttpRequest() {
 		// generate register and login with device combined unique id param map
 		Map<String, String> _reg7LoginWithDeviceIdParamMap = new HashMap<String, String>();

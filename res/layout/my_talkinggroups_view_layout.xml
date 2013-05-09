@@ -5,29 +5,6 @@
     android:layout_height="match_parent"
     tools:context=".talkinggroup.SimpleIMeetingMainActivity" >
 
-    <RelativeLayout
-        android:id="@+id/mtg_loadingMyTalkingGroup_relativeLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal" >
-
-        <ProgressBar
-            android:id="@+id/mtg_loadingMyTalkingGroup_progressBar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/mtg_loadingMyTalkingGroup_progressBar"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="20dp"
-            android:text="@string/myTalkingGroup_loadMyTalkingGroup_textViewText"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@color/light_dim_gray" />
-    </RelativeLayout>
-
     <TextView
         android:id="@+id/mtg_noTalkingGroup_tip_textView"
         android:layout_width="fill_parent"
@@ -44,8 +21,7 @@
         android:layout_height="fill_parent"
         android:background="@drawable/img_mytalkinggroup7attendees_bg"
         android:baselineAligned="false"
-        android:orientation="horizontal"
-        android:visibility="gone" >
+        android:orientation="horizontal" >
 
         <RelativeLayout
             android:id="@+id/mtg_talkingGroupList_relativeLayout"
@@ -62,7 +38,7 @@
                 android:paddingLeft="12dp"
                 android:text="@string/myTalkingGroup_talkingGroupList_headTip_textViewText" />
 
-            <ListView
+            <com.handmark.pulltorefresh.library.PullToRefreshListView
                 android:id="@+id/mtg_talkingGroupListView"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
@@ -74,7 +50,7 @@
                 android:headerDividersEnabled="false"
                 android:listSelector="@android:color/transparent"
                 android:scrollbars="none" >
-            </ListView>
+            </com.handmark.pulltorefresh.library.PullToRefreshListView>
         </RelativeLayout>
 
         <RelativeLayout

@@ -55,7 +55,6 @@ import com.richitec.commontoolkit.customadapter.CTListAdapter;
 import com.richitec.commontoolkit.customcomponent.CTPopupWindow;
 import com.richitec.commontoolkit.customcomponent.ListViewQuickAlphabetBar;
 import com.richitec.commontoolkit.customcomponent.ListViewQuickAlphabetBar.OnTouchListener;
-import com.richitec.commontoolkit.user.UserManager;
 import com.richitec.commontoolkit.utils.CommonUtils;
 import com.richitec.commontoolkit.utils.DisplayScreenUtils;
 import com.richitec.commontoolkit.utils.HttpUtils;
@@ -1808,13 +1807,6 @@ public class ContactsSelectView extends SIMBaseView implements
 									.getString(
 											R.string.bg_server_getTalkingGroupAttendees6scheduleNewTalkingGroup6inviteNewAddedContacts2TalkingGroup_confId),
 									_mNewTalkingGroupId);
-					_scheduleNewTalkingGroupParamMap
-							.put(getContext()
-									.getResources()
-									.getString(
-											R.string.bg_server_getMyTalkingGroups6scheduleNewTalkingGroup_userName),
-									UserManager.getInstance().getUser()
-											.getName());
 					_scheduleNewTalkingGroupParamMap
 							.put(getContext()
 									.getResources()
