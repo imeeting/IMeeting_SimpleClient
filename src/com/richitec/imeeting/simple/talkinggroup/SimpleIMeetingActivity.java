@@ -2,6 +2,8 @@ package com.richitec.imeeting.simple.talkinggroup;
 
 import java.util.List;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,6 +17,8 @@ import com.richitec.commontoolkit.customcomponent.BarButtonItem.BarButtonItemSty
 import com.richitec.commontoolkit.customcomponent.CTMenu;
 import com.richitec.commontoolkit.customcomponent.CTMenu.CTMenuOnItemSelectedListener;
 import com.richitec.commontoolkit.utils.DisplayScreenUtils;
+import com.richitec.commontoolkit.utils.VersionUtils;
+import com.richitec.commontoolkit.utils.VersionUtils.APPUPGRADEMODE;
 import com.richitec.imeeting.simple.R;
 import com.richitec.imeeting.simple.assistant.AboutActivity;
 import com.richitec.imeeting.simple.assistant.SettingActivity;
@@ -23,7 +27,7 @@ import com.richitec.imeeting.simple.customcomponent.SimpleIMeetingBarButtonItem;
 import com.richitec.imeeting.simple.customcomponent.SimpleIMeetingImageBarButtonItem;
 import com.richitec.imeeting.simple.customcomponent.SimpleIMeetingNavigationActivity;
 import com.richitec.imeeting.simple.talkinggroup.MyTalkingGroupsView.MyTalkingGroupsViewRefreshType;
-import com.richitec.imeeting.simple.utils.AppUpdateManager;
+import com.richitec.imeeting.simple.utils.AppDataSaveRestoreUtils;
 import com.richitec.imeeting.simple.view.SIMBaseView;
 import com.richitec.imeeting.simple.view.SIMViewFactory;
 
@@ -61,6 +65,11 @@ public class SimpleIMeetingActivity extends SimpleIMeetingNavigationActivity {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		// restore application data
+		if (null != savedInstanceState) {
+			AppDataSaveRestoreUtils.onRestoreInstanceState(savedInstanceState);
+		}
+
 		super.onCreate(savedInstanceState);
 
 		// set content view
@@ -85,9 +94,12 @@ public class SimpleIMeetingActivity extends SimpleIMeetingNavigationActivity {
 		setRightBarButtonItem(new SimpleIMeetingImageBarButtonItem(this,
 				android.R.drawable.ic_dialog_info, BarButtonItemStyle.RIGHT_GO,
 				new MoreMenuImageBarButtonItemOnClickListener()));
-		
-		AppUpdateManager aum = new AppUpdateManager(this);
-		aum.checkVersion();
+
+		// upgrade imeeting simple client
+		VersionUtils.upgradeApp(this,
+				getResources().getString(R.string.app_id), getResources()
+						.getString(R.string.appvcenter_url),
+				APPUPGRADEMODE.AUTO);
 	}
 
 	@Override
@@ -113,6 +125,36 @@ public class SimpleIMeetingActivity extends SimpleIMeetingNavigationActivity {
 		// get simple imeeting main activity content view(simple imeeting view)
 		// and call its onStop method
 		_mContentView.onStop();
+	}
+
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+
+		// save application data
+		AppDataSaveRestoreUtils.onSaveInstanceState(outState);
+	}
+
+	@Override
+	public void onBackPressed() {
+		// show exit imeeting simple client alert dialog
+		new AlertDialog.Builder(this)
+				.setTitle(R.string.simpleIMeeting_exitAlertDialog_title)
+				.setMessage(R.string.simpleIMeeting_exitAlertDialog_message)
+				.setPositiveButton(
+						R.string.simpleIMeeting_exitAlertDialog_exitButton_title,
+						new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								// exit imeeting simple client
+								System.exit(0);
+							}
+						})
+				.setNegativeButton(
+						R.string.simpleIMeeting_exitAlertDialog_cancelButton_title,
+						null).show();
 	}
 
 	// switch to my talking group list view

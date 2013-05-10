@@ -43,6 +43,7 @@ import com.richitec.imeeting.simple.assistant.httprequestlistener.RegAndLoginWit
 import com.richitec.imeeting.simple.customcomponent.SimpleIMeetingNavigationActivity;
 import com.richitec.imeeting.simple.user.SIMUserExtension;
 import com.richitec.imeeting.simple.user.SIMUserExtension.SIMUserExtAttributes;
+import com.richitec.imeeting.simple.utils.AppDataSaveRestoreUtils;
 
 public class SettingActivity extends SimpleIMeetingNavigationActivity {
 
@@ -68,6 +69,11 @@ public class SettingActivity extends SimpleIMeetingNavigationActivity {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		// restore application data
+		if (null != savedInstanceState) {
+			AppDataSaveRestoreUtils.onRestoreInstanceState(savedInstanceState);
+		}
+
 		super.onCreate(savedInstanceState);
 
 		// set content view
@@ -134,6 +140,14 @@ public class SettingActivity extends SimpleIMeetingNavigationActivity {
 				.setOnCancelListener(new BindedAccountLoginAlertDialogOnCancelListener());
 	}
 
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+
+		// save application data
+		AppDataSaveRestoreUtils.onSaveInstanceState(outState);
+	}
+
 	public AlertDialog getBindedAccountManualLoginAlertDialog() {
 		return _mBindedAccountLoginAlertDialog;
 	}
@@ -166,7 +180,7 @@ public class SettingActivity extends SimpleIMeetingNavigationActivity {
 		((ImageButton) findViewById(R.id.set_phoneBind_imageButton))
 				.setEnabled(null != _contactsInfoBeBinded ? getResources()
 						.getString(
-								R.string.bg_server_login6reg7LoginWithDeviceIdReq_resp_bindPhoneStatus)
+								R.string.bg_server_login6reg7LoginWithDeviceId6PhoneBind_phoneBindedStatus)
 						.equalsIgnoreCase(_contactsInfoBeBinded) ? false : true
 						: true);
 	}
@@ -706,6 +720,12 @@ public class SettingActivity extends SimpleIMeetingNavigationActivity {
 								getResources()
 										.getString(
 												R.string.bg_server_login6ContactInfoBindReq_resp_userKey));
+				String _confirmBindPhoneRespBindStatus = JSONUtils
+						.getStringFromJSONObject(
+								_respJsonData,
+								getResources()
+										.getString(
+												R.string.bg_server_login6reg7LoginWithDeviceId6PhoneBindReq_resp_bindStatus));
 
 				Log.d(LOG_TAG, "Bind phone successful, response user id = "
 						+ _confirmBindPhoneRespUserId + " and user key = "
@@ -718,8 +738,10 @@ public class SettingActivity extends SimpleIMeetingNavigationActivity {
 						_confirmBindPhoneRespUserKey);
 				SIMUserExtension.setUserBindContactInfo(_newBindedGenerateUser,
 						_bindedPhone);
-				SIMUserExtension.setUserContactsInfoBeBinded(_newBindedGenerateUser, "bind_phone");
-				
+				SIMUserExtension
+						.setUserContactsInfoBeBinded(_newBindedGenerateUser,
+								_confirmBindPhoneRespBindStatus);
+
 				// add it to user manager
 				UserManager.getInstance().setUser(_newBindedGenerateUser);
 

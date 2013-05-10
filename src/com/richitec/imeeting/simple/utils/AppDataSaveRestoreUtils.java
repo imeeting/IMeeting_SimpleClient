@@ -8,6 +8,7 @@ import com.richitec.commontoolkit.user.User;
 import com.richitec.commontoolkit.user.UserBean;
 import com.richitec.commontoolkit.user.UserManager;
 import com.richitec.commontoolkit.utils.DataStorageUtils;
+import com.richitec.imeeting.simple.talkinggroup.ContactsSelectView;
 import com.richitec.imeeting.simple.user.SIMUserExtension;
 import com.richitec.imeeting.simple.user.SIMUserExtension.SIMUserExtAttributes;
 
@@ -17,26 +18,90 @@ public class AppDataSaveRestoreUtils {
 			.getCanonicalName();
 
 	public static void onSaveInstanceState(Bundle outState) {
-		UserBean user = UserManager.getInstance().getUser();
-		outState.putString(User.username.name(), user.getName());
+		// get memory storage user bean
+		UserBean _memStorageUser = UserManager.getInstance().getUser();
+
+		// put user common keys: user name, password and userKey
+		outState.putString(User.username.name(), _memStorageUser.getName());
+		outState.putString(User.password.name(), _memStorageUser.getPassword());
+		outState.putString(User.userkey.name(), _memStorageUser.getUserKey());
+
+		// put user extension keys: bind contactInfo, nickname and
+		// contactsInfo beBinded
+		outState.putString(SIMUserExtAttributes.BIND_CONTACTINFO.name(),
+				SIMUserExtension.getUserBindContactInfo(_memStorageUser));
+		outState.putString(SIMUserExtAttributes.NICKNAME.name(),
+				SIMUserExtension.getUserNickname(_memStorageUser));
+		outState.putString(SIMUserExtAttributes.CONTACTSINFO_BEBINDED.name(),
+				SIMUserExtension.getUserContactsInfoBeBinded(_memStorageUser));
 	}
 
 	public static void onRestoreInstanceState(Bundle savedInstanceState) {
 		Log.d(LOG_TAG, "AppDataSaveRestoreUtils - onRestoreInstanceState");
 
+		// check and traversal addressBook if needed
 		if (!AddressBookManager.getInstance().isInited()) {
 			AddressBookManager.getInstance().traversalAddressBook();
 			AddressBookManager.getInstance().registContactOberver();
+
+			// init all name phonetic sorted contacts info array
+			ContactsSelectView.initNamePhoneticSortedContactsInfoArray();
 		}
 
-		String userName = savedInstanceState.getString(User.username.name());
+		// get user from user manager
+		UserBean _user = UserManager.getInstance().getUser();
 
-		UserBean user = UserManager.getInstance().getUser();
-		if (userName == null || userName.equals("")) {
-		} else if (user.getName() == null || user.getName().equals("")) {
-			loadAccount();
+		// get saved instance state bundle storage data
+		String _userName = savedInstanceState.getString(User.username.name());
+		String _password = savedInstanceState.getString(User.password.name());
+		String _userKey = savedInstanceState.getString(User.userkey.name());
+		String _bindContactInfo = savedInstanceState
+				.getString(SIMUserExtAttributes.BIND_CONTACTINFO.name());
+		String _nickname = savedInstanceState
+				.getString(SIMUserExtAttributes.NICKNAME.name());
+		String _contactsInfoBeBinded = savedInstanceState
+				.getString(SIMUserExtAttributes.CONTACTSINFO_BEBINDED.name());
+
+		// check user name
+		if (null != _userName && !("").equalsIgnoreCase(_userName)) {
+			_user.setName(_userName);
+		} else {
+			Log.e(LOG_TAG,
+					"Get user name from saved instance state bundle error, user name = "
+							+ _userName);
 		}
 
+		// check password
+		if (null != _password && !("").equalsIgnoreCase(_password)) {
+			_user.setPassword(_password);
+		}
+
+		// check user key
+		if (null != _userKey && !("").equalsIgnoreCase(_userKey)) {
+			_user.setUserKey(_userKey);
+		} else {
+			Log.e(LOG_TAG,
+					"Get user key from saved instance state bundle error, user key = "
+							+ _userKey);
+		}
+
+		// check bind contactInfo
+		if (null != _bindContactInfo
+				&& !("").equalsIgnoreCase(_bindContactInfo)) {
+			SIMUserExtension.setUserBindContactInfo(_user, _bindContactInfo);
+		}
+
+		// check nickname
+		if (null != _nickname && !("").equalsIgnoreCase(_nickname)) {
+			SIMUserExtension.setUserNickname(_user, _nickname);
+		}
+
+		// check contactsInfo beBinded
+		if (null != _contactsInfoBeBinded
+				&& !("").equalsIgnoreCase(_contactsInfoBeBinded)) {
+			SIMUserExtension.setUserContactsInfoBeBinded(_user,
+					_contactsInfoBeBinded);
+		}
 	}
 
 	public static void loadAccount() {

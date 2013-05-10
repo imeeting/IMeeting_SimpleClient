@@ -125,7 +125,7 @@ public class BindedAccountLoginHttpRequestListener extends
 							_mContext
 									.getResources()
 									.getString(
-											R.string.bg_server_login6reg7LoginWithDeviceIdReq_resp_bindStatus));
+											R.string.bg_server_login6reg7LoginWithDeviceId6PhoneBindReq_resp_bindStatus));
 
 			Log.d(LOG_TAG,
 					"Binded account login successful, response user id = "

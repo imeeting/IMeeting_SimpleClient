@@ -30,6 +30,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
@@ -156,6 +159,10 @@ public class ContactsSelectView extends SIMBaseView implements
 		// add on touch listener
 		new ListViewQuickAlphabetBar(_mInABContactsPresentListView)
 				.setOnTouchListener(new ContactsInABPresentListViewQuickAlphabetBarOnTouchListener());
+
+		// bind contacts in addressbook present listView on scroll listener
+		_mInABContactsPresentListView
+				.setOnScrollListener(new ContactsInABPresentListViewOnScrollListener());
 
 		// bind contacts in addressbook present listView on item click listener
 		_mInABContactsPresentListView
@@ -440,6 +447,14 @@ public class ContactsSelectView extends SIMBaseView implements
 		_dataMap.put(SELECTED_CONTACT_IS_IN_TALKINGGROUP, isInTalkingGroup);
 
 		return _dataMap;
+	}
+
+	// hide contact search input method
+	private void hideContactSearchInputMethodSoftKeyboard() {
+		((InputMethodManager) getContext().getSystemService(
+				Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(
+				((EditText) findViewById(R.id.cs_cl_contactSearchEditText))
+						.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
 	}
 
 	// get real position in contact display name with original position
@@ -871,6 +886,25 @@ public class ContactsSelectView extends SIMBaseView implements
 
 	}
 
+	// contacts in addressbook present listView on scroll listener
+	class ContactsInABPresentListViewOnScrollListener implements
+			OnScrollListener {
+
+		@Override
+		public void onScroll(AbsListView view, int firstVisibleItem,
+				int visibleItemCount, int totalItemCount) {
+		}
+
+		@Override
+		public void onScrollStateChanged(AbsListView view, int scrollState) {
+			// hide input method manager not always when scroll begin
+			if (OnScrollListener.SCROLL_STATE_TOUCH_SCROLL == scrollState) {
+				hideContactSearchInputMethodSoftKeyboard();
+			}
+		}
+
+	}
+
 	// contacts in addressbook present listView on item click listener
 	class ContactsInABPresentListViewOnItemClickListener implements
 			OnItemClickListener {
@@ -878,6 +912,9 @@ public class ContactsSelectView extends SIMBaseView implements
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position,
 				long id) {
+			// hide input method manager not always
+			hideContactSearchInputMethodSoftKeyboard();
+
 			// get the click item view data: contact object
 			ContactBean _clickItemViewData = _mPresentContactsInABInfoArray
 					.get((int) id);
@@ -927,7 +964,6 @@ public class ContactsSelectView extends SIMBaseView implements
 				}
 			}
 		}
-
 	}
 
 	// contact phone numbers select popup window

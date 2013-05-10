@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/img_simpleimeeting_bg"
     tools:context=".talkinggroup.SimpleIMeetingMainActivity" >
 
     <TextView
         android:id="@+id/mtg_noTalkingGroup_tip_textView"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_gravity="center_horizontal"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
         android:layout_margin="40dp"
         android:text="@string/no_myTalkingGroup_tip_textViewText"
         android:textAppearance="?android:attr/textAppearanceMedium"
@@ -19,7 +20,6 @@
         android:id="@+id/mtg_myTalkingGroup7attendees_linearLayout"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:background="@drawable/img_mytalkinggroup7attendees_bg"
         android:baselineAligned="false"
         android:orientation="horizontal" >
 
@@ -104,4 +104,4 @@
         </RelativeLayout>
     </LinearLayout>
 
-</FrameLayout>
+</RelativeLayout>

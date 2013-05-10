@@ -37,6 +37,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnLastItemVisibleListener;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
+import com.richitec.commontoolkit.addressbook.AddressBookManager;
 import com.richitec.commontoolkit.customadapter.CTListAdapter;
 import com.richitec.commontoolkit.utils.HttpUtils;
 import com.richitec.commontoolkit.utils.HttpUtils.HttpRequestType;
@@ -571,7 +572,8 @@ public class MyTalkingGroupsView extends SIMBaseView implements
 				_attendeeDisplayName = _attebdeeNickname;
 			} else {
 				// get phone ownership in addressbook
-				_attendeeDisplayName = _attendeePhone;
+				_attendeeDisplayName = AddressBookManager.getInstance()
+						.getContactsDisplayNamesByPhone(_attendeePhone).get(0);
 			}
 
 			// check talking group status, its attendee status and reset talking
@@ -948,9 +950,8 @@ public class MyTalkingGroupsView extends SIMBaseView implements
 								.getItem(_lastPressedTalkingGroupIndex);
 
 						// recover last selected talking group item background
-						// and
-						// hide detail info
-						// update adapter data map for last selected
+						// and hide detail info update adapter data map for last
+						// selected
 						_myTalkingGroupAdapterDataMap.put(
 								GROUP_SELECTED4ITEM,
 								getContext().getResources().getDrawable(
@@ -966,9 +967,7 @@ public class MyTalkingGroupsView extends SIMBaseView implements
 							.getItem((int) id);
 
 					// update selected talking group item background and show
-					// detail
-					// info
-					// update adapter data map for current selected
+					// detail info update adapter data map for current selected
 					_myTalkingGroupAdapterDataMap
 							.put(GROUP_SELECTED4ITEM,
 									getContext()

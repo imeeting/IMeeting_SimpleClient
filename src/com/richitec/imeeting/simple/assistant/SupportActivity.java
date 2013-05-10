@@ -1,7 +1,6 @@
 package com.richitec.imeeting.simple.assistant;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
@@ -11,11 +10,17 @@ import android.widget.TextView;
 
 import com.richitec.imeeting.simple.R;
 import com.richitec.imeeting.simple.customcomponent.SimpleIMeetingNavigationActivity;
+import com.richitec.imeeting.simple.utils.AppDataSaveRestoreUtils;
 
 public class SupportActivity extends SimpleIMeetingNavigationActivity {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		// restore application data
+		if (null != savedInstanceState) {
+			AppDataSaveRestoreUtils.onRestoreInstanceState(savedInstanceState);
+		}
+
 		super.onCreate(savedInstanceState);
 
 		// set content view
@@ -28,10 +33,9 @@ public class SupportActivity extends SimpleIMeetingNavigationActivity {
 		WebView _supportWebView = (WebView) findViewById(R.id.st_support_webView);
 
 		// load support url
-		String url = getResources().getString(R.string.server_url)
-				+ getResources().getString(R.string.support_url);
-		_supportWebView.loadUrl(url);
-		
+		_supportWebView.loadUrl(getResources().getString(R.string.server_url)
+				+ getResources().getString(R.string.support_url));
+
 		// add web chrome client for loading progress changed
 		_supportWebView.setWebChromeClient(new WebChromeClient() {
 
@@ -60,6 +64,14 @@ public class SupportActivity extends SimpleIMeetingNavigationActivity {
 			}
 
 		});
+	}
+
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+
+		// save application data
+		AppDataSaveRestoreUtils.onSaveInstanceState(outState);
 	}
 
 }

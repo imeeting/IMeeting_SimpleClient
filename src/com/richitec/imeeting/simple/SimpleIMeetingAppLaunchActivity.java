@@ -45,6 +45,15 @@ public class SimpleIMeetingAppLaunchActivity extends AppLaunchActivity {
 	}
 
 	@Override
+	public void onBackPressed() {
+		// unregister contacts changed observer
+		AddressBookManager.getInstance().unRegistContactObserver();
+
+		// exit imeeting simple client
+		System.exit(0);
+	}
+
+	@Override
 	public Drawable splashImg() {
 		return getResources().getDrawable(R.drawable.ic_splash);
 	}
@@ -119,6 +128,12 @@ public class SimpleIMeetingAppLaunchActivity extends AppLaunchActivity {
 		}
 
 		return true;
+	}
+
+	@Override
+	public void doPostExecute() {
+		// register contacts changed observer
+		AddressBookManager.getInstance().registContactOberver();
 	}
 
 	// update target intent activity
