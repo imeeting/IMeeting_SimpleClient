@@ -950,8 +950,8 @@ public class MyTalkingGroupsView extends SIMBaseView implements
 								.getItem(_lastPressedTalkingGroupIndex);
 
 						// recover last selected talking group item background
-						// and hide detail info update adapter data map for last
-						// selected
+						// and hide detail info
+						// update adapter data map for last selected
 						_myTalkingGroupAdapterDataMap.put(
 								GROUP_SELECTED4ITEM,
 								getContext().getResources().getDrawable(
@@ -967,7 +967,8 @@ public class MyTalkingGroupsView extends SIMBaseView implements
 							.getItem((int) id);
 
 					// update selected talking group item background and show
-					// detail info update adapter data map for current selected
+					// detail info
+					// update adapter data map for current selected
 					_myTalkingGroupAdapterDataMap
 							.put(GROUP_SELECTED4ITEM,
 									getContext()

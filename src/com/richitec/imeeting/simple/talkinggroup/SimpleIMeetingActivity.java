@@ -4,6 +4,7 @@ import java.util.List;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -41,12 +42,18 @@ public class SimpleIMeetingActivity extends SimpleIMeetingNavigationActivity {
 	private static final int SUPPORT_MENU = 11;
 	private static final int ABOUT_MENU = 12;
 
+	// my account changed request code
+	private static final int MYACCOUNT_CHANGED = 0;
+
 	// simple imeeting activity content view type
 	private SimpleIMeetingActivityContentViewType _mMainViewType = SimpleIMeetingActivityContentViewType.ADDRESSBOOK_CONTACTS;
 
 	// contacts select and my talking group list subViews
 	private SIMBaseView _mContactsSelectView;
 	private SIMBaseView _mMyTalkingGroupsView;
+
+	// my talking group list needed to refresh later
+	private boolean _mMyTalkingGroupsNeeded2RefreshLater = false;
 
 	// simple imeeting main activity content view(simple imeeting view)
 	private SIMBaseView _mContentView;
@@ -95,7 +102,7 @@ public class SimpleIMeetingActivity extends SimpleIMeetingNavigationActivity {
 				android.R.drawable.ic_dialog_info, BarButtonItemStyle.RIGHT_GO,
 				new MoreMenuImageBarButtonItemOnClickListener()));
 
-		// upgrade imeeting simple client
+		// check for upgrading imeeting simple client
 		VersionUtils.upgradeApp(this,
 				getResources().getString(R.string.app_id), getResources()
 						.getString(R.string.appvcenter_url),
@@ -157,6 +164,55 @@ public class SimpleIMeetingActivity extends SimpleIMeetingNavigationActivity {
 						null).show();
 	}
 
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// check request code
+		switch (requestCode) {
+		case MYACCOUNT_CHANGED:
+			// check result code
+			switch (resultCode) {
+			case RESULT_OK:
+				// check data
+				if (null != data) {
+					// get intent extra data
+					Bundle _data = data.getExtras();
+
+					// check intent extra data and get my account changed flag
+					if (null != _data) {
+						// check my account changed or not
+						if (_data
+								.getBoolean(SettingActivity.SETTING_CHANGEDMYACCOUNT_KEY)) {
+							// check current content view type
+							if (_mMyTalkingGroupsView == _mContentView) {
+								// refresh my talking group list
+								((MyTalkingGroupsView) _mContentView)
+										.setMyTalkingGroupsNeeded2Refresh(MyTalkingGroupsViewRefreshType.TALKINGGROUPS);
+							} else {
+								// mark my talking group list needed to refresh
+								// later
+								_mMyTalkingGroupsNeeded2RefreshLater = true;
+							}
+						}
+					}
+				} else {
+					Log.e(LOG_TAG, "On activity result, intent data = " + data);
+				}
+				break;
+
+			default:
+				// nothing to do
+				break;
+			}
+			break;
+
+		default:
+			// nothing to do
+			break;
+		}
+
+		super.onActivityResult(requestCode, resultCode, data);
+	}
+
 	// switch to my talking group list view
 	public void switch2myTalkingGroupsView(
 			MyTalkingGroupsViewRefreshType refreshType) {
@@ -198,6 +254,12 @@ public class SimpleIMeetingActivity extends SimpleIMeetingNavigationActivity {
 				R.string.contactsSelecting_backBarButtonItem_navTitle,
 				new ContactsSelectingBackBarButtonItemOnClickListener(
 						contentViewType)));
+	}
+
+	// reset my talking group list needed to refresh later flag
+	public void resetMyTalkingGroupsNeeded2RefreshLaterFlag() {
+		// set my talking group list needed to refresh later flag false
+		_mMyTalkingGroupsNeeded2RefreshLater = false;
 	}
 
 	// set main activity content view
@@ -409,8 +471,17 @@ public class SimpleIMeetingActivity extends SimpleIMeetingNavigationActivity {
 
 		@Override
 		public void onClick(View v) {
-			// switch content view
-			switchContentView(null, null);
+			// check content view type and switch content view
+			if (_mMyTalkingGroupsNeeded2RefreshLater
+					&& _mContactsSelectView == _mContentView) {
+				// set my talking group list needed to refresh later flag false
+				_mMyTalkingGroupsNeeded2RefreshLater = false;
+
+				switchContentView(MyTalkingGroupsViewRefreshType.TALKINGGROUPS,
+						null);
+			} else {
+				switchContentView(null, null);
+			}
 		}
 
 	}
@@ -441,7 +512,8 @@ public class SimpleIMeetingActivity extends SimpleIMeetingNavigationActivity {
 				switch (menuItemId) {
 				case SETTING_MENU:
 					// goto setting activity
-					pushActivity(SettingActivity.class);
+					pushActivityForResult(SettingActivity.class,
+							MYACCOUNT_CHANGED);
 					break;
 
 				case SUPPORT_MENU:

@@ -178,7 +178,7 @@ public class BindedAccountLoginHttpRequestListener extends
 					&& BindedAccountLoginType.MANUAL.equals(_mLoginType)) {
 				// update my account and contacts info bind group UI
 				((SettingActivity) _mContext)
-						.updateMyAccount7ContactsInfoBindGroupUI();
+						.updateMyAccount7ContactsInfoBindGroupUI(true);
 			}
 		} else {
 			processBindedAccountLoginException(responseResult);

@@ -50,6 +50,9 @@ public class SettingActivity extends SimpleIMeetingNavigationActivity {
 	private static final String LOG_TAG = SettingActivity.class
 			.getCanonicalName();
 
+	// my account changed flag, login or logout
+	public static final String SETTING_CHANGEDMYACCOUNT_KEY = "setting_activity_changed_myaccount";
+
 	// binded account login, phone and email bind alertDialog
 	private AlertDialog _mBindedAccountLoginAlertDialog;
 	private AlertDialog _mPhoneBindAlertDialog;
@@ -83,7 +86,7 @@ public class SettingActivity extends SimpleIMeetingNavigationActivity {
 		setTitle(R.string.setting_nav_title_text);
 
 		// update my account and contacts info bind group UI
-		updateMyAccount7ContactsInfoBindGroupUI();
+		updateMyAccount7ContactsInfoBindGroupUI(false);
 
 		// define a alertDialog builder
 		final Builder ALERTDIALOG_BUILDER = new AlertDialog.Builder(this);
@@ -152,8 +155,9 @@ public class SettingActivity extends SimpleIMeetingNavigationActivity {
 		return _mBindedAccountLoginAlertDialog;
 	}
 
-	// update my account and contacts info bind group UI
-	public void updateMyAccount7ContactsInfoBindGroupUI() {
+	// update my account and contacts info bind group UI with my account changed
+	// flag
+	public void updateMyAccount7ContactsInfoBindGroupUI(boolean myAccountChanged) {
 		// get login user
 		UserBean _loginUser = UserManager.getInstance().getUser();
 
@@ -183,6 +187,12 @@ public class SettingActivity extends SimpleIMeetingNavigationActivity {
 								R.string.bg_server_login6reg7LoginWithDeviceId6PhoneBind_phoneBindedStatus)
 						.equalsIgnoreCase(_contactsInfoBeBinded) ? false : true
 						: true);
+
+		// check my account changed or not
+		if (myAccountChanged) {
+			// set my account changed flag to setting intent extra data
+			getIntent().putExtra(SETTING_CHANGEDMYACCOUNT_KEY, true);
+		}
 	}
 
 	// check and cancel the get phone bind verification code again timer task
@@ -728,8 +738,10 @@ public class SettingActivity extends SimpleIMeetingNavigationActivity {
 												R.string.bg_server_login6reg7LoginWithDeviceId6PhoneBindReq_resp_bindStatus));
 
 				Log.d(LOG_TAG, "Bind phone successful, response user id = "
-						+ _confirmBindPhoneRespUserId + " and user key = "
-						+ _confirmBindPhoneRespUserKey);
+						+ _confirmBindPhoneRespUserId + ", user key = "
+						+ _confirmBindPhoneRespUserKey
+						+ " and contacts info be binded = "
+						+ _confirmBindPhoneRespBindStatus);
 
 				// generate new binded generate user bean and set other
 				// attributes
@@ -746,7 +758,7 @@ public class SettingActivity extends SimpleIMeetingNavigationActivity {
 				UserManager.getInstance().setUser(_newBindedGenerateUser);
 
 				// update my account and contacts info bind group UI
-				updateMyAccount7ContactsInfoBindGroupUI();
+				updateMyAccount7ContactsInfoBindGroupUI(false);
 			} else {
 				processConfirmBindPhoneException(responseResult);
 			}
