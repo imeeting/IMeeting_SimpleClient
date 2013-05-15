@@ -101,7 +101,7 @@
     <string name="myTalkingGroup_groupId_hint">会议号码：</string>
     <string name="myTalkingGroup_groupStatus_hint">会议状态：</string>
     <string name="myTalkingGroup_groupStatus_opened">进行中&#8230;</string>
-    <string name="myTalkingGroup_groupStatus_broken">会议已坏</string>
+    <string name="myTalkingGroup_groupStatus_invalid">无效会议</string>
     <string name="myTalkingGroup_groupStatus_unopened">***后开始</string>
     <string name="remainderTime_daySuffix">天</string>
     <string name="remainderTime_hourSuffix">小时</string>

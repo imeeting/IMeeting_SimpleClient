@@ -43,7 +43,7 @@
     <string name="bg_server_getMyTalkingGroups6newTalkingGroupIdReq_resp_id">conferenceId</string>
     <string name="bg_server_getMyTalkingGroupsReq_resp_status">status</string>
     <string name="bg_server_myTalkingGroup_talkingGroupOpened">OPEN</string>
-    <string name="bg_server_myTalkingGroup_talkingGroupSchedule">SCHEDULE</string>
+    <string name="bg_server_myTalkingGroup_talkingGroupScheduled">SCHEDULE</string>
     <string name="bg_server_getMyTalkingGroupsReq_resp_attendees">attendees</string>
     <string name="bg_server_myTalkingGroupAttendee_phone">phone</string>
     <string name="bg_server_getTalkingGroupAttendees6scheduleNewTalkingGroup6inviteNewAddedContacts2TalkingGroup_confId">conferenceId</string>

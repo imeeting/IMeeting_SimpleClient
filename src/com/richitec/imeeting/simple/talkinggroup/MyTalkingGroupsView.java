@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -15,6 +17,7 @@ import org.json.JSONObject;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.os.Handler;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
@@ -62,6 +65,10 @@ public class MyTalkingGroupsView extends SIMBaseView implements
 	private final String GROUP_SELECTED4ITEM = "group_selected_for_item";
 	private final String GROUP_SELECTED4DETAIL = "group_selected_for_detail";
 
+	// my talking group listView item adapter extra data keys
+	private final String GROUP_EXT_STARTEDTIMESTAMP = "group_extra_startedTimestamp";
+	private final String GROUP_EXT_STATUS = "group_extra_status";
+
 	// my talking group started time date format, format unix timeStamp
 	private final DateFormat MYTALKINGGROUP_STARTEDTIMEDATEFORMAT = new SimpleDateFormat(
 			"yy-MM-dd HH:mm", Locale.getDefault());
@@ -91,6 +98,15 @@ public class MyTalkingGroupsView extends SIMBaseView implements
 
 	// selected talking group index
 	private Integer _mSelectedTalkingGroupIndex = null;
+
+	// check all talking groups started time timer
+	private final Timer CHECK_ALLTALKINGGROUPS_STARTEDTIME_TIMER = new Timer();
+
+	// check all talking groups started time timer task
+	private TimerTask _mCheckAllTalkingGroupsStartedTimeTimerTask;
+
+	// update all talking groups status textView text handle
+	private final Handler UPDATE_ALLTALKINGGROUPS_STATUSTEXTVIEWTEXT_HANDLE = new Handler();
 
 	// selected talking group attendees phone array
 	private List<String> _mSelectedTalkingGroupAttendeesPhoneArray = new ArrayList<String>();
@@ -123,6 +139,59 @@ public class MyTalkingGroupsView extends SIMBaseView implements
 		// set my talking group listView on item click listener
 		_mMyTalkingGroupListView
 				.setOnItemClickListener(new MyTalkingGroupListViewOnItemClickListener());
+
+		// check all talking groups started time every 1 minute
+		CHECK_ALLTALKINGGROUPS_STARTEDTIME_TIMER.schedule(
+				_mCheckAllTalkingGroupsStartedTimeTimerTask = new TimerTask() {
+
+					@Override
+					public void run() {
+						// check my talking group adapter
+						if (null != _mMyTalkingGroupAdapter) {
+							// handle on UI thread with handle
+							UPDATE_ALLTALKINGGROUPS_STATUSTEXTVIEWTEXT_HANDLE
+									.post(new Runnable() {
+
+										@Override
+										public void run() {
+											// process each my talking group
+											for (int i = 0; i < _mMyTalkingGroupAdapterDataList
+													.size(); i++) {
+												// get my talking group adapter
+												// data map
+												@SuppressWarnings("unchecked")
+												Map<String, Object> _myTalkingGroupAdapterDataMap = (Map<String, Object>) _mMyTalkingGroupAdapter
+														.getItem(i);
+
+												// if my talking group status is
+												// opened, skip it
+												if (getContext()
+														.getResources()
+														.getString(
+																R.string.bg_server_myTalkingGroup_talkingGroupOpened)
+														.equalsIgnoreCase(
+																(String) _myTalkingGroupAdapterDataMap
+																		.get(GROUP_EXT_STATUS))) {
+													continue;
+												} else {
+													// update my talking group
+													// status
+													_myTalkingGroupAdapterDataMap
+															.put(GROUP_STATUS,
+																	getScheduledTalkingGroupStatusString((Long) _myTalkingGroupAdapterDataMap
+																			.get(GROUP_EXT_STARTEDTIMESTAMP)));
+
+													// notify my talking group
+													// adapter changed
+													_mMyTalkingGroupAdapter
+															.notifyDataSetChanged();
+												}
+											}
+										}
+									});
+						}
+					}
+				}, 0, 60 * 1000);
 
 		// get my talking group attendee list view
 		_mMyTalkingGroupAttendeeListView = (ListView) findViewById(R.id.mtg_talkingGroupAttendeeListView);
@@ -163,6 +232,15 @@ public class MyTalkingGroupsView extends SIMBaseView implements
 
 			// get the selected my talking group attendee list
 			sendGetSelectedTalkingGroupAttendeesHttpRequest(_mSelectedTalkingGroupIndex);
+		}
+	}
+
+	@Override
+	public void onDestroy() {
+		// check and cancel the check all talking groups started time timer
+		// task
+		if (null != _mCheckAllTalkingGroupsStartedTimeTimerTask) {
+			_mCheckAllTalkingGroupsStartedTimeTimerTask.cancel();
 		}
 	}
 
@@ -257,6 +335,10 @@ public class MyTalkingGroupsView extends SIMBaseView implements
 									.getString(
 											R.string.bg_server_getMyTalkingGroupsReq_resp_status));
 
+			// set extra data: talking group status and started timestamp
+			_dataMap.put(GROUP_EXT_STATUS, (String) _groupStatus);
+			_dataMap.put(GROUP_EXT_STARTEDTIMESTAMP, _groupStartedTimestamp);
+
 			// check my talking group status and reset my talking group started
 			// time, group id and status
 			if (getContext()
@@ -293,75 +375,10 @@ public class MyTalkingGroupsView extends SIMBaseView implements
 			} else if (getContext()
 					.getResources()
 					.getString(
-							R.string.bg_server_myTalkingGroup_talkingGroupSchedule)
+							R.string.bg_server_myTalkingGroup_talkingGroupScheduled)
 					.equalsIgnoreCase((String) _groupStatus)) {
-				// milliseconds per second， seconds per day, hour and minute
-				final Long MILLISECONDS_PER_SECOND = 1000L;
-				final Long SECONDS_PER_DAY = 24 * 60 * 60L;
-				final Long SECONDS_PER_HOUR = 60 * 60L;
-				final Long SECONDS_PER_MINUTE = 60L;
-
-				// get talking group start remainder time
-				Long _remainderTime = (_groupStartedTimestamp - Calendar
-						.getInstance().getTimeInMillis())
-						/ MILLISECONDS_PER_SECOND;
-
-				// check it and init talking group status string format
-				String _talkingGroupStatusString;
-				if (0 >= _remainderTime) {
-					_talkingGroupStatusString = getContext().getResources()
-							.getString(
-									R.string.myTalkingGroup_groupStatus_broken);
-
-					Log.e(LOG_TAG, "This is a invalidate talking group");
-				} else {
-					_talkingGroupStatusString = getContext()
-							.getResources()
-							.getString(
-									R.string.myTalkingGroup_groupStatus_unopened);
-
-					// days
-					if (SECONDS_PER_DAY <= _remainderTime) {
-						_talkingGroupStatusString = _talkingGroupStatusString
-								.replace(
-										"***",
-										_remainderTime
-												/ SECONDS_PER_DAY
-												+ getContext()
-														.getResources()
-														.getString(
-																R.string.remainderTime_daySuffix));
-					}
-					// hours
-					else if (SECONDS_PER_HOUR <= _remainderTime) {
-						_talkingGroupStatusString = _talkingGroupStatusString
-								.replace(
-										"***",
-										_remainderTime
-												/ SECONDS_PER_HOUR
-												+ getContext()
-														.getResources()
-														.getString(
-																R.string.remainderTime_hourSuffix));
-					}
-					// minutes
-					else {
-						_talkingGroupStatusString = _talkingGroupStatusString
-								.replace(
-										"***",
-										_remainderTime
-												/ SECONDS_PER_MINUTE
-												+ getContext()
-														.getResources()
-														.getString(
-																R.string.remainderTime_minuteSuffix));
-					}
-				}
-
 				// update my talking group status
-				_groupStatus = getContext().getResources().getString(
-						R.string.myTalkingGroup_groupStatus_hint)
-						+ _talkingGroupStatusString;
+				_groupStatus = getScheduledTalkingGroupStatusString(_groupStartedTimestamp);
 			}
 
 			// set data
@@ -581,7 +598,7 @@ public class MyTalkingGroupsView extends SIMBaseView implements
 			if (getContext()
 					.getResources()
 					.getString(
-							R.string.bg_server_myTalkingGroup_talkingGroupSchedule)
+							R.string.bg_server_myTalkingGroup_talkingGroupScheduled)
 					.equalsIgnoreCase((String) myTalkingGroupStatus)) {
 				_attendeeStatus = null;
 			} else if (getContext()
@@ -632,6 +649,103 @@ public class MyTalkingGroupsView extends SIMBaseView implements
 						R.id.talkingGroup_attendee_displayName_textView })
 				: _myTalkingGroupAttendeesListViewAdapter
 						.setData(_myTalkingGroupAttendeesDataList);
+	}
+
+	// // get my talking group status with my talking group adapter data
+	// private String getTalkingGroupStatus(Map<String, ?>
+	// talkingGroupAdapterData) {
+	// // define default my talking group status: scheduled
+	// String _ret = getContext().getResources().getString(
+	// R.string.bg_server_myTalkingGroup_talkingGroupScheduled);
+	//
+	// // get and check my talking group status
+	// Object _myTalkingGroupStatus = talkingGroupAdapterData
+	// .get(GROUP_STATUS);
+	// if (null != _myTalkingGroupStatus
+	// && _myTalkingGroupStatus.toString().endsWith(
+	// getContext().getResources().getString(
+	// R.string.myTalkingGroup_groupStatus_opened))) {
+	// // update my talking group status to opened
+	// _ret = getContext().getResources().getString(
+	// R.string.bg_server_myTalkingGroup_talkingGroupOpened);
+	// }
+	//
+	// return _ret;
+	// }
+
+	// get scheduled talking group status string
+	private String getScheduledTalkingGroupStatusString(
+			Long talkingGroupStartedTimestamp) {
+		// define return scheduled talking group status string builder
+		StringBuilder _scheduledTalkingGroupStatusStringBuilder = new StringBuilder(
+				getContext().getResources().getString(
+						R.string.myTalkingGroup_groupStatus_hint));
+
+		// milliseconds per second， seconds per day, hour and minute
+		final Long MILLISECONDS_PER_SECOND = 1000L;
+		final Long SECONDS_PER_DAY = 24 * 60 * 60L;
+		final Long SECONDS_PER_HOUR = 60 * 60L;
+		final Long SECONDS_PER_MINUTE = 60L;
+
+		// get talking group start remainder time
+		Long _remainderTime = (talkingGroupStartedTimestamp - Calendar
+				.getInstance().getTimeInMillis()) / MILLISECONDS_PER_SECOND;
+
+		// check it and init scheduled talking group status string format
+		if (0 >= _remainderTime) {
+			_scheduledTalkingGroupStatusStringBuilder.append(getContext()
+					.getResources().getString(
+							R.string.myTalkingGroup_groupStatus_invalid));
+
+			Log.e(LOG_TAG, "This is a invalidate talking group");
+		} else {
+			// get my talking group scheduled format
+			String _scheduledTalkingGroupStatusFormat = getContext()
+					.getResources().getString(
+							R.string.myTalkingGroup_groupStatus_unopened);
+
+			// days
+			if (SECONDS_PER_DAY <= _remainderTime) {
+				_scheduledTalkingGroupStatusStringBuilder
+						.append(_scheduledTalkingGroupStatusFormat
+								.replace(
+										"***",
+										_remainderTime
+												/ SECONDS_PER_DAY
+												+ getContext()
+														.getResources()
+														.getString(
+																R.string.remainderTime_daySuffix)));
+			}
+			// hours
+			else if (SECONDS_PER_HOUR <= _remainderTime) {
+				_scheduledTalkingGroupStatusStringBuilder
+						.append(_scheduledTalkingGroupStatusFormat
+								.replace(
+										"***",
+										_remainderTime
+												/ SECONDS_PER_HOUR
+												+ getContext()
+														.getResources()
+														.getString(
+																R.string.remainderTime_hourSuffix)));
+			}
+			// minutes
+			else {
+				_scheduledTalkingGroupStatusStringBuilder
+						.append(_scheduledTalkingGroupStatusFormat
+								.replace(
+										"***",
+										_remainderTime
+												/ SECONDS_PER_MINUTE
+												+ getContext()
+														.getResources()
+														.getString(
+																R.string.remainderTime_minuteSuffix)));
+			}
+		}
+
+		return _scheduledTalkingGroupStatusStringBuilder.toString();
 	}
 
 	// inner class
@@ -975,12 +1089,21 @@ public class MyTalkingGroupsView extends SIMBaseView implements
 											.getResources()
 											.getDrawable(
 													R.drawable.img_mytalkinggroup_touchdown_bg));
-					_myTalkingGroupAdapterDataMap.put(
-							GROUP_SELECTED4DETAIL,
-							getContext().getResources().getDrawable(
-									R.drawable.img_mytalkinggroup_detailinfo));
+					_myTalkingGroupAdapterDataMap
+							.put(GROUP_SELECTED4DETAIL,
+									getContext()
+											.getResources()
+											.getDrawable(
+													getContext()
+															.getResources()
+															.getString(
+																	R.string.bg_server_myTalkingGroup_talkingGroupOpened)
+															.equalsIgnoreCase(
+																	(String) _myTalkingGroupAdapterDataMap
+																			.get(GROUP_EXT_STATUS)) ? R.drawable.img_openedmytalkinggroup_detailinfo
+															: R.drawable.img_scheduledmytalkinggroup_detailinfo));
 
-					// notify adapter changed
+					// notify my talking group adapter changed
 					_mMyTalkingGroupAdapter.notifyDataSetChanged();
 				}
 

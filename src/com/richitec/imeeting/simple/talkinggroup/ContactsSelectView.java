@@ -964,6 +964,7 @@ public class ContactsSelectView extends SIMBaseView implements
 				}
 			}
 		}
+
 	}
 
 	// contact phone numbers select popup window
@@ -1986,13 +1987,11 @@ public class ContactsSelectView extends SIMBaseView implements
 									R.id.tgsts_talkingGroupStartedTimeSelect_inviteNoteTextView))
 							.getText().toString());
 
-					// reset my talking groups needed to refresh later flag
-					// false
+					// mark my talking group list needed not to refresh later
+					// and switch to my talking groups view and update my
+					// talking group list
 					((SimpleIMeetingActivity) getContext())
-							.resetMyTalkingGroupsNeeded2RefreshLaterFlag();
-
-					// switch to my talking groups view and update my talking
-					// group list
+							.markMyTalkingGroupsNeededNot2RefreshLater();
 					((SimpleIMeetingActivity) getContext())
 							.switch2myTalkingGroupsView(MyTalkingGroupsViewRefreshType.TALKINGGROUPS);
 

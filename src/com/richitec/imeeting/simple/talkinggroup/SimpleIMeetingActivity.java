@@ -52,7 +52,7 @@ public class SimpleIMeetingActivity extends SimpleIMeetingNavigationActivity {
 	private SIMBaseView _mContactsSelectView;
 	private SIMBaseView _mMyTalkingGroupsView;
 
-	// my talking group list needed to refresh later
+	// my talking group list needed to refresh later flag, default is false
 	private boolean _mMyTalkingGroupsNeeded2RefreshLater = false;
 
 	// simple imeeting main activity content view(simple imeeting view)
@@ -132,6 +132,15 @@ public class SimpleIMeetingActivity extends SimpleIMeetingNavigationActivity {
 		// get simple imeeting main activity content view(simple imeeting view)
 		// and call its onStop method
 		_mContentView.onStop();
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+
+		// get simple imeeting main activity content view(simple imeeting view)
+		// and call its onDestroy method
+		_mContentView.onDestroy();
 	}
 
 	@Override
@@ -256,9 +265,9 @@ public class SimpleIMeetingActivity extends SimpleIMeetingNavigationActivity {
 						contentViewType)));
 	}
 
-	// reset my talking group list needed to refresh later flag
-	public void resetMyTalkingGroupsNeeded2RefreshLaterFlag() {
-		// set my talking group list needed to refresh later flag false
+	// mark my talking group list needed not to refresh later
+	public void markMyTalkingGroupsNeededNot2RefreshLater() {
+		// clear my talking group list needed to refresh later flag
 		_mMyTalkingGroupsNeeded2RefreshLater = false;
 	}
 
@@ -474,7 +483,7 @@ public class SimpleIMeetingActivity extends SimpleIMeetingNavigationActivity {
 			// check content view type and switch content view
 			if (_mMyTalkingGroupsNeeded2RefreshLater
 					&& _mContactsSelectView == _mContentView) {
-				// set my talking group list needed to refresh later flag false
+				// clear my talking group list needed to refresh later flag
 				_mMyTalkingGroupsNeeded2RefreshLater = false;
 
 				switchContentView(MyTalkingGroupsViewRefreshType.TALKINGGROUPS,

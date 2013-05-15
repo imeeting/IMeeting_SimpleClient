@@ -94,6 +94,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
                     android:layout_above="@id/mtg_addContacts2talkingGroup_button"
+                    android:layout_marginTop="6dp"
                     android:cacheColorHint="@android:color/transparent"
                     android:fadingEdge="none"
                     android:headerDividersEnabled="false"
