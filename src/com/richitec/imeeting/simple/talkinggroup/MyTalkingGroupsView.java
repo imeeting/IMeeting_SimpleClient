@@ -160,8 +160,8 @@ public class MyTalkingGroupsView extends SIMBaseView implements
 												// get my talking group adapter
 												// data map
 												@SuppressWarnings("unchecked")
-												Map<String, Object> _myTalkingGroupAdapterDataMap = (Map<String, Object>) _mMyTalkingGroupAdapter
-														.getItem(i);
+												Map<String, Object> _myTalkingGroupAdapterDataMap = (Map<String, Object>) _mMyTalkingGroupAdapterDataList
+														.get(i);
 
 												// if my talking group status is
 												// opened, skip it
@@ -237,8 +237,7 @@ public class MyTalkingGroupsView extends SIMBaseView implements
 
 	@Override
 	public void onDestroy() {
-		// check and cancel the check all talking groups started time timer
-		// task
+		// check and cancel the check all talking groups started time timer task
 		if (null != _mCheckAllTalkingGroupsStartedTimeTimerTask) {
 			_mCheckAllTalkingGroupsStartedTimeTimerTask.cancel();
 		}
@@ -651,28 +650,6 @@ public class MyTalkingGroupsView extends SIMBaseView implements
 						.setData(_myTalkingGroupAttendeesDataList);
 	}
 
-	// // get my talking group status with my talking group adapter data
-	// private String getTalkingGroupStatus(Map<String, ?>
-	// talkingGroupAdapterData) {
-	// // define default my talking group status: scheduled
-	// String _ret = getContext().getResources().getString(
-	// R.string.bg_server_myTalkingGroup_talkingGroupScheduled);
-	//
-	// // get and check my talking group status
-	// Object _myTalkingGroupStatus = talkingGroupAdapterData
-	// .get(GROUP_STATUS);
-	// if (null != _myTalkingGroupStatus
-	// && _myTalkingGroupStatus.toString().endsWith(
-	// getContext().getResources().getString(
-	// R.string.myTalkingGroup_groupStatus_opened))) {
-	// // update my talking group status to opened
-	// _ret = getContext().getResources().getString(
-	// R.string.bg_server_myTalkingGroup_talkingGroupOpened);
-	// }
-	//
-	// return _ret;
-	// }
-
 	// get scheduled talking group status string
 	private String getScheduledTalkingGroupStatusString(
 			Long talkingGroupStartedTimestamp) {
@@ -699,7 +676,7 @@ public class MyTalkingGroupsView extends SIMBaseView implements
 
 			Log.e(LOG_TAG, "This is a invalidate talking group");
 		} else {
-			// get my talking group scheduled format
+			// get my talking group scheduled status format
 			String _scheduledTalkingGroupStatusFormat = getContext()
 					.getResources().getString(
 							R.string.myTalkingGroup_groupStatus_unopened);
