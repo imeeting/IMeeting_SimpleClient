@@ -165,7 +165,7 @@ public class MyTalkingGroupsView extends SIMBaseView implements
 											for (int i = 0; i < _mMyTalkingGroupAdapterDataList
 													.size(); i++) {
 												// get my talking group adapter
-												// data map and into
+												// data map and info
 												@SuppressWarnings("unchecked")
 												Map<String, Object> _myTalkingGroupAdapterDataMap = (Map<String, Object>) _mMyTalkingGroupAdapterDataList
 														.get(i);
