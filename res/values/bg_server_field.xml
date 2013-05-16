@@ -53,4 +53,19 @@
     <string name="bg_server_talkingGroupAttendee_attendeeIn">Established</string>
     <string name="bg_server_talkingGroupAttendee_attendeeOut">Terminated</string>
 
+    <!-- my account notifier -->
+    <string name="bg_server_webSocket_noticeEvent">notice</string>
+    <string name="bg_server_webSocket_eventCommand">cmd</string>
+    <string name="bg_server_webSocket_notifyEventCmd">notify</string>
+    <string name="bg_server_webSocket_cacheEventCmd">cache</string>
+    <string name="bg_server_webSocket_eventNoticeList">notice_list</string>
+    <string name="bg_server_webSocket_noticeAction">action</string>
+    <string name="bg_server_webSocket_updateConferenceListNotice">update_conf_list</string>
+    <string name="bg_server_webSocket_updateAttendeeListNotice">update_attendee_list</string>
+    <string name="bg_server_webSocket_updateAttendeeStatusNotice">update_status</string>
+    <string name="bg_server_webSocket_updateAttendeeNotice_conferenceId">conferenceId</string>
+    <string name="bg_server_webSocket_updateAttendeeStatusNotice_attendee">attendee</string>
+    <string name="bg_server_webSocket_updateAttendeeStatusNotice_attendee_phone">phone</string>
+    <string name="bg_server_webSocket_updateAttendeeStatusNotice_attendee_status">telephone_status</string>
+
 </resources>

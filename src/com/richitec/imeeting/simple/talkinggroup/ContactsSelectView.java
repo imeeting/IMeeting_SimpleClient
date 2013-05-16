@@ -1988,12 +1988,14 @@ public class ContactsSelectView extends SIMBaseView implements
 							.getText().toString());
 
 					// mark my talking group list needed not to refresh later
-					// and switch to my talking groups view and update my
-					// talking group list
+					// and switch to my talking groups view, update my talking
+					// group list and reconnect my account web socket notifier
 					((SimpleIMeetingActivity) getContext())
 							.markMyTalkingGroupsNeededNot2RefreshLater();
 					((SimpleIMeetingActivity) getContext())
 							.switch2myTalkingGroupsView(MyTalkingGroupsViewRefreshType.TALKINGGROUPS);
+					((SimpleIMeetingActivity) getContext())
+							.reconnectMyAccountWebSocketNotifier();
 
 					// set contacts select view stopped
 					onStop();

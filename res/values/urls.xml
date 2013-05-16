@@ -19,6 +19,15 @@
     <string name="create7start_newTalkinggroup_url">/conference/scheduleNow</string>
     <string name="schedule_talkinggroup_url">/conference/schedule</string>
 
+    <!-- support url -->
+    <string name="support_url">/help</string>
+
+    <!-- application version center url -->
+    <string name="appvcenter_url">http://www.wetalking.net/appvcenter</string>
+
+    <!-- web socket url -->
+    <string name="webSocket_url">http://msg.wetalking.net</string>
+
     <!-- unused -->
     <string name="user_get_pwd_url">/user/getUserPwd</string>
     <string name="modify_psw_url">/profile/changePwd</string>
@@ -35,15 +44,5 @@
     <string name="account_balance_url">/accountBalance</string>
     <string name="card_charge_url">/cardCharge</string>
     <string name="upload_addressbook_url">/addressbook/upload</string>
-
-    <!-- support url -->
-    <string name="support_url">/help</string>
-
-    <!-- application version center url -->
-    <string name="appvcenter_url">http://www.wetalking.net/appvcenter</string>
-
-    <!-- other -->
-    <string name="notify_url">http://msg.wetalking.net</string>
-    <string name="rtmp_server_url">rtmp://rtmp.wetalking.net/quick_server</string>
 
 </resources>

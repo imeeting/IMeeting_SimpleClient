@@ -70,6 +70,10 @@ public class SimpleIMeetingActivity extends SimpleIMeetingNavigationActivity {
 	// more popup menu
 	private CTMenu _mMorePopupMenu;
 
+	// my account web socket notifier needed to reconnect later flag, default is
+	// false
+	private boolean _mMyAccountWebSocketNotifierNeeded2ReconnectLater = false;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		// restore application data
@@ -196,10 +200,25 @@ public class SimpleIMeetingActivity extends SimpleIMeetingNavigationActivity {
 								// refresh my talking group list
 								((MyTalkingGroupsView) _mContentView)
 										.setMyTalkingGroupsNeeded2Refresh(MyTalkingGroupsViewRefreshType.TALKINGGROUPS);
+
+								// reconnect my account web socket notifier
+								((MyTalkingGroupsView) _mContentView)
+										.reconnectMyAccountWebSocketNotifier();
 							} else {
 								// mark my talking group list needed to refresh
 								// later
 								_mMyTalkingGroupsNeeded2RefreshLater = true;
+
+								// check my talking groups view and disconnect
+								// my account web socket notifier
+								if (null != _mMyTalkingGroupsView) {
+									((MyTalkingGroupsView) _mMyTalkingGroupsView)
+											.disconnectMyAccountWebSocketNotifier();
+
+									// mark my account web socket notifier
+									// needed to reconnect later
+									_mMyAccountWebSocketNotifierNeeded2ReconnectLater = true;
+								}
 							}
 						}
 					}
@@ -269,6 +288,19 @@ public class SimpleIMeetingActivity extends SimpleIMeetingNavigationActivity {
 	public void markMyTalkingGroupsNeededNot2RefreshLater() {
 		// clear my talking group list needed to refresh later flag
 		_mMyTalkingGroupsNeeded2RefreshLater = false;
+	}
+
+	// reconnect my account web socket notifier
+	public void reconnectMyAccountWebSocketNotifier() {
+		// check my account web socket notifier need or not to reconnect
+		if (_mMyAccountWebSocketNotifierNeeded2ReconnectLater) {
+			// clear my account web socket notifier needed to reconnect later
+			// flag
+			_mMyAccountWebSocketNotifierNeeded2ReconnectLater = false;
+
+			((MyTalkingGroupsView) _mContentView)
+					.reconnectMyAccountWebSocketNotifier();
+		}
 	}
 
 	// set main activity content view
@@ -480,6 +512,9 @@ public class SimpleIMeetingActivity extends SimpleIMeetingNavigationActivity {
 
 		@Override
 		public void onClick(View v) {
+			// save current content view
+			SIMBaseView _contentView = _mContentView;
+
 			// check content view type and switch content view
 			if (_mMyTalkingGroupsNeeded2RefreshLater
 					&& _mContactsSelectView == _mContentView) {
@@ -490,6 +525,18 @@ public class SimpleIMeetingActivity extends SimpleIMeetingNavigationActivity {
 						null);
 			} else {
 				switchContentView(null, null);
+			}
+
+			// check content view type and reconnect my account web socket
+			// notifier
+			if (_mMyAccountWebSocketNotifierNeeded2ReconnectLater
+					&& _mContactsSelectView == _contentView) {
+				// clear my account web socket notifier needed to reconnect
+				// later flag
+				_mMyAccountWebSocketNotifierNeeded2ReconnectLater = false;
+
+				((MyTalkingGroupsView) _mContentView)
+						.reconnectMyAccountWebSocketNotifier();
 			}
 		}
 

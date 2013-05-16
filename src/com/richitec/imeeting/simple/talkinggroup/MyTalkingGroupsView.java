@@ -42,6 +42,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.richitec.commontoolkit.addressbook.AddressBookManager;
 import com.richitec.commontoolkit.customadapter.CTListAdapter;
+import com.richitec.commontoolkit.user.UserManager;
 import com.richitec.commontoolkit.utils.HttpUtils;
 import com.richitec.commontoolkit.utils.HttpUtils.HttpRequestType;
 import com.richitec.commontoolkit.utils.HttpUtils.HttpResponseResult;
@@ -51,6 +52,8 @@ import com.richitec.commontoolkit.utils.JSONUtils;
 import com.richitec.imeeting.simple.R;
 import com.richitec.imeeting.simple.talkinggroup.SimpleIMeetingActivity.SimpleIMeetingActivityContentViewType;
 import com.richitec.imeeting.simple.view.SIMBaseView;
+import com.richitec.websocket.notifier.NotifierCallbackListener;
+import com.richitec.websocket.notifier.WebSocketNotifier;
 
 public class MyTalkingGroupsView extends SIMBaseView implements
 		NewTalkingGroupListener {
@@ -65,9 +68,9 @@ public class MyTalkingGroupsView extends SIMBaseView implements
 	private final String GROUP_SELECTED4ITEM = "group_selected_for_item";
 	private final String GROUP_SELECTED4DETAIL = "group_selected_for_detail";
 
-	// my talking group listView item adapter extra data keys
-	private final String GROUP_EXT_STARTEDTIMESTAMP = "group_extra_startedTimestamp";
-	private final String GROUP_EXT_STATUS = "group_extra_status";
+	// my talking group attendee listView item adapter data keys
+	private final String ATTENDEE_DISPLAYNAME = "attendee_displayName";
+	private final String ATTENDEE_STATUS = "attendee_status";
 
 	// my talking group started time date format, format unix timeStamp
 	private final DateFormat MYTALKINGGROUP_STARTEDTIMEDATEFORMAT = new SimpleDateFormat(
@@ -105,14 +108,18 @@ public class MyTalkingGroupsView extends SIMBaseView implements
 	// check all talking groups started time timer task
 	private TimerTask _mCheckAllTalkingGroupsStartedTimeTimerTask;
 
-	// update all talking groups status textView text handle
-	private final Handler UPDATE_ALLTALKINGGROUPS_STATUSTEXTVIEWTEXT_HANDLE = new Handler();
+	// update all talking groups status textView text and process my account web
+	// socket notifier handle
+	private final Handler UPDATE_ALLTALKINGGROUPS_STATUSTEXTVIEWTEXT7PROCESS_MYACCOUNTWEBSOCKET_NOTIFIER_HANDLE = new Handler();
 
 	// selected talking group attendees phone array
 	private List<String> _mSelectedTalkingGroupAttendeesPhoneArray = new ArrayList<String>();
 
 	// my talking group attendee list view
 	private ListView _mMyTalkingGroupAttendeeListView;
+
+	// my account web socket notifier
+	private WebSocketNotifier _mMyAccountWebSocketNotifier;
 
 	@Override
 	public int presentViewLayout() {
@@ -149,7 +156,7 @@ public class MyTalkingGroupsView extends SIMBaseView implements
 						// check my talking group adapter
 						if (null != _mMyTalkingGroupAdapter) {
 							// handle on UI thread with handle
-							UPDATE_ALLTALKINGGROUPS_STATUSTEXTVIEWTEXT_HANDLE
+							UPDATE_ALLTALKINGGROUPS_STATUSTEXTVIEWTEXT7PROCESS_MYACCOUNTWEBSOCKET_NOTIFIER_HANDLE
 									.post(new Runnable() {
 
 										@Override
@@ -158,10 +165,14 @@ public class MyTalkingGroupsView extends SIMBaseView implements
 											for (int i = 0; i < _mMyTalkingGroupAdapterDataList
 													.size(); i++) {
 												// get my talking group adapter
-												// data map
+												// data map and into
 												@SuppressWarnings("unchecked")
 												Map<String, Object> _myTalkingGroupAdapterDataMap = (Map<String, Object>) _mMyTalkingGroupAdapterDataList
 														.get(i);
+												JSONObject _myTalkingGroupInfo = JSONUtils
+														.getJSONObjectFromJSONArray(
+																_mMyTalkingGroupsInfoArray,
+																i);
 
 												// if my talking group status is
 												// opened, skip it
@@ -170,16 +181,26 @@ public class MyTalkingGroupsView extends SIMBaseView implements
 														.getString(
 																R.string.bg_server_myTalkingGroup_talkingGroupOpened)
 														.equalsIgnoreCase(
-																(String) _myTalkingGroupAdapterDataMap
-																		.get(GROUP_EXT_STATUS))) {
+																JSONUtils
+																		.getStringFromJSONObject(
+																				_myTalkingGroupInfo,
+																				getContext()
+																						.getResources()
+																						.getString(
+																								R.string.bg_server_getMyTalkingGroupsReq_resp_status)))) {
 													continue;
 												} else {
 													// update my talking group
 													// status
 													_myTalkingGroupAdapterDataMap
 															.put(GROUP_STATUS,
-																	getScheduledTalkingGroupStatusString((Long) _myTalkingGroupAdapterDataMap
-																			.get(GROUP_EXT_STARTEDTIMESTAMP)));
+																	getScheduledTalkingGroupStatusString(JSONUtils
+																			.getLongFromJSONObject(
+																					_myTalkingGroupInfo,
+																					getContext()
+																							.getResources()
+																							.getString(
+																									R.string.bg_server_getMyTalkingGroupsReq_resp_startedTimestamp))));
 
 													// notify my talking group
 													// adapter changed
@@ -204,6 +225,26 @@ public class MyTalkingGroupsView extends SIMBaseView implements
 		// bind add contacts to talking group button on click listener
 		((Button) findViewById(R.id.mtg_addContacts2talkingGroup_button))
 				.setOnClickListener(new AddContacts2talkingGroupButtonOnClickListener());
+
+		// init my account web socket notifier
+		_mMyAccountWebSocketNotifier = new WebSocketNotifier();
+
+		// set web socket server address
+		_mMyAccountWebSocketNotifier.setServerAddress(getContext()
+				.getResources().getString(R.string.webSocket_url));
+
+		// set my account web socket notifier subscribe id and topic
+		_mMyAccountWebSocketNotifier.setSubscriberID(UserManager.getInstance()
+				.getUser().getName());
+		_mMyAccountWebSocketNotifier.setTopic(UserManager.getInstance()
+				.getUser().getName());
+
+		// set my account web socket notifier callback listener
+		_mMyAccountWebSocketNotifier
+				.setNotifierActionListener(new MyAccountWebSocketNotifierCallbackListener());
+
+		// connect to web socket server
+		_mMyAccountWebSocketNotifier.connect();
 	}
 
 	@Override
@@ -241,6 +282,9 @@ public class MyTalkingGroupsView extends SIMBaseView implements
 		if (null != _mCheckAllTalkingGroupsStartedTimeTimerTask) {
 			_mCheckAllTalkingGroupsStartedTimeTimerTask.cancel();
 		}
+
+		// disconnect my account web socket notifier
+		disconnectMyAccountWebSocketNotifier();
 	}
 
 	@Override
@@ -271,6 +315,29 @@ public class MyTalkingGroupsView extends SIMBaseView implements
 				_mMyTalkingGroupsNeeded2Refresh = true;
 				break;
 			}
+		}
+	}
+
+	// disconnect my account web socket notifier
+	public void disconnectMyAccountWebSocketNotifier() {
+		// check and disconnect my account web socket notifier
+		if (null != _mMyAccountWebSocketNotifier) {
+			_mMyAccountWebSocketNotifier.disconnect();
+		}
+	}
+
+	// reconnect my account web socket notifier
+	public void reconnectMyAccountWebSocketNotifier() {
+		// check and reconnect my account web socket notifier
+		if (null != _mMyAccountWebSocketNotifier) {
+			// reset my account web socket notifier subscribe id and topic
+			_mMyAccountWebSocketNotifier.setSubscriberID(UserManager
+					.getInstance().getUser().getName());
+			_mMyAccountWebSocketNotifier.setTopic(UserManager.getInstance()
+					.getUser().getName());
+
+			// reconnect to web socket server
+			_mMyAccountWebSocketNotifier.reconnect();
 		}
 	}
 
@@ -333,10 +400,6 @@ public class MyTalkingGroupsView extends SIMBaseView implements
 									.getResources()
 									.getString(
 											R.string.bg_server_getMyTalkingGroupsReq_resp_status));
-
-			// set extra data: talking group status and started timestamp
-			_dataMap.put(GROUP_EXT_STATUS, (String) _groupStatus);
-			_dataMap.put(GROUP_EXT_STARTEDTIMESTAMP, _groupStartedTimestamp);
 
 			// check my talking group status and reset my talking group started
 			// time, group id and status
@@ -532,10 +595,6 @@ public class MyTalkingGroupsView extends SIMBaseView implements
 	private ListAdapter generateMyTalkingGroupAttendeeAdapter(
 			String myTalkingGroupStatus,
 			JSONArray myTalkingGroupAttendeesInfoArray) {
-		// my talking group attendee listView item adapter data keys
-		final String ATTENDEE_DISPLAYNAME = "attendee_displayName";
-		final String ATTENDEE_STATUS = "attendee_status";
-
 		// clear selected talking group attendees phone array
 		_mSelectedTalkingGroupAttendeesPhoneArray.clear();
 
@@ -1051,11 +1110,14 @@ public class MyTalkingGroupsView extends SIMBaseView implements
 								GROUP_SELECTED4DETAIL, null);
 					}
 
-					// get my talking group adapter data map for current
-					// selected
+					// get my talking group adapter data map and info for
+					// current selected
 					@SuppressWarnings("unchecked")
 					Map<String, Object> _myTalkingGroupAdapterDataMap = (Map<String, Object>) _mMyTalkingGroupAdapter
 							.getItem((int) id);
+					JSONObject _myTalkingGroupInfo = JSONUtils
+							.getJSONObjectFromJSONArray(
+									_mMyTalkingGroupsInfoArray, (int) id);
 
 					// update selected talking group item background and show
 					// detail info
@@ -1076,8 +1138,13 @@ public class MyTalkingGroupsView extends SIMBaseView implements
 															.getString(
 																	R.string.bg_server_myTalkingGroup_talkingGroupOpened)
 															.equalsIgnoreCase(
-																	(String) _myTalkingGroupAdapterDataMap
-																			.get(GROUP_EXT_STATUS)) ? R.drawable.img_openedmytalkinggroup_detailinfo
+																	JSONUtils
+																			.getStringFromJSONObject(
+																					_myTalkingGroupInfo,
+																					getContext()
+																							.getResources()
+																							.getString(
+																									R.string.bg_server_getMyTalkingGroupsReq_resp_status))) ? R.drawable.img_openedmytalkinggroup_detailinfo
 															: R.drawable.img_scheduledmytalkinggroup_detailinfo));
 
 					// notify my talking group adapter changed
@@ -1218,6 +1285,283 @@ public class MyTalkingGroupsView extends SIMBaseView implements
 			// left navigation bar button item
 			((SimpleIMeetingActivity) getContext())
 					.setContactsSelectNavigationTitle7BackBarButtonItem(SimpleIMeetingActivityContentViewType.MY_TALKINGGROUP_LIST);
+		}
+
+	}
+
+	// my account web socket notifier callback listener
+	class MyAccountWebSocketNotifierCallbackListener implements
+			NotifierCallbackListener {
+
+		@Override
+		public void doAction(String event, JSONObject data) {
+			Log.d(LOG_TAG,
+					"My account web socket notifier callback, action event = "
+							+ event + " and data = " + data);
+
+			// check action event, just process notice
+			if (getContext().getResources()
+					.getString(R.string.bg_server_webSocket_noticeEvent)
+					.equalsIgnoreCase(event)) {
+				// process action event data, get event command and notice list
+				String _command = JSONUtils.getStringFromJSONObject(
+						data,
+						getContext().getResources().getString(
+								R.string.bg_server_webSocket_eventCommand));
+				final JSONArray _noticeList = JSONUtils
+						.getJSONArrayFromJSONObject(
+								data,
+								getContext()
+										.getResources()
+										.getString(
+												R.string.bg_server_webSocket_eventNoticeList));
+
+				// check action event command, just process notify and cache
+				if (getContext().getResources()
+						.getString(R.string.bg_server_webSocket_notifyEventCmd)
+						.equalsIgnoreCase(_command)
+						|| getContext()
+								.getResources()
+								.getString(
+										R.string.bg_server_webSocket_cacheEventCmd)
+								.equalsIgnoreCase(_command)) {
+					// handle on UI thread with handle
+					UPDATE_ALLTALKINGGROUPS_STATUSTEXTVIEWTEXT7PROCESS_MYACCOUNTWEBSOCKET_NOTIFIER_HANDLE
+							.post(new Runnable() {
+
+								@Override
+								public void run() {
+									// process each notify or cache event
+									for (int i = 0; i < _noticeList.length(); i++) {
+										// get notice
+										JSONObject _notice = JSONUtils
+												.getJSONObjectFromJSONArray(
+														_noticeList, i);
+
+										// get notice action
+										String _eventAction = JSONUtils
+												.getStringFromJSONObject(
+														_notice,
+														getContext()
+																.getResources()
+																.getString(
+																		R.string.bg_server_webSocket_noticeAction));
+
+										// process notice with notice action
+										if (getContext()
+												.getResources()
+												.getString(
+														R.string.bg_server_webSocket_updateConferenceListNotice)
+												.equalsIgnoreCase(_eventAction)) {
+											// refresh my talking group list
+											// my talking group pull to refresh
+											// listView refreshing
+											_mMyTalkingGroupPull2RefreshListView
+													.setRefreshing();
+
+											// send get my talking group list
+											// post http request
+											sendGetMyTalkingGroupsHttpRequest();
+										} else if (getContext()
+												.getResources()
+												.getString(
+														R.string.bg_server_webSocket_updateAttendeeListNotice)
+												.equalsIgnoreCase(_eventAction)
+												|| getContext()
+														.getResources()
+														.getString(
+																R.string.bg_server_webSocket_updateAttendeeStatusNotice)
+														.equalsIgnoreCase(
+																_eventAction)) {
+											// check selected talking group
+											// index
+											if (null != _mSelectedTalkingGroupIndex) {
+												// get selected talking group
+												// info
+												JSONObject _selectedTalkingGroupInfo = JSONUtils
+														.getJSONObjectFromJSONArray(
+																_mMyTalkingGroupsInfoArray,
+																_mSelectedTalkingGroupIndex);
+
+												// compare selected talking
+												// group id with needed to
+												// refresh conference attendees'
+												// conference id
+												if (JSONUtils
+														.getStringFromJSONObject(
+																_selectedTalkingGroupInfo,
+																getContext()
+																		.getResources()
+																		.getString(
+																				R.string.bg_server_getMyTalkingGroups6newTalkingGroupIdReq_resp_id))
+														.equalsIgnoreCase(
+																JSONUtils
+																		.getStringFromJSONObject(
+																				_notice,
+																				getContext()
+																						.getResources()
+																						.getString(
+																								R.string.bg_server_webSocket_updateAttendeeNotice_conferenceId)))) {
+													// check update attendee
+													// list or status
+													if (getContext()
+															.getResources()
+															.getString(
+																	R.string.bg_server_webSocket_updateAttendeeListNotice)
+															.equalsIgnoreCase(
+																	_eventAction)) {
+														// refresh the selected
+														// my talking group
+														// attendee list
+														// get the selected my
+														// talking group
+														// attendee list
+														sendGetSelectedTalkingGroupAttendeesHttpRequest(_mSelectedTalkingGroupIndex);
+													} else {
+														// update the selected
+														// talking group
+														// attendee status with
+														// attendee phone
+														// get needed to update
+														// status attendee and
+														// its phone
+														JSONObject _attendee = JSONUtils
+																.getJSONObjectFromJSONObject(
+																		_notice,
+																		getContext()
+																				.getResources()
+																				.getString(
+																						R.string.bg_server_webSocket_updateAttendeeStatusNotice_attendee));
+														String _attendeePhone = JSONUtils
+																.getStringFromJSONObject(
+																		_attendee,
+																		getContext()
+																				.getResources()
+																				.getString(
+																						R.string.bg_server_webSocket_updateAttendeeStatusNotice_attendee_phone));
+
+														// check needed to
+														// update attendee
+														// existed in selected
+														// talking group
+														// attendee list or not
+														if (_mSelectedTalkingGroupAttendeesPhoneArray
+																.contains(_attendeePhone)) {
+															// get my talking
+															// group attendee
+															// adapter
+															MyTalkingGroup7MyTalkingGroupAttendeeAdapter _myTalkingGroupAttendeeAdapter = (MyTalkingGroup7MyTalkingGroupAttendeeAdapter) _mMyTalkingGroupAttendeeListView
+																	.getAdapter();
+
+															// get selected
+															// talking group
+															// attendee adapter
+															// data map for
+															// needed to update
+															// index
+															@SuppressWarnings("unchecked")
+															Map<String, Object> _selectedTalkingGroupAttendeeAdapterDataMap = (Map<String, Object>) _myTalkingGroupAttendeeAdapter
+																	.getItem(_mSelectedTalkingGroupAttendeesPhoneArray
+																			.indexOf(_attendeePhone));
+
+															// get attendee
+															// display name
+															Object _attendeeDisplayName = _selectedTalkingGroupAttendeeAdapterDataMap
+																	.get(ATTENDEE_DISPLAYNAME);
+
+															// check needed to
+															// update attendee
+															// phone status and
+															// update attendee
+															// phone status and
+															// display name
+															if (getContext()
+																	.getResources()
+																	.getString(
+																			R.string.bg_server_talkingGroupAttendee_attendeeIn)
+																	.equalsIgnoreCase(
+																			JSONUtils
+																					.getStringFromJSONObject(
+																							_attendee,
+																							getContext()
+																									.getResources()
+																									.getString(
+																											R.string.bg_server_webSocket_updateAttendeeStatusNotice_attendee_status)))) {
+																_selectedTalkingGroupAttendeeAdapterDataMap
+																		.put(ATTENDEE_STATUS,
+																				getContext()
+																						.getResources()
+																						.getDrawable(
+																								android.R.drawable.presence_online));
+
+																// dark sea
+																// green
+																// foreground
+																// color span
+																ForegroundColorSpan _darkSeaGreenForegroundColorSpan = new ForegroundColorSpan(
+																		getContext()
+																				.getResources()
+																				.getColor(
+																						R.color.dark_seagreen));
+
+																_attendeeDisplayName = new SpannableString(
+																		_attendeeDisplayName
+																				.toString());
+																((SpannableString) _attendeeDisplayName)
+																		.setSpan(
+																				_darkSeaGreenForegroundColorSpan,
+																				0,
+																				((SpannableString) _attendeeDisplayName)
+																						.length(),
+																				Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+																_selectedTalkingGroupAttendeeAdapterDataMap
+																		.put(ATTENDEE_DISPLAYNAME,
+																				_attendeeDisplayName);
+															} else {
+																_selectedTalkingGroupAttendeeAdapterDataMap
+																		.put(ATTENDEE_STATUS,
+																				getContext()
+																						.getResources()
+																						.getDrawable(
+																								android.R.drawable.presence_invisible));
+
+																_selectedTalkingGroupAttendeeAdapterDataMap
+																		.put(ATTENDEE_DISPLAYNAME,
+																				_attendeeDisplayName
+																						.toString());
+															}
+
+															// notify my talking
+															// group attendee
+															// adapter changed
+															_myTalkingGroupAttendeeAdapter
+																	.notifyDataSetChanged();
+														} else {
+															Log.e(LOG_TAG,
+																	"Needed to update attendee = "
+																			+ _attendee
+																			+ " not existed in selected talking group attendee list");
+														}
+													}
+												}
+											}
+										} else {
+											// unrecognize notice
+											Log.e(LOG_TAG,
+													"Unrecognize notice, notice action = "
+															+ _eventAction);
+										}
+									}
+								}
+							});
+				} else {
+					Log.e(LOG_TAG, "Action event command = " + _command
+							+ " not process now");
+				}
+			} else {
+				Log.e(LOG_TAG, "Action event = " + event + " not process now");
+			}
 		}
 
 	}
