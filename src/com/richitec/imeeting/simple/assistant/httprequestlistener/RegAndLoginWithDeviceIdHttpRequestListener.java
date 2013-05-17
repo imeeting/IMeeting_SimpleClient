@@ -66,6 +66,12 @@ public class RegAndLoginWithDeviceIdHttpRequestListener extends
 
 	@Override
 	public void onFinished(HttpResponseResult responseResult) {
+		// close binded account logout process dialog for binded account logout
+		if (Reg7LoginWithDeviceIdType.BINDEDACCOUNT_LOGOUT == _mReg7LoginWithDeviceIdType) {
+			((SettingActivity) _mContext)
+					.closeAsynchronousHttpRequestProgressDialog();
+		}
+
 		// get http response entity string json data
 		JSONObject _respJsonData = JSONUtils.toJSONObject(responseResult
 				.getResponseText());

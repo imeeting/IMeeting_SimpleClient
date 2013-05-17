@@ -80,6 +80,14 @@ public class BindedAccountLoginHttpRequestListener extends
 
 	@Override
 	public void onFinished(HttpResponseResult responseResult) {
+		// check binded account login type
+		if (null != _mLoginType
+				&& BindedAccountLoginType.MANUAL.equals(_mLoginType)) {
+			// close binded account user login process dialog
+			((SettingActivity) _mContext)
+					.closeAsynchronousHttpRequestProgressDialog();
+		}
+
 		// get http response entity string json data
 		JSONObject _respJsonData = JSONUtils.toJSONObject(responseResult
 				.getResponseText());

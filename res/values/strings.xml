@@ -31,6 +31,7 @@
     <string name="bindedAccountLogin_alertDialog_loginPwdTextView_text">密码：</string>
     <string name="bindedAccountLogin_alertDialog_loginCancelBtn_title">取消</string>
     <string name="bindedAccountLogin_alertDialog_loginConfirmBtn_title">登录</string>
+    <string name="asynchronousHttpRequest_progressDialog_message">正在处理，请稍后&#8230;</string>
 
     <!-- support activity -->
     <string name="title_activity_support">SupportActivity</string>
