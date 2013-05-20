@@ -177,7 +177,7 @@ public class BindedAccountLoginHttpRequestListener extends
 					.setUserKey(_bindedAccountLoginRespUserKey);
 			SIMUserExtension.setUserNickname(_bindedAccountLoginRetUser,
 					_bindedAccountLoginRespNickname);
-			SIMUserExtension.setUserContactsInfoBeBinded(
+			SIMUserExtension.setUserContactsInfoTypeBeBinded(
 					_bindedAccountLoginRetUser,
 					_bindedAccountLoginRespBindStatus);
 

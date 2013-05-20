@@ -171,13 +171,20 @@ public class SettingActivity extends SimpleIMeetingNavigationActivity {
 		String _bindContactInfo = SIMUserExtension
 				.getUserBindContactInfo(_loginUser);
 
-		// set account or device id textView text and its label textView text
-		((TextView) findViewById(R.id.set_account6deviceId_textView))
+		// get contacts info binded
+		String _contactsInfoBeBinded = SIMUserExtension
+				.getUserContactsInfoBeBinded(_loginUser);
+
+		// set account or device id or contacts info be binded textView text and
+		// its label textView text
+		((TextView) findViewById(R.id.set_account6deviceId6contactsInfoBeBinded_textView))
 				.setText(null != _bindContactInfo ? _bindContactInfo
-						: DeviceUtils.combinedUniqueId());
-		((TextView) findViewById(R.id.set_account6deviceIdLabel_textView))
+						: null != _contactsInfoBeBinded ? _contactsInfoBeBinded
+								: DeviceUtils.combinedUniqueId());
+		((TextView) findViewById(R.id.set_account6deviceId6contactsInfoBeBindedLabel_textView))
 				.setText(null != _bindContactInfo ? R.string.myAccount_labelTextView_text
-						: R.string.deviceId_labelTextView_text);
+						: null != _contactsInfoBeBinded ? R.string.contactsInfoBeBinded_labelTextView_text
+								: R.string.deviceId_labelTextView_text);
 
 		// show or hide binded account logout button
 		((Button) findViewById(R.id.set_accountLogout_button))
@@ -185,13 +192,14 @@ public class SettingActivity extends SimpleIMeetingNavigationActivity {
 						: View.GONE);
 
 		// get and check contacts info binded type
-		String _contactsInfoBeBinded = SIMUserExtension
-				.getUserContactsInfoBeBinded(_loginUser);
+		String _contactsInfoTypeBeBinded = SIMUserExtension
+				.getUserContactsInfoTypeBeBinded(_loginUser);
 		((ImageButton) findViewById(R.id.set_phoneBind_imageButton))
-				.setEnabled(null != _contactsInfoBeBinded ? getResources()
+				.setEnabled(null != _contactsInfoTypeBeBinded ? getResources()
 						.getString(
 								R.string.bg_server_login6reg7LoginWithDeviceId6PhoneBind_phoneBindedStatus)
-						.equalsIgnoreCase(_contactsInfoBeBinded) ? false : true
+						.equalsIgnoreCase(_contactsInfoTypeBeBinded) ? false
+						: true
 						: true);
 
 		// check my account changed or not
@@ -804,7 +812,8 @@ public class SettingActivity extends SimpleIMeetingNavigationActivity {
 				SIMUserExtension.setUserBindContactInfo(_newBindedGenerateUser,
 						_bindedPhone);
 				SIMUserExtension
-						.setUserContactsInfoBeBinded(_newBindedGenerateUser,
+						.setUserContactsInfoTypeBeBinded(
+								_newBindedGenerateUser,
 								_confirmBindPhoneRespBindStatus);
 
 				// add it to user manager

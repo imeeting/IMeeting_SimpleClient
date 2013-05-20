@@ -29,7 +29,7 @@
                 android:padding="6dp" >
 
                 <TextView
-                    android:id="@+id/set_account6deviceIdLabel_textView"
+                    android:id="@+id/set_account6deviceId6contactsInfoBeBindedLabel_textView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
@@ -47,13 +47,13 @@
                     android:visibility="gone" />
 
                 <TextView
-                    android:id="@+id/set_account6deviceId_textView"
+                    android:id="@+id/set_account6deviceId6contactsInfoBeBinded_textView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="6dp"
                     android:layout_toLeftOf="@id/set_accountLogout_button"
-                    android:layout_toRightOf="@id/set_account6deviceIdLabel_textView"
+                    android:layout_toRightOf="@id/set_account6deviceId6contactsInfoBeBindedLabel_textView"
                     android:ellipsize="middle"
                     android:gravity="left|center_vertical"
                     android:singleLine="true" />
@@ -120,7 +120,6 @@
                         android:id="@+id/set_phoneBind_imageButton"
                         android:layout_width="fill_parent"
                         android:layout_height="fill_parent"
-                        android:layout_marginRight="16dp"
                         android:layout_weight="1"
                         android:background="@android:color/transparent"
                         android:contentDescription="@string/phoneBind_imageBtn_contentDescription"
@@ -131,12 +130,13 @@
                         android:id="@+id/set_emailBind_imageButton"
                         android:layout_width="fill_parent"
                         android:layout_height="fill_parent"
-                        android:layout_marginLeft="16dp"
+                        android:layout_marginLeft="32dp"
                         android:layout_weight="1"
                         android:background="@android:color/transparent"
                         android:contentDescription="@string/emailBind_imageBtn_contentDescription"
                         android:scaleType="centerCrop"
-                        android:src="@drawable/emailbind_bg" />
+                        android:src="@drawable/emailbind_bg"
+                        android:visibility="gone" />
                 </LinearLayout>
             </LinearLayout>
         </FrameLayout>

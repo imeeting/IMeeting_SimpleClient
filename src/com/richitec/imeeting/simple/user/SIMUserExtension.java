@@ -1,8 +1,11 @@
 package com.richitec.imeeting.simple.user;
 
+import android.content.Context;
 import android.util.Log;
 
+import com.richitec.commontoolkit.CTApplication;
 import com.richitec.commontoolkit.user.UserBean;
+import com.richitec.imeeting.simple.R;
 
 public class SIMUserExtension {
 
@@ -32,9 +35,44 @@ public class SIMUserExtension {
 		return getUserExtAttribute(user, SIMUserExtAttributes.NICKNAME);
 	}
 
+	// set simple iMetting user contacts info type be binded
+	public static void setUserContactsInfoTypeBeBinded(UserBean user,
+			String contactsInfoBeBinded) {
+		setUserExtAttribute(user,
+				SIMUserExtAttributes.CONTACTSINFOTYPE_BEBINDED,
+				contactsInfoBeBinded);
+	}
+
+	// get simple iMetting user contacts info type be binded
+	public static String getUserContactsInfoTypeBeBinded(UserBean user) {
+		return getUserExtAttribute(user,
+				SIMUserExtAttributes.CONTACTSINFOTYPE_BEBINDED);
+	}
+
 	// set simple iMetting user contacts info be binded
 	public static void setUserContactsInfoBeBinded(UserBean user,
 			String contactsInfoBeBinded) {
+		// check contacts info be binded
+		if (null != contactsInfoBeBinded) {
+			// get application context
+			Context _appContext = CTApplication.getContext();
+
+			// get contacts info type be binded
+			String _contactsInfoTypeBeBinded = getUserContactsInfoTypeBeBinded(user);
+
+			// check contacts info type be binded
+			if (null != _contactsInfoTypeBeBinded
+					&& _appContext
+							.getResources()
+							.getString(
+									R.string.bg_server_login6reg7LoginWithDeviceId6PhoneBind_phoneBindedStatus)
+							.equalsIgnoreCase(_contactsInfoTypeBeBinded)) {
+				contactsInfoBeBinded = _appContext.getResources().getString(
+						R.string.phoneBinded_contactsInfoPrefix)
+						+ contactsInfoBeBinded;
+			}
+		}
+
 		setUserExtAttribute(user, SIMUserExtAttributes.CONTACTSINFO_BEBINDED,
 				contactsInfoBeBinded);
 	}
@@ -79,7 +117,7 @@ public class SIMUserExtension {
 	// inner class
 	// simple iMeeting user extension attributes
 	public static enum SIMUserExtAttributes {
-		BIND_CONTACTINFO, NICKNAME, CONTACTSINFO_BEBINDED
+		BIND_CONTACTINFO, NICKNAME, CONTACTSINFOTYPE_BEBINDED, CONTACTSINFO_BEBINDED
 	}
 
 }
