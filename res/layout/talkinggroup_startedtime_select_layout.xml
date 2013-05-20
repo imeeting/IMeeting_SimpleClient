@@ -20,6 +20,7 @@
             android:id="@+id/tgsts_talkingGroupStartedTimeSelect_titleTextView"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
             android:layout_marginLeft="4dp"
             android:layout_marginRight="4dp"
             android:gravity="center"
@@ -55,8 +56,8 @@
             android:id="@+id/tgsts_date7timePicker"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
-            android:layout_marginTop="4dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
             android:background="@color/light_dim_gray" >
         </com.richitec.imeeting.simple.customcomponent.SimpleIMeetingDate7TimePicker>
 
