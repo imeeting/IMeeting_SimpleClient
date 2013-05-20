@@ -164,6 +164,12 @@ public class RegAndLoginWithDeviceIdHttpRequestListener extends
 
 	@Override
 	public void onFailed(HttpResponseResult responseResult) {
+		// close binded account logout process dialog for binded account logout
+		if (Reg7LoginWithDeviceIdType.BINDEDACCOUNT_LOGOUT == _mReg7LoginWithDeviceIdType) {
+			((SettingActivity) _mContext)
+					.closeAsynchronousHttpRequestProgressDialog();
+		}
+
 		Log.e(LOG_TAG,
 				"Send register and login with device combined unique id post http request failed!");
 

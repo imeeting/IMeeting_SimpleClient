@@ -13,6 +13,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -68,6 +69,7 @@ import com.richitec.commontoolkit.utils.HttpUtils.PostRequestFormat;
 import com.richitec.commontoolkit.utils.JSONUtils;
 import com.richitec.commontoolkit.utils.StringUtils;
 import com.richitec.imeeting.simple.R;
+import com.richitec.imeeting.simple.customcomponent.SimpleIMeetingDate7TimePicker;
 import com.richitec.imeeting.simple.talkinggroup.MyTalkingGroupsView.MyTalkingGroupsViewRefreshType;
 import com.richitec.imeeting.simple.talkinggroup.SimpleIMeetingActivity.SimpleIMeetingActivityContentViewType;
 import com.richitec.imeeting.simple.view.SIMBaseView;
@@ -111,6 +113,9 @@ public class ContactsSelectView extends SIMBaseView implements
 	private final ContactPhoneNumbersSelectPopupWindow _mContactPhoneNumbersSelectPopupWindow = new ContactPhoneNumbersSelectPopupWindow(
 			R.layout.contact_phonenumbers_select_layout,
 			LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
+
+	// asynchronous http request progress dialog
+	private ProgressDialog _mAsynchronousHttpRequestProgressDialog;
 
 	// in and prein talking group contacts list view
 	private ListView _mIn7PreinTalkingGroupContactsListView;
@@ -718,18 +723,17 @@ public class ContactsSelectView extends SIMBaseView implements
 		return _ret.toString();
 	}
 
-	// send invite to talking group sms
-	private void sendInviteSMS(String inviteNote) {
-		// sms recipient
+	// send invite contacts in to talking group sms again
+	private void sendInviteSMS(String inviteNote, List<String> recipients) {
+		// sms recipients string builder
 		StringBuilder _recipients = new StringBuilder();
 
-		// process each invited contacts phone numbers
-		for (int i = 0; i < _mPreinTalkingGroupContactsInfoArray.size(); i++) {
-			_recipients.append(_mPreinTalkingGroupContactsInfoArray.get(i)
-					.getExtension().get(SELECTED_CONTACT_SELECTEDPHONE));
+		// process each had been invited contacts phone numbers
+		for (int i = 0; i < recipients.size(); i++) {
+			_recipients.append(recipients.get(i));
 
 			// add more recipient
-			if (_mPreinTalkingGroupContactsInfoArray.size() - 1 != i) {
+			if (recipients.size() - 1 != i) {
 				_recipients.append(',');
 			}
 		}
@@ -746,6 +750,28 @@ public class ContactsSelectView extends SIMBaseView implements
 			getContext().startActivity(_sendSMSIntent);
 		} else {
 			Log.e(LOG_TAG, "Device not support send SMS");
+		}
+	}
+
+	// send invite contacts pre-in to talking group sms
+	private void sendInviteSMS(String inviteNote) {
+		// sms recipients phone list
+		List<String> _recipientsPhone = new ArrayList<String>();
+
+		// process each be invited contacts phone numbers
+		for (ContactBean preinTalkingGroupContact : _mPreinTalkingGroupContactsInfoArray) {
+			_recipientsPhone.add((String) preinTalkingGroupContact
+					.getExtension().get(SELECTED_CONTACT_SELECTEDPHONE));
+		}
+
+		sendInviteSMS(inviteNote, _recipientsPhone);
+	}
+
+	// close asynchronous http request process dialog
+	private void closeAsynchronousHttpRequestProgressDialog() {
+		// check and dismiss asynchronous http request process dialog
+		if (null != _mAsynchronousHttpRequestProgressDialog) {
+			_mAsynchronousHttpRequestProgressDialog.dismiss();
 		}
 	}
 
@@ -1424,6 +1450,17 @@ public class ContactsSelectView extends SIMBaseView implements
 		public void onClick(View v) {
 			// check in and prein talking group contacts size
 			if (!_mPreinTalkingGroupContactsInfoArray.isEmpty()) {
+				// init and show get new talking group id or invite new added
+				// contacts to the talking group process dialog
+				_mAsynchronousHttpRequestProgressDialog = ProgressDialog
+						.show(getContext(),
+								null,
+								getContext()
+										.getResources()
+										.getString(
+												R.string.asynchronousHttpRequest_progressDialog_message),
+								true);
+
 				// check needs to show select talking group start date and time
 				// popup window
 				if (null == _mTalkingGroupContactsPhoneArray) {
@@ -1486,10 +1523,28 @@ public class ContactsSelectView extends SIMBaseView implements
 									new InviteNewAddedContacts2TalkingGroupHttpRequestListener());
 				}
 			} else {
-				// show select one contact at least toast
-				Toast.makeText(getContext(),
-						R.string.toast_selectedContact_atLeastSelectOneContact,
-						Toast.LENGTH_SHORT).show();
+				// check send invite sms again for contacts in talking group
+				if (null != _mTalkingGroupContactsPhoneArray
+						&& !_mTalkingGroupContactsPhoneArray.isEmpty()) {
+					// send invite sms again for in talking group contacts
+					sendInviteSMS(
+							_mInviteNewAddedContacts2ExistedTalkingGroupNote,
+							_mTalkingGroupContactsPhoneArray);
+
+					// switch to my talking groups view and update my talking
+					// group attendee list
+					((SimpleIMeetingActivity) getContext())
+							.switch2myTalkingGroupsView(null);
+
+					// set contacts select view stopped
+					onStop();
+				} else {
+					// show select one contact at least toast
+					Toast.makeText(
+							getContext(),
+							R.string.toast_selectedContact_atLeastSelectOneContact,
+							Toast.LENGTH_SHORT).show();
+				}
 			}
 		}
 
@@ -1526,6 +1581,9 @@ public class ContactsSelectView extends SIMBaseView implements
 
 		@Override
 		public void onFinished(HttpResponseResult responseResult) {
+			// close get new talking group id process dialog
+			closeAsynchronousHttpRequestProgressDialog();
+
 			// get http response entity string json data
 			JSONObject _respJsonData = JSONUtils.toJSONObject(responseResult
 					.getResponseText());
@@ -1557,6 +1615,9 @@ public class ContactsSelectView extends SIMBaseView implements
 
 		@Override
 		public void onFailed(HttpResponseResult responseResult) {
+			// close get new talking group id process dialog
+			closeAsynchronousHttpRequestProgressDialog();
+
 			Log.e(LOG_TAG,
 					"Send get new talking group id get http request failed!");
 
@@ -1591,8 +1652,7 @@ public class ContactsSelectView extends SIMBaseView implements
 		private String _mNewTalkingGroupId;
 
 		// new talking group started time select date and time picker
-		private DatePicker _mNewTalkingGroupStartedTimeSelectDatePicker;
-		private TimePicker _mNewTalkingGroupStartedTimeSelectTimePicker;
+		SimpleIMeetingDate7TimePicker _mNewTalkingGroupStartedTimeSelectDate7TimePicker;
 
 		public NewTalkingGroupStartedTimeSelectPopupWindow(int resource,
 				int width, int height, boolean focusable,
@@ -1625,29 +1685,18 @@ public class ContactsSelectView extends SIMBaseView implements
 					R.id.tgsts_talkingGroupStartedTimeSelect_copyInviteNoteBtn))
 					.setOnClickListener(new NewTalkingGroupStartedTimeSelectCopyInviteNoteButtonOnClickListener());
 
-			// get new talking group started time select date picker
-			_mNewTalkingGroupStartedTimeSelectDatePicker = (DatePicker) getContentView()
-					.findViewById(
-							R.id.tgsts_talkingGroupStartedTimeSelect_datePicker);
+			// get new talking group started time select date and time picker
+			_mNewTalkingGroupStartedTimeSelectDate7TimePicker = (SimpleIMeetingDate7TimePicker) getContentView()
+					.findViewById(R.id.tgsts_date7timePicker);
 
-			// bind its on date changed listener
-			_mNewTalkingGroupStartedTimeSelectDatePicker
-					.init(1970,
-							1,
-							1,
-							new NewTalkingGroupStartedTimeSelectDatePickerOnDateChangedListener());
+			// bind new talking group started time select date picker on date
+			// changed listener
+			_mNewTalkingGroupStartedTimeSelectDate7TimePicker
+					.setOnDateChangedListener(new NewTalkingGroupStartedTimeSelectDatePickerOnDateChangedListener());
 
-			// get new talking group started time select time picker
-			_mNewTalkingGroupStartedTimeSelectTimePicker = (TimePicker) getContentView()
-					.findViewById(
-							R.id.tgsts_talkingGroupStartedTimeSelect_timePicker);
-
-			// set its is 24 hour view
-			_mNewTalkingGroupStartedTimeSelectTimePicker
-					.setIs24HourView(Boolean.valueOf(true));
-
-			// bind its on time changed listener
-			_mNewTalkingGroupStartedTimeSelectTimePicker
+			// bind new talking group started time select time picker on time
+			// changed listener
+			_mNewTalkingGroupStartedTimeSelectDate7TimePicker
 					.setOnTimeChangedListener(new NewTalkingGroupStartedTimeSelectTimePickerOnTimeChangedListener());
 		}
 
@@ -1665,22 +1714,10 @@ public class ContactsSelectView extends SIMBaseView implements
 		// set current calendar for new talking group started time select date
 		// and time picker
 		public void setCurrentCalendar4Date7timePicker(Calendar calendar) {
-			// get current calendar year, month, day, hour and minute
-			int _year = calendar.get(Calendar.YEAR);
-			int _month = calendar.get(Calendar.MONTH);
-			int _day = calendar.get(Calendar.DAY_OF_MONTH);
-			int _hour = calendar.get(Calendar.HOUR_OF_DAY);
-			int _minute = calendar.get(Calendar.MINUTE);
-
-			// update new talking group started time select date picker
-			_mNewTalkingGroupStartedTimeSelectDatePicker.updateDate(_year,
-					_month, _day);
-
-			// update new talking group started time select time picker hour and
-			// minute
-			_mNewTalkingGroupStartedTimeSelectTimePicker.setCurrentHour(_hour);
-			_mNewTalkingGroupStartedTimeSelectTimePicker
-					.setCurrentMinute(_minute);
+			// update new talking group started time select date and time picker
+			// calendar
+			_mNewTalkingGroupStartedTimeSelectDate7TimePicker
+					.setCalendar(calendar);
 		}
 
 		// get new talking group selected started time with format type
@@ -1724,20 +1761,20 @@ public class ContactsSelectView extends SIMBaseView implements
 
 			// format selected date and time string
 			_selectedDate7timeString
-					.append(_mNewTalkingGroupStartedTimeSelectDatePicker
+					.append(_mNewTalkingGroupStartedTimeSelectDate7TimePicker
 							.getYear())
 					.append(_yearSuffix)
-					.append(_mNewTalkingGroupStartedTimeSelectDatePicker
+					.append(_mNewTalkingGroupStartedTimeSelectDate7TimePicker
 							.getMonth() + 1)
 					.append(_monthSuffix)
-					.append(_mNewTalkingGroupStartedTimeSelectDatePicker
+					.append(_mNewTalkingGroupStartedTimeSelectDate7TimePicker
 							.getDayOfMonth())
 					.append(_daySuffix)
 					.append(SELECTEDDATE7TIMESEPCHAR)
-					.append(_mNewTalkingGroupStartedTimeSelectTimePicker
+					.append(_mNewTalkingGroupStartedTimeSelectDate7TimePicker
 							.getCurrentHour())
 					.append(SELECTEDTIMEHOUR7MINUTESEPCHAR)
-					.append(_mNewTalkingGroupStartedTimeSelectTimePicker
+					.append(_mNewTalkingGroupStartedTimeSelectDate7TimePicker
 							.getCurrentMinute());
 
 			return _selectedDate7timeString.toString();
@@ -1782,47 +1819,42 @@ public class ContactsSelectView extends SIMBaseView implements
 				// get current calendar
 				Calendar _currentCalendar = Calendar.getInstance();
 
+				// get the selected started time for new talking group year,
+				// month, day, hour and minute
+				int _selectedStartedTime4NewTalkingGroupYear = _mNewTalkingGroupStartedTimeSelectDate7TimePicker
+						.getYear();
+				int _selectedStartedTime4NewTalkingGroupMonth = _mNewTalkingGroupStartedTimeSelectDate7TimePicker
+						.getMonth();
+				int _selectedStartedTime4NewTalkingGroupDay = _mNewTalkingGroupStartedTimeSelectDate7TimePicker
+						.getDayOfMonth();
+				int _selectedStartedTime4NewTalkingGroupHour = _mNewTalkingGroupStartedTimeSelectDate7TimePicker
+						.getCurrentHour();
+				int _selectedStartedTime4NewTalkingGroupMinute = _mNewTalkingGroupStartedTimeSelectDate7TimePicker
+						.getCurrentMinute();
+
+				// get current calendar year, month, day, hour and minute
+				int _currentCalendarYear = _currentCalendar.get(Calendar.YEAR);
+				int _currentCalendarMonth = _currentCalendar
+						.get(Calendar.MONTH);
+				int _currentCalendarDay = _currentCalendar
+						.get(Calendar.DAY_OF_MONTH);
+				int _currentCalendarHour = _currentCalendar
+						.get(Calendar.HOUR_OF_DAY);
+				int _currentCalendarMinute = _currentCalendar
+						.get(Calendar.MINUTE);
+
 				// check the selected started time for new talking group
-				if (_mNewTalkingGroupStartedTimeSelectDatePicker.getYear() < _currentCalendar
-						.get(Calendar.YEAR)
-						|| (_mNewTalkingGroupStartedTimeSelectDatePicker
-								.getYear() == _currentCalendar
-								.get(Calendar.YEAR) && _mNewTalkingGroupStartedTimeSelectDatePicker
-								.getMonth() < _currentCalendar
-								.get(Calendar.MONTH))
-						|| (_mNewTalkingGroupStartedTimeSelectDatePicker
-								.getYear() == _currentCalendar
-								.get(Calendar.YEAR)
-								&& _mNewTalkingGroupStartedTimeSelectDatePicker
-										.getMonth() == _currentCalendar
-										.get(Calendar.MONTH) && _mNewTalkingGroupStartedTimeSelectDatePicker
-								.getDayOfMonth() < _currentCalendar
-								.get(Calendar.DAY_OF_MONTH))
-						|| (_mNewTalkingGroupStartedTimeSelectDatePicker
-								.getYear() == _currentCalendar
-								.get(Calendar.YEAR)
-								&& _mNewTalkingGroupStartedTimeSelectDatePicker
-										.getMonth() == _currentCalendar
-										.get(Calendar.MONTH)
-								&& _mNewTalkingGroupStartedTimeSelectDatePicker
-										.getDayOfMonth() == _currentCalendar
-										.get(Calendar.DAY_OF_MONTH) && _mNewTalkingGroupStartedTimeSelectTimePicker
-								.getCurrentHour() < _currentCalendar
-								.get(Calendar.HOUR_OF_DAY))
-						|| (_mNewTalkingGroupStartedTimeSelectDatePicker
-								.getYear() == _currentCalendar
-								.get(Calendar.YEAR)
-								&& _mNewTalkingGroupStartedTimeSelectDatePicker
-										.getMonth() == _currentCalendar
-										.get(Calendar.MONTH)
-								&& _mNewTalkingGroupStartedTimeSelectDatePicker
-										.getDayOfMonth() == _currentCalendar
-										.get(Calendar.DAY_OF_MONTH)
-								&& _mNewTalkingGroupStartedTimeSelectTimePicker
-										.getCurrentHour() == _currentCalendar
-										.get(Calendar.HOUR_OF_DAY) && _mNewTalkingGroupStartedTimeSelectTimePicker
-								.getCurrentMinute() < _currentCalendar
-								.get(Calendar.MINUTE))) {
+				if (_selectedStartedTime4NewTalkingGroupYear < _currentCalendarYear
+						|| (_selectedStartedTime4NewTalkingGroupYear == _currentCalendarYear && _selectedStartedTime4NewTalkingGroupMonth < _currentCalendarMonth)
+						|| (_selectedStartedTime4NewTalkingGroupYear == _currentCalendarYear
+								&& _selectedStartedTime4NewTalkingGroupMonth == _currentCalendarMonth && _selectedStartedTime4NewTalkingGroupDay < _currentCalendarDay)
+						|| (_selectedStartedTime4NewTalkingGroupYear == _currentCalendarYear
+								&& _selectedStartedTime4NewTalkingGroupMonth == _currentCalendarMonth
+								&& _selectedStartedTime4NewTalkingGroupDay == _currentCalendarDay && _selectedStartedTime4NewTalkingGroupHour < _currentCalendarHour)
+						|| (_selectedStartedTime4NewTalkingGroupYear == _currentCalendarYear
+								&& _selectedStartedTime4NewTalkingGroupMonth == _currentCalendarMonth
+								&& _selectedStartedTime4NewTalkingGroupDay == _currentCalendarDay
+								&& _selectedStartedTime4NewTalkingGroupHour == _currentCalendarHour && _selectedStartedTime4NewTalkingGroupMinute < _currentCalendarMinute)) {
 					Log.e(LOG_TAG,
 							"Selected time for new talking group is too early");
 
@@ -1833,6 +1865,16 @@ public class ContactsSelectView extends SIMBaseView implements
 							R.string.toast_selectedStartedtime4newTalkingGroup_tooEarly,
 							Toast.LENGTH_LONG).show();
 				} else {
+					// init and show schedule new talking group process dialog
+					_mAsynchronousHttpRequestProgressDialog = ProgressDialog
+							.show(getContext(),
+									null,
+									getContext()
+											.getResources()
+											.getString(
+													R.string.asynchronousHttpRequest_progressDialog_message),
+									true);
+
 					// schedule new talking group
 					// generate schedule new talking group param map
 					Map<String, String> _scheduleNewTalkingGroupParamMap = new HashMap<String, String>();
@@ -1856,20 +1898,11 @@ public class ContactsSelectView extends SIMBaseView implements
 
 					// check the selected started time for new talking group
 					// again
-					if (_mNewTalkingGroupStartedTimeSelectDatePicker.getYear() == _currentCalendar
-							.get(Calendar.YEAR)
-							&& _mNewTalkingGroupStartedTimeSelectDatePicker
-									.getMonth() == _currentCalendar
-									.get(Calendar.MONTH)
-							&& _mNewTalkingGroupStartedTimeSelectDatePicker
-									.getDayOfMonth() == _currentCalendar
-									.get(Calendar.DAY_OF_MONTH)
-							&& _mNewTalkingGroupStartedTimeSelectTimePicker
-									.getCurrentHour() == _currentCalendar
-									.get(Calendar.HOUR_OF_DAY)
-							&& _mNewTalkingGroupStartedTimeSelectTimePicker
-									.getCurrentMinute() == _currentCalendar
-									.get(Calendar.MINUTE)) {
+					if (_selectedStartedTime4NewTalkingGroupYear == _currentCalendarYear
+							&& _selectedStartedTime4NewTalkingGroupMonth == _currentCalendarMonth
+							&& _selectedStartedTime4NewTalkingGroupDay == _currentCalendarDay
+							&& _selectedStartedTime4NewTalkingGroupHour == _currentCalendarHour
+							&& _selectedStartedTime4NewTalkingGroupMinute == _currentCalendarMinute) {
 						// create and start new talking group
 						// post the http request
 						HttpUtils
@@ -1927,6 +1960,11 @@ public class ContactsSelectView extends SIMBaseView implements
 								.findViewById(
 										R.id.tgsts_talkingGroupStartedTimeSelect_inviteNoteTextView))
 								.getText());
+
+				// show talking group invite note copy successful toast
+				Toast.makeText(getContext(),
+						R.string.toast_inviteNoteCpoySuccessful,
+						Toast.LENGTH_SHORT).show();
 			}
 
 		}
@@ -1966,6 +2004,9 @@ public class ContactsSelectView extends SIMBaseView implements
 
 			@Override
 			public void onFinished(HttpResponseResult responseResult) {
+				// close schedule new talking group process dialog
+				closeAsynchronousHttpRequestProgressDialog();
+
 				// get http response entity string json data
 				JSONObject _respJsonData = JSONUtils
 						.toJSONObject(responseResult.getResponseText());
@@ -2012,6 +2053,9 @@ public class ContactsSelectView extends SIMBaseView implements
 
 			@Override
 			public void onFailed(HttpResponseResult responseResult) {
+				// close schedule new talking group process dialog
+				closeAsynchronousHttpRequestProgressDialog();
+
 				Log.e(LOG_TAG,
 						"Send schedule new talking group post http request failed!");
 
@@ -2035,6 +2079,10 @@ public class ContactsSelectView extends SIMBaseView implements
 
 		@Override
 		public void onFinished(HttpResponseResult responseResult) {
+			// close invite new added contacts to the talking group process
+			// dialog
+			closeAsynchronousHttpRequestProgressDialog();
+
 			Log.d(LOG_TAG,
 					"Send invite new added contacts to talking group post http request successful!");
 
@@ -2053,6 +2101,10 @@ public class ContactsSelectView extends SIMBaseView implements
 
 		@Override
 		public void onFailed(HttpResponseResult responseResult) {
+			// close invite new added contacts to the talking group process
+			// dialog
+			closeAsynchronousHttpRequestProgressDialog();
+
 			Log.e(LOG_TAG,
 					"Send invite new added contacts to talking group post http request failed!");
 
