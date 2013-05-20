@@ -67,9 +67,12 @@ public class SIMUserExtension {
 							.getString(
 									R.string.bg_server_login6reg7LoginWithDeviceId6PhoneBind_phoneBindedStatus)
 							.equalsIgnoreCase(_contactsInfoTypeBeBinded)) {
-				contactsInfoBeBinded = _appContext.getResources().getString(
-						R.string.phoneBinded_contactsInfoPrefix)
-						+ contactsInfoBeBinded;
+				if (!contactsInfoBeBinded.startsWith(_appContext.getResources()
+						.getString(R.string.phoneBinded_contactsInfoPrefix))) {
+					contactsInfoBeBinded = _appContext.getResources()
+							.getString(R.string.phoneBinded_contactsInfoPrefix)
+							+ contactsInfoBeBinded;
+				}
 			}
 		}
 
