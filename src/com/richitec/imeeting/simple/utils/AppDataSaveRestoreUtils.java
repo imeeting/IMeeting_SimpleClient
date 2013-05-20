@@ -26,12 +26,15 @@ public class AppDataSaveRestoreUtils {
 		outState.putString(User.password.name(), _memStorageUser.getPassword());
 		outState.putString(User.userkey.name(), _memStorageUser.getUserKey());
 
-		// put user extension keys: bind contactInfo, nickname and
-		// contactsInfo beBinded
+		// put user extension keys: bind contactInfo, nickname, contactsInfo and
+		// its type beBinded
 		outState.putString(SIMUserExtAttributes.BIND_CONTACTINFO.name(),
 				SIMUserExtension.getUserBindContactInfo(_memStorageUser));
 		outState.putString(SIMUserExtAttributes.NICKNAME.name(),
 				SIMUserExtension.getUserNickname(_memStorageUser));
+		outState.putString(SIMUserExtAttributes.CONTACTSINFOTYPE_BEBINDED
+				.name(), SIMUserExtension
+				.getUserContactsInfoTypeBeBinded(_memStorageUser));
 		outState.putString(SIMUserExtAttributes.CONTACTSINFO_BEBINDED.name(),
 				SIMUserExtension.getUserContactsInfoBeBinded(_memStorageUser));
 	}
@@ -59,6 +62,9 @@ public class AppDataSaveRestoreUtils {
 				.getString(SIMUserExtAttributes.BIND_CONTACTINFO.name());
 		String _nickname = savedInstanceState
 				.getString(SIMUserExtAttributes.NICKNAME.name());
+		String _contactsInfoTypeBeBinded = savedInstanceState
+				.getString(SIMUserExtAttributes.CONTACTSINFOTYPE_BEBINDED
+						.name());
 		String _contactsInfoBeBinded = savedInstanceState
 				.getString(SIMUserExtAttributes.CONTACTSINFO_BEBINDED.name());
 
@@ -94,6 +100,13 @@ public class AppDataSaveRestoreUtils {
 		// check nickname
 		if (null != _nickname && !("").equalsIgnoreCase(_nickname)) {
 			SIMUserExtension.setUserNickname(_user, _nickname);
+		}
+
+		// check contactsInfo type beBinded
+		if (null != _contactsInfoTypeBeBinded
+				&& !("").equalsIgnoreCase(_contactsInfoTypeBeBinded)) {
+			SIMUserExtension.setUserContactsInfoTypeBeBinded(_user,
+					_contactsInfoTypeBeBinded);
 		}
 
 		// check contactsInfo beBinded

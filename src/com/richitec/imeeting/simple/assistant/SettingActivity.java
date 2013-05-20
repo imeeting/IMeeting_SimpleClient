@@ -10,8 +10,10 @@ import org.json.JSONObject;
 
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -28,6 +30,7 @@ import com.richitec.commontoolkit.user.UserBean;
 import com.richitec.commontoolkit.user.UserManager;
 import com.richitec.commontoolkit.utils.DataStorageUtils;
 import com.richitec.commontoolkit.utils.DeviceUtils;
+import com.richitec.commontoolkit.utils.DisplayScreenUtils;
 import com.richitec.commontoolkit.utils.HttpUtils;
 import com.richitec.commontoolkit.utils.HttpUtils.HttpRequestType;
 import com.richitec.commontoolkit.utils.HttpUtils.HttpResponseResult;
@@ -52,6 +55,9 @@ public class SettingActivity extends SimpleIMeetingNavigationActivity {
 
 	// my account changed flag, login or logout
 	public static final String SETTING_CHANGEDMYACCOUNT_KEY = "setting_activity_changed_myaccount";
+
+	// asynchronous http request progress dialog
+	private ProgressDialog _mAsynchronousHttpRequestProgressDialog;
 
 	// binded account login, phone and email bind alertDialog
 	private AlertDialog _mBindedAccountLoginAlertDialog;
@@ -165,13 +171,20 @@ public class SettingActivity extends SimpleIMeetingNavigationActivity {
 		String _bindContactInfo = SIMUserExtension
 				.getUserBindContactInfo(_loginUser);
 
-		// set account or device id textView text and its label textView text
-		((TextView) findViewById(R.id.set_account6deviceId_textView))
+		// get contacts info binded
+		String _contactsInfoBeBinded = SIMUserExtension
+				.getUserContactsInfoBeBinded(_loginUser);
+
+		// set account or device id or contacts info be binded textView text and
+		// its label textView text
+		((TextView) findViewById(R.id.set_account6deviceId6contactsInfoBeBinded_textView))
 				.setText(null != _bindContactInfo ? _bindContactInfo
-						: DeviceUtils.combinedUniqueId());
-		((TextView) findViewById(R.id.set_account6deviceIdLabel_textView))
+						: null != _contactsInfoBeBinded ? _contactsInfoBeBinded
+								: DeviceUtils.combinedUniqueId());
+		((TextView) findViewById(R.id.set_account6deviceId6contactsInfoBeBindedLabel_textView))
 				.setText(null != _bindContactInfo ? R.string.myAccount_labelTextView_text
-						: R.string.deviceId_labelTextView_text);
+						: null != _contactsInfoBeBinded ? R.string.contactsInfoBeBinded_labelTextView_text
+								: R.string.deviceId_labelTextView_text);
 
 		// show or hide binded account logout button
 		((Button) findViewById(R.id.set_accountLogout_button))
@@ -179,19 +192,28 @@ public class SettingActivity extends SimpleIMeetingNavigationActivity {
 						: View.GONE);
 
 		// get and check contacts info binded type
-		String _contactsInfoBeBinded = SIMUserExtension
-				.getUserContactsInfoBeBinded(_loginUser);
+		String _contactsInfoTypeBeBinded = SIMUserExtension
+				.getUserContactsInfoTypeBeBinded(_loginUser);
 		((ImageButton) findViewById(R.id.set_phoneBind_imageButton))
-				.setEnabled(null != _contactsInfoBeBinded ? getResources()
+				.setEnabled(null != _contactsInfoTypeBeBinded ? getResources()
 						.getString(
 								R.string.bg_server_login6reg7LoginWithDeviceId6PhoneBind_phoneBindedStatus)
-						.equalsIgnoreCase(_contactsInfoBeBinded) ? false : true
+						.equalsIgnoreCase(_contactsInfoTypeBeBinded) ? false
+						: true
 						: true);
 
 		// check my account changed or not
 		if (myAccountChanged) {
 			// set my account changed flag to setting intent extra data
 			getIntent().putExtra(SETTING_CHANGEDMYACCOUNT_KEY, true);
+		}
+	}
+
+	// close asynchronous http request process dialog
+	public void closeAsynchronousHttpRequestProgressDialog() {
+		// check and dismiss asynchronous http request process dialog
+		if (null != _mAsynchronousHttpRequestProgressDialog) {
+			_mAsynchronousHttpRequestProgressDialog.dismiss();
 		}
 	}
 
@@ -226,6 +248,13 @@ public class SettingActivity extends SimpleIMeetingNavigationActivity {
 
 		@Override
 		public void onClick(View v) {
+			// init and show binded account logout process dialog
+			_mAsynchronousHttpRequestProgressDialog = ProgressDialog
+					.show(SettingActivity.this,
+							null,
+							getString(R.string.asynchronousHttpRequest_progressDialog_message),
+							true);
+
 			// revert to register and login with device combined unique id
 			// generate register and login with device combined unique id param
 			// map
@@ -237,6 +266,28 @@ public class SettingActivity extends SimpleIMeetingNavigationActivity {
 							.getString(
 									R.string.bg_server_reg7LoginWithDeviceId6ContactInfoBind_deviceId),
 							DeviceUtils.combinedUniqueId());
+			_reg7LoginWithDeviceIdParamMap.put(
+					getResources().getString(R.string.bg_server_deviceBrand),
+					Build.BRAND);
+			_reg7LoginWithDeviceIdParamMap.put(
+					getResources().getString(R.string.bg_server_deviceModel),
+					Build.MODEL);
+			_reg7LoginWithDeviceIdParamMap.put(
+					getResources().getString(
+							R.string.bg_server_deviceOS_version),
+					Build.VERSION.RELEASE);
+			_reg7LoginWithDeviceIdParamMap.put(
+					getResources().getString(
+							R.string.bg_server_deviceOS_APILevel),
+					Build.VERSION.SDK);
+			_reg7LoginWithDeviceIdParamMap.put(
+					getResources().getString(
+							R.string.bg_server_deviceDisplayScreen_width),
+					Integer.toString(DisplayScreenUtils.screenWidth()));
+			_reg7LoginWithDeviceIdParamMap.put(
+					getResources().getString(
+							R.string.bg_server_deviceDisplayScreen_height),
+					Integer.toString(DisplayScreenUtils.screenHeight()));
 
 			// post the http request
 			try {
@@ -642,6 +693,13 @@ public class SettingActivity extends SimpleIMeetingNavigationActivity {
 				return;
 			}
 
+			// init and show phone bind process dialog
+			_mAsynchronousHttpRequestProgressDialog = ProgressDialog
+					.show(SettingActivity.this,
+							null,
+							getString(R.string.asynchronousHttpRequest_progressDialog_message),
+							true);
+
 			// phone bind confirm
 			// generate confirm bind phone param map
 			Map<String, String> _confirmBindPhoneParamMap = new HashMap<String, String>();
@@ -684,6 +742,9 @@ public class SettingActivity extends SimpleIMeetingNavigationActivity {
 
 		@Override
 		public void onFinished(HttpResponseResult responseResult) {
+			// close phone bind process dialog
+			closeAsynchronousHttpRequestProgressDialog();
+
 			// get http response entity string json data
 			JSONObject _respJsonData = JSONUtils.toJSONObject(responseResult
 					.getResponseText());
@@ -751,7 +812,8 @@ public class SettingActivity extends SimpleIMeetingNavigationActivity {
 				SIMUserExtension.setUserBindContactInfo(_newBindedGenerateUser,
 						_bindedPhone);
 				SIMUserExtension
-						.setUserContactsInfoBeBinded(_newBindedGenerateUser,
+						.setUserContactsInfoTypeBeBinded(
+								_newBindedGenerateUser,
 								_confirmBindPhoneRespBindStatus);
 
 				// add it to user manager
@@ -970,6 +1032,13 @@ public class SettingActivity extends SimpleIMeetingNavigationActivity {
 				return;
 			}
 
+			// init and show binded account user login process dialog
+			_mAsynchronousHttpRequestProgressDialog = ProgressDialog
+					.show(SettingActivity.this,
+							null,
+							getString(R.string.asynchronousHttpRequest_progressDialog_message),
+							true);
+
 			// binded account user login
 			// generate binded account login param map
 			Map<String, String> _bindedAccountLoginParamMap = new HashMap<String, String>();
@@ -981,6 +1050,28 @@ public class SettingActivity extends SimpleIMeetingNavigationActivity {
 			_bindedAccountLoginParamMap.put(
 					getResources().getString(R.string.bg_server_userLoginPwd),
 					StringUtils.md5(_loginPassword));
+			_bindedAccountLoginParamMap.put(
+					getResources().getString(R.string.bg_server_deviceBrand),
+					Build.BRAND);
+			_bindedAccountLoginParamMap.put(
+					getResources().getString(R.string.bg_server_deviceModel),
+					Build.MODEL);
+			_bindedAccountLoginParamMap.put(
+					getResources().getString(
+							R.string.bg_server_deviceOS_version),
+					Build.VERSION.RELEASE);
+			_bindedAccountLoginParamMap.put(
+					getResources().getString(
+							R.string.bg_server_deviceOS_APILevel),
+					Build.VERSION.SDK);
+			_bindedAccountLoginParamMap.put(
+					getResources().getString(
+							R.string.bg_server_deviceDisplayScreen_width),
+					Integer.toString(DisplayScreenUtils.screenWidth()));
+			_bindedAccountLoginParamMap.put(
+					getResources().getString(
+							R.string.bg_server_deviceDisplayScreen_height),
+					Integer.toString(DisplayScreenUtils.screenHeight()));
 
 			// post the http request
 			try {

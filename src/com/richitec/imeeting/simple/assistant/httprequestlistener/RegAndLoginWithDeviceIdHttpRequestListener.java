@@ -66,6 +66,12 @@ public class RegAndLoginWithDeviceIdHttpRequestListener extends
 
 	@Override
 	public void onFinished(HttpResponseResult responseResult) {
+		// close binded account logout process dialog for binded account logout
+		if (Reg7LoginWithDeviceIdType.BINDEDACCOUNT_LOGOUT == _mReg7LoginWithDeviceIdType) {
+			((SettingActivity) _mContext)
+					.closeAsynchronousHttpRequestProgressDialog();
+		}
+
 		// get http response entity string json data
 		JSONObject _respJsonData = JSONUtils.toJSONObject(responseResult
 				.getResponseText());
@@ -107,22 +113,30 @@ public class RegAndLoginWithDeviceIdHttpRequestListener extends
 										.getResources()
 										.getString(
 												R.string.bg_server_login6reg7LoginWithDeviceId6PhoneBindReq_resp_bindStatus));
+				String _reg7LoginWithDeviceIdRespBindInfo = JSONUtils
+						.getStringFromJSONObject(_respJsonData,
+								_reg7LoginWithDeviceIdRespBindStatus);
 
 				Log.d(LOG_TAG,
 						"Register and login with device combined unique id successful, response user id = "
 								+ _reg7LoginWithDeviceIdRespUserId
 								+ ", user key = "
 								+ _reg7LoginWithDeviceIdRespUserKey
-								+ " and bind status = "
-								+ _reg7LoginWithDeviceIdRespBindStatus);
+								+ ", bind status = "
+								+ _reg7LoginWithDeviceIdRespBindStatus
+								+ " and bind info = "
+								+ _reg7LoginWithDeviceIdRespBindInfo);
 
 				// generate new user bean and complete other attributes
 				UserBean _reg7LoginWithDeviceIdUser = new UserBean(
 						_reg7LoginWithDeviceIdRespUserId, null,
 						_reg7LoginWithDeviceIdRespUserKey);
-				SIMUserExtension.setUserContactsInfoBeBinded(
+				SIMUserExtension.setUserContactsInfoTypeBeBinded(
 						_reg7LoginWithDeviceIdUser,
 						_reg7LoginWithDeviceIdRespBindStatus);
+				SIMUserExtension.setUserContactsInfoBeBinded(
+						_reg7LoginWithDeviceIdUser,
+						_reg7LoginWithDeviceIdRespBindInfo);
 
 				// add it to user manager
 				UserManager.getInstance().setUser(_reg7LoginWithDeviceIdUser);
@@ -158,6 +172,12 @@ public class RegAndLoginWithDeviceIdHttpRequestListener extends
 
 	@Override
 	public void onFailed(HttpResponseResult responseResult) {
+		// close binded account logout process dialog for binded account logout
+		if (Reg7LoginWithDeviceIdType.BINDEDACCOUNT_LOGOUT == _mReg7LoginWithDeviceIdType) {
+			((SettingActivity) _mContext)
+					.closeAsynchronousHttpRequestProgressDialog();
+		}
+
 		Log.e(LOG_TAG,
 				"Send register and login with device combined unique id post http request failed!");
 

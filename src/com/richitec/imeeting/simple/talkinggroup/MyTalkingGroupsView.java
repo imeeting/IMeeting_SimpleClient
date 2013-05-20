@@ -15,6 +15,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
@@ -99,6 +100,9 @@ public class MyTalkingGroupsView extends SIMBaseView implements
 	// my talking group list view's footer view
 	private View _mMyTalkingGroupListViewFooterView;
 
+	// asynchronous http request progress dialog
+	private ProgressDialog _mAsynchronousHttpRequestProgressDialog;
+
 	// selected talking group index
 	private Integer _mSelectedTalkingGroupIndex = null;
 
@@ -165,7 +169,7 @@ public class MyTalkingGroupsView extends SIMBaseView implements
 											for (int i = 0; i < _mMyTalkingGroupAdapterDataList
 													.size(); i++) {
 												// get my talking group adapter
-												// data map and into
+												// data map and info
 												@SuppressWarnings("unchecked")
 												Map<String, Object> _myTalkingGroupAdapterDataMap = (Map<String, Object>) _mMyTalkingGroupAdapterDataList
 														.get(i);
@@ -343,6 +347,9 @@ public class MyTalkingGroupsView extends SIMBaseView implements
 
 	// send get my talking group list post http request
 	private void sendGetMyTalkingGroupsHttpRequest() {
+		// clear selected talking group index
+		_mSelectedTalkingGroupIndex = null;
+
 		// remove my talking group list view footer view first
 		_mMyTalkingGroupListView
 				.removeFooterView(_mMyTalkingGroupListViewFooterView);
@@ -1151,6 +1158,17 @@ public class MyTalkingGroupsView extends SIMBaseView implements
 					_mMyTalkingGroupAdapter.notifyDataSetChanged();
 				}
 
+				// init and show get the selected my talking group attendees
+				// process dialog
+				_mAsynchronousHttpRequestProgressDialog = ProgressDialog
+						.show(getContext(),
+								null,
+								getContext()
+										.getResources()
+										.getString(
+												R.string.asynchronousHttpRequest_progressDialog_message),
+								true);
+
 				// get the selected my talking group attendee list
 				sendGetSelectedTalkingGroupAttendeesHttpRequest((int) id);
 			} else {
@@ -1169,6 +1187,9 @@ public class MyTalkingGroupsView extends SIMBaseView implements
 
 		@Override
 		public void onFinished(HttpResponseResult responseResult) {
+			// close get the selected my talking group attendees process dialog
+			closeAsynchronousHttpRequestProgressDialog();
+
 			// get http response entity string json data
 			JSONArray _respJsonData = JSONUtils.toJSONArray(responseResult
 					.getResponseText());
@@ -1200,6 +1221,9 @@ public class MyTalkingGroupsView extends SIMBaseView implements
 
 		@Override
 		public void onFailed(HttpResponseResult responseResult) {
+			// close get the selected my talking group attendees process dialog
+			closeAsynchronousHttpRequestProgressDialog();
+
 			Log.e(LOG_TAG,
 					"Send get talking group attendee list post http request failed");
 
@@ -1216,6 +1240,14 @@ public class MyTalkingGroupsView extends SIMBaseView implements
 					.getVisibility()) {
 				_myTalkingGroupAttendeeListViewRelativeLayout
 						.setVisibility(View.GONE);
+			}
+		}
+
+		// close asynchronous http request process dialog
+		private void closeAsynchronousHttpRequestProgressDialog() {
+			// check and dismiss asynchronous http request process dialog
+			if (null != _mAsynchronousHttpRequestProgressDialog) {
+				_mAsynchronousHttpRequestProgressDialog.dismiss();
 			}
 		}
 

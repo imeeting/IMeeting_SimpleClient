@@ -5,6 +5,7 @@ import java.util.Map;
 
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
@@ -14,6 +15,7 @@ import com.richitec.commontoolkit.addressbook.AddressBookManager;
 import com.richitec.commontoolkit.user.UserBean;
 import com.richitec.commontoolkit.user.UserManager;
 import com.richitec.commontoolkit.utils.DeviceUtils;
+import com.richitec.commontoolkit.utils.DisplayScreenUtils;
 import com.richitec.commontoolkit.utils.HttpUtils;
 import com.richitec.commontoolkit.utils.HttpUtils.HttpRequestType;
 import com.richitec.commontoolkit.utils.HttpUtils.PostRequestFormat;
@@ -104,6 +106,28 @@ public class SimpleIMeetingAppLaunchActivity extends AppLaunchActivity {
 			_bindedAccountLoginParamMap.put(
 					getResources().getString(R.string.bg_server_userLoginPwd),
 					_localStorageUser.getPassword());
+			_bindedAccountLoginParamMap.put(
+					getResources().getString(R.string.bg_server_deviceBrand),
+					Build.BRAND);
+			_bindedAccountLoginParamMap.put(
+					getResources().getString(R.string.bg_server_deviceModel),
+					Build.MODEL);
+			_bindedAccountLoginParamMap.put(
+					getResources().getString(
+							R.string.bg_server_deviceOS_version),
+					Build.VERSION.RELEASE);
+			_bindedAccountLoginParamMap.put(
+					getResources().getString(
+							R.string.bg_server_deviceOS_APILevel),
+					Build.VERSION.SDK);
+			_bindedAccountLoginParamMap.put(
+					getResources().getString(
+							R.string.bg_server_deviceDisplayScreen_width),
+					Integer.toString(DisplayScreenUtils.screenWidth()));
+			_bindedAccountLoginParamMap.put(
+					getResources().getString(
+							R.string.bg_server_deviceDisplayScreen_height),
+					Integer.toString(DisplayScreenUtils.screenHeight()));
 
 			// post the http request
 			try {
@@ -156,6 +180,26 @@ public class SimpleIMeetingAppLaunchActivity extends AppLaunchActivity {
 						.getString(
 								R.string.bg_server_reg7LoginWithDeviceId6ContactInfoBind_deviceId),
 						DeviceUtils.combinedUniqueId());
+		_reg7LoginWithDeviceIdParamMap.put(
+				getResources().getString(R.string.bg_server_deviceBrand),
+				Build.BRAND);
+		_reg7LoginWithDeviceIdParamMap.put(
+				getResources().getString(R.string.bg_server_deviceModel),
+				Build.MODEL);
+		_reg7LoginWithDeviceIdParamMap.put(
+				getResources().getString(R.string.bg_server_deviceOS_version),
+				Build.VERSION.RELEASE);
+		_reg7LoginWithDeviceIdParamMap.put(
+				getResources().getString(R.string.bg_server_deviceOS_APILevel),
+				Build.VERSION.SDK);
+		_reg7LoginWithDeviceIdParamMap.put(
+				getResources().getString(
+						R.string.bg_server_deviceDisplayScreen_width),
+				Integer.toString(DisplayScreenUtils.screenWidth()));
+		_reg7LoginWithDeviceIdParamMap.put(
+				getResources().getString(
+						R.string.bg_server_deviceDisplayScreen_height),
+				Integer.toString(DisplayScreenUtils.screenHeight()));
 
 		// post the http request
 		try {

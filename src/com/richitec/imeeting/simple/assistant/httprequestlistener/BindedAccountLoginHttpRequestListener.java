@@ -80,6 +80,14 @@ public class BindedAccountLoginHttpRequestListener extends
 
 	@Override
 	public void onFinished(HttpResponseResult responseResult) {
+		// check binded account login type
+		if (null != _mLoginType
+				&& BindedAccountLoginType.MANUAL.equals(_mLoginType)) {
+			// close binded account user login process dialog
+			((SettingActivity) _mContext)
+					.closeAsynchronousHttpRequestProgressDialog();
+		}
+
 		// get http response entity string json data
 		JSONObject _respJsonData = JSONUtils.toJSONObject(responseResult
 				.getResponseText());
@@ -169,7 +177,7 @@ public class BindedAccountLoginHttpRequestListener extends
 					.setUserKey(_bindedAccountLoginRespUserKey);
 			SIMUserExtension.setUserNickname(_bindedAccountLoginRetUser,
 					_bindedAccountLoginRespNickname);
-			SIMUserExtension.setUserContactsInfoBeBinded(
+			SIMUserExtension.setUserContactsInfoTypeBeBinded(
 					_bindedAccountLoginRetUser,
 					_bindedAccountLoginRespBindStatus);
 
@@ -187,6 +195,14 @@ public class BindedAccountLoginHttpRequestListener extends
 
 	@Override
 	public void onFailed(HttpResponseResult responseResult) {
+		// check binded account login type
+		if (null != _mLoginType
+				&& BindedAccountLoginType.MANUAL.equals(_mLoginType)) {
+			// close binded account user login process dialog
+			((SettingActivity) _mContext)
+					.closeAsynchronousHttpRequestProgressDialog();
+		}
+
 		Log.e(LOG_TAG, "Send binded account login post http request failed!");
 
 		processBindedAccountLoginException(responseResult);

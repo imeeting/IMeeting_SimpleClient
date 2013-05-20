@@ -16,39 +16,17 @@
         android:paddingRight="4dp"
         android:paddingTop="4dp" >
 
-        <RelativeLayout
-            android:id="@+id/tgsts_header_relativeLayout"
+        <TextView
+            android:id="@+id/tgsts_talkingGroupStartedTimeSelect_titleTextView"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content" >
-
-            <Button
-                android:id="@+id/tgsts_talkingGroupStartedTimeSelect_cancelBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:text="@string/talkingGroupStartedTimeSelect_cancelBtn_title" />
-
-            <Button
-                android:id="@+id/tgsts_talkingGroupStartedTimeSelect_confirmBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:text="@string/talkingGroupStartedTimeSelect_confirmBtn_title" />
-
-            <TextView
-                android:id="@+id/tgsts_talkingGroupStartedTimeSelect_titleTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:layout_marginLeft="2dp"
-                android:layout_marginRight="2dp"
-                android:layout_toLeftOf="@id/tgsts_talkingGroupStartedTimeSelect_confirmBtn"
-                android:layout_toRightOf="@id/tgsts_talkingGroupStartedTimeSelect_cancelBtn"
-                android:gravity="center"
-                android:text="@string/talkingGroupStartedTimeSelect_titleTextView_text"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="@android:color/white" />
-        </RelativeLayout>
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
+            android:gravity="center"
+            android:text="@string/talkingGroupStartedTimeSelect_titleTextView_text"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@android:color/white" />
 
         <LinearLayout
             android:id="@+id/tgsts_inviteNote_linearLayout"
@@ -74,23 +52,35 @@
                 android:text="@string/talkingGroupStartedTimeSelect_inviteNoteCpoyBtn_title" />
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/tgsts_date7timePicker_linearLayout"
+        <com.richitec.imeeting.simple.customcomponent.SimpleIMeetingDate7TimePicker
+            android:id="@+id/tgsts_date7timePicker"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
+            android:background="@color/light_dim_gray" >
+        </com.richitec.imeeting.simple.customcomponent.SimpleIMeetingDate7TimePicker>
 
-            <DatePicker
-                android:id="@+id/tgsts_talkingGroupStartedTimeSelect_datePicker"
+        <LinearLayout
+            android:id="@+id/tgsts_controller_relativeLayout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <Button
+                android:id="@+id/tgsts_talkingGroupStartedTimeSelect_cancelBtn"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:text="@string/talkingGroupStartedTimeSelect_cancelBtn_title" />
 
-            <TimePicker
-                android:id="@+id/tgsts_talkingGroupStartedTimeSelect_timePicker"
+            <Button
+                android:id="@+id/tgsts_talkingGroupStartedTimeSelect_confirmBtn"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1" />
+                android:layout_marginLeft="4dp"
+                android:layout_weight="1"
+                android:text="@string/talkingGroupStartedTimeSelect_confirmBtn_title" />
         </LinearLayout>
     </LinearLayout>
 
