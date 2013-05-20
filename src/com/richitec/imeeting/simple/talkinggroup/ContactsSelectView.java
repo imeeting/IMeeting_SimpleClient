@@ -69,6 +69,7 @@ import com.richitec.commontoolkit.utils.HttpUtils.PostRequestFormat;
 import com.richitec.commontoolkit.utils.JSONUtils;
 import com.richitec.commontoolkit.utils.StringUtils;
 import com.richitec.imeeting.simple.R;
+import com.richitec.imeeting.simple.customcomponent.ContactListViewQuickAlphabetToast;
 import com.richitec.imeeting.simple.customcomponent.SimpleIMeetingDate7TimePicker;
 import com.richitec.imeeting.simple.talkinggroup.MyTalkingGroupsView.MyTalkingGroupsViewRefreshType;
 import com.richitec.imeeting.simple.talkinggroup.SimpleIMeetingActivity.SimpleIMeetingActivityContentViewType;
@@ -162,7 +163,7 @@ public class ContactsSelectView extends SIMBaseView implements
 
 		// init contacts in addressbook present listView quick alphabet bar and
 		// add on touch listener
-		new ListViewQuickAlphabetBar(_mInABContactsPresentListView)
+		new ListViewQuickAlphabetBar(_mInABContactsPresentListView, new ContactListViewQuickAlphabetToast(getContext()))
 				.setOnTouchListener(new ContactsInABPresentListViewQuickAlphabetBarOnTouchListener());
 
 		// bind contacts in addressbook present listView on scroll listener
