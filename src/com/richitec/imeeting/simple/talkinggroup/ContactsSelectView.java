@@ -1281,6 +1281,18 @@ public class ContactsSelectView extends SIMBaseView implements
 
 			@Override
 			public void onClick(View v) {
+				// check selected contacts relativeLayout visibility and set
+				// contacts select navigation title and back bar button item as
+				// left navigation bar button item
+				if (View.VISIBLE != ((RelativeLayout) findViewById(R.id.cs_selectedContacts_relativeLayout))
+						.getVisibility()) {
+					((SimpleIMeetingActivity) getContext())
+							.setContactsSelectNavigationTitle7BackBarButtonItem(SimpleIMeetingActivityContentViewType.ADDRESSBOOK_CONTACTS);
+				}
+
+				// show selected contacts relativeLayout
+				setSelectedContactsRelativeLayoutVisibility(View.VISIBLE);
+
 				// get added manual input contact phone number
 				String _addedManualInputContactPhoneNumber = ((EditText) getContentView()
 						.findViewById(R.id.amic_addManualInputContact_editText))
