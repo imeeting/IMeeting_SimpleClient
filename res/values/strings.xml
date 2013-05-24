@@ -89,7 +89,7 @@
     <string name="talkingGroupStartedTimeSelect_cancelBtn_title">取消</string>
     <string name="talkingGroupStartedTimeSelect_titleTextView_text">请选择会议开始时间</string>
     <string name="talkingGroupStartedTimeSelect_confirmBtn_title">确定</string>
-    <string name="talkingGroupAttendee_inviteNoteText">请于 *** 拨打0551&#8211;62379997参加电话会议(会议号: ***)</string>
+    <string name="talkingGroupAttendee_inviteNoteText">请于 *** 拨打0551-62379997参加电话会议(会议号: ***)</string>
     <string name="datePicker_yearSuffix">年</string>
     <string name="datePicker_monthSuffix">月</string>
     <string name="datePicker_daySuffix">日</string>

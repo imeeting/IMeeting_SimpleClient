@@ -728,20 +728,18 @@ public class ContactsSelectView extends SIMBaseView implements
 	private void sendInviteSMS(String inviteNote, List<String> recipients) {
 		// sms recipients string builder
 		StringBuilder _recipients = new StringBuilder();
-
 		// process each had been invited contacts phone numbers
 		for (int i = 0; i < recipients.size(); i++) {
 			_recipients.append(recipients.get(i));
-
 			// add more recipient
 			if (recipients.size() - 1 != i) {
-				_recipients.append(',');
+				_recipients.append(';');
 			}
 		}
 
 		// define send sms intent
 		Intent _sendSMSIntent = new Intent(Intent.ACTION_SENDTO,
-				Uri.parse("smsto:" + _recipients));
+				Uri.parse("smsto:" + _recipients.toString()));
 
 		// send sms body
 		_sendSMSIntent.putExtra("sms_body", inviteNote);
